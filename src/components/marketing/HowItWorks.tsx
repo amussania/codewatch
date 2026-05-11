@@ -99,10 +99,10 @@ export default function HowItWorks() {
   );
 
   return (
-    <section id="how-it-works" className="py-[7.5rem] max-w-[1200px] mx-auto px-6">
+    <section id="how-it-works" className="py-[8.75rem] max-w-[1200px] mx-auto px-6">
       {/* Header */}
       <div className="text-center mb-20">
-        <span className="text-[#ff5b35] text-sm font-medium uppercase tracking-widest">
+        <span className="text-[#8896ab] text-xs font-semibold uppercase tracking-widest">
           The process
         </span>
         <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
@@ -137,7 +137,7 @@ export default function HowItWorks() {
             <line
               className="hiw-track"
               x1="0.5" y1="0" x2="0.5" y2={svgHeight}
-              stroke="white" strokeOpacity="0.07" strokeWidth="1"
+              stroke="#e8edf5" strokeOpacity="1" strokeWidth="1"
             />
             {/* Animated draw line */}
             <line
@@ -160,8 +160,15 @@ export default function HowItWorks() {
               </div>
 
               {/* Content */}
-              <div className="pt-2 flex-1">
-                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+              <div className="pt-2 flex-1 relative">
+                <span
+                  aria-hidden
+                  className="absolute -top-3 left-0 font-extrabold leading-none select-none pointer-events-none"
+                  style={{ fontSize: "80px", color: "#f0f2f5", zIndex: 0 }}
+                >
+                  {step.num}
+                </span>
+                <h3 className="relative text-xl font-semibold mb-2" style={{ zIndex: 1 }}>{step.title}</h3>
                 <p className="text-muted-foreground leading-relaxed max-w-lg mb-3">{step.desc}</p>
                 <p className="text-xs text-muted-foreground/60 font-mono border-l-2 border-[#ff5b35]/30 pl-3">
                   {step.detail}

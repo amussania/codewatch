@@ -64,10 +64,10 @@ export default function SecuritySection() {
   );
 
   return (
-    <section ref={sectionRef} id="security" className="py-[7.5rem] max-w-[1200px] mx-auto px-6">
+    <section ref={sectionRef} id="security" className="py-[8.75rem] max-w-[1200px] mx-auto px-6">
       {/* Header */}
       <div className="text-center mb-16">
-        <span className="text-[#ff5b35] text-sm font-medium uppercase tracking-widest">
+        <span className="text-[#8896ab] text-xs font-semibold uppercase tracking-widest">
           Security
         </span>
         <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">

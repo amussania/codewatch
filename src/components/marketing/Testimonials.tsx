@@ -71,11 +71,11 @@ export default function Testimonials() {
   }
 
   return (
-    <section className="py-[7.5rem] overflow-hidden bg-[#f8faff]" id="testimonials">
+    <section className="py-[8.75rem] overflow-hidden bg-[#f8faff]" id="testimonials">
       <div className="max-w-[1200px] mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-14">
-          <span className="text-[#ff5b35] text-sm font-medium uppercase tracking-widest">
+          <span className="text-[#8896ab] text-xs font-semibold uppercase tracking-widest">
             Testimonials
           </span>
           <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">

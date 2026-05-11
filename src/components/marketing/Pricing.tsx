@@ -44,7 +44,7 @@ const PLANS = [
     ],
     cta: "Get 10 Free Reviews",
     href: "/signup?plan=pro",
-    featured: true,
+    featured: false,
   },
   {
     name: "Studio",
@@ -61,7 +61,7 @@ const PLANS = [
     ],
     cta: "Get Started",
     href: "/signup?plan=studio",
-    featured: false,
+    featured: true,
   },
   {
     name: "Agency",
@@ -113,10 +113,10 @@ export default function Pricing() {
   );
 
   return (
-    <section id="pricing" className="py-[7.5rem] max-w-[1200px] mx-auto px-6">
+    <section id="pricing" className="py-[8.75rem] max-w-[1200px] mx-auto px-6">
       {/* Header */}
       <div className="text-center mb-16">
-        <span className="text-[#ff5b35] text-sm font-medium uppercase tracking-widest">
+        <span className="text-[#8896ab] text-xs font-semibold uppercase tracking-widest">
           Pricing
         </span>
         <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">

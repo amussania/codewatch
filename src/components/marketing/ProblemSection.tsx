@@ -75,10 +75,10 @@ export default function ProblemSection() {
   );
 
   return (
-    <section ref={sectionRef} className="py-[7.5rem] max-w-[1200px] mx-auto px-6 bg-[#f8faff]" id="features">
+    <section ref={sectionRef} className="py-[8.75rem] max-w-[1200px] mx-auto px-6 bg-[#f8faff]" id="features">
       {/* Header */}
       <div className="text-center mb-16">
-        <span className="text-[#ff5b35] text-sm font-medium uppercase tracking-widest">
+        <span className="text-[#8896ab] text-xs font-semibold uppercase tracking-widest">
           The problem
         </span>
         <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">

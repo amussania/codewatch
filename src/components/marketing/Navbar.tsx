@@ -54,7 +54,7 @@ export default function Navbar() {
             >
               ◈
             </motion.div>
-            <span className="font-semibold tracking-tight text-foreground">CodeWatch</span>
+            <span className="font-extrabold tracking-tight text-foreground">CODEWATCH</span>
           </Link>
 
           {/* Desktop links */}
@@ -132,12 +132,12 @@ export default function Navbar() {
                 <Link
                   href="/"
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 font-semibold text-foreground"
+                  className="flex items-center gap-2 font-extrabold text-foreground"
                 >
                   <span className="w-6 h-6 rounded-md bg-[var(--cw-coral)] flex items-center justify-center text-[10px] text-white font-bold">
                     ◈
                   </span>
-                  CodeWatch
+                  CODEWATCH
                 </Link>
                 <button
                   onClick={() => setMenuOpen(false)}

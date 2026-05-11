@@ -78,11 +78,11 @@ export default function Specialists() {
   );
 
   return (
-    <section ref={sectionRef} id="features" className="py-[7.5rem] bg-[#f8faff]">
+    <section ref={sectionRef} id="features" className="py-[8.75rem] bg-[#f8faff]">
       <div className="max-w-[1200px] mx-auto px-6">
       {/* Header */}
       <div className="text-center mb-16">
-        <span className="text-[#ff5b35] text-sm font-medium uppercase tracking-widest">
+        <span className="text-[#8896ab] text-xs font-semibold uppercase tracking-widest">
           The specialists
         </span>
         <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">

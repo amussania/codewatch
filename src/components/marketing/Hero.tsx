@@ -81,19 +81,19 @@ export default function Hero() {
           {/* Headline */}
           <h1
             className="font-extrabold tracking-[-0.03em] leading-[1.08] mb-6"
-            style={{ fontSize: "clamp(40px, 5vw, 58px)" }}
+            style={{ fontSize: "clamp(36px, 4.5vw, 58px)" }}
           >
-            <div>
+            <div className="whitespace-nowrap">
               <CharReveal text="The Senior Engineer" delay={0.08} />
             </div>
-            <div className="mt-1">
+            <div className="mt-1 whitespace-nowrap">
               <CharReveal
                 text="Your AI-Generated"
                 delay={0.32}
                 className="text-[#ff5b35]"
               />
             </div>
-            <div className="mt-1">
+            <div className="mt-1 whitespace-nowrap">
               <CharReveal text="Code Has Never Had" delay={0.58} />
             </div>
           </h1>
