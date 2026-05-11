@@ -18,7 +18,7 @@ const doubled = [...ITEMS, ...ITEMS];
 export default function Ticker() {
   return (
     <div
-      className="border-t border-b border-[#e8edf5] overflow-hidden bg-[#f4f6fb] py-3.5"
+      className="border-t border-b border-[#e2e2ee] overflow-hidden bg-[#f2f2f8] py-3.5"
       onMouseEnter={(e) => {
         const track = e.currentTarget.firstElementChild as HTMLElement | null;
         if (track) track.style.animationPlayState = "paused";
@@ -38,8 +38,8 @@ export default function Ticker() {
       >
         {doubled.map((item, i) => (
           <span key={i} className="flex items-center gap-2.5 whitespace-nowrap">
-            <span className="text-[#ff5b35] text-[5px]" style={{ opacity: 0.4 }}>◆</span>
-            <span className="text-[11px] font-semibold tracking-[0.08em] uppercase text-[#8896ab]">
+            <span className="text-[#00b85f] text-[5px]" style={{ opacity: 0.4 }}>◆</span>
+            <span className="text-[11px] font-semibold tracking-[0.08em] uppercase text-[#7070a0]">
               {item}
             </span>
           </span>

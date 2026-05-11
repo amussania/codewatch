@@ -72,16 +72,16 @@ export default function Hero() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0  }}
             transition={{ duration: 0.45 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 mb-7 rounded-full border border-[#ff5b35]/25 bg-[#ff5b35]/8 text-[#ff5b35] text-xs font-semibold"
+            className="inline-flex items-center gap-2 px-3 py-1.5 mb-7 rounded-full border border-[#00b85f]/25 bg-[#00b85f]/8 text-[#00b85f] text-xs font-semibold"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#ff5b35] animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00b85f] animate-pulse" />
             Multi-Specialist AI Code Review · Business-Logic Aware
           </motion.div>
 
           {/* Headline */}
           <h1
-            className="font-extrabold tracking-[-0.03em] leading-[1.08] mb-6"
-            style={{ fontSize: "clamp(36px, 4.5vw, 58px)" }}
+            className="font-heading leading-[.93] mb-6 tracking-[.01em]"
+            style={{ fontSize: "clamp(48px, 6vw, 80px)" }}
           >
             <div className="whitespace-nowrap">
               <CharReveal text="The Senior Engineer" delay={0.08} />
@@ -90,7 +90,7 @@ export default function Hero() {
               <CharReveal
                 text="Your AI-Generated"
                 delay={0.32}
-                className="text-[#ff5b35]"
+                className="text-[#00b85f]"
               />
             </div>
             <div className="mt-1 whitespace-nowrap">
@@ -103,7 +103,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0  }}
             transition={{ duration: 0.55, delay: 0.88 }}
-            className="text-[17px] text-[#3d4f6b] leading-[1.65] mb-9 max-w-[420px]"
+            className="font-serif italic font-light text-[17px] text-[#4a4a6a] leading-[1.65] mb-9 max-w-[420px]"
           >
             AI writes your code fast. CODEWATCH makes sure it&apos;s fit for production.
             Five specialists. Your business rules. The actual fixed code.
@@ -120,7 +120,7 @@ export default function Hero() {
               <Link href="/signup">
                 <Button
                   size="lg"
-                  className="bg-[#ff5b35] hover:bg-[#ff5b35]/90 text-white border-0 px-7 shadow-xl shadow-[#ff5b3533] text-[0.95rem] font-semibold"
+                  className="bg-[#00b85f] hover:bg-[#00b85f]/90 text-white border-0 px-7 shadow-xl shadow-[#00b85f33] text-[0.95rem] font-semibold"
                 >
                   Get 10 Free Reviews →
                 </Button>
@@ -132,7 +132,7 @@ export default function Hero() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-[1.5px] border-[#d1d9e6] text-[#0a0f1e] hover:bg-[#f8faff] px-7 text-[0.95rem]"
+                  className="border-[1.5px] border-[#d1d9e6] text-[#0a0a12] hover:bg-[#f7f7fa] px-7 text-[0.95rem]"
                 >
                   See How It Works
                 </Button>
@@ -147,14 +147,14 @@ export default function Hero() {
             transition={{ delay: 1.35 }}
             className="mt-10"
           >
-            <p className="text-[10px] uppercase tracking-widest text-[#8896ab] mb-4 font-semibold">
+            <p className="text-[10px] uppercase tracking-widest text-[#7070a0] mb-4 font-semibold">
               Why this matters right now
             </p>
             <div className="flex flex-wrap gap-6">
               {STATS.map((s) => (
                 <div key={s.value}>
-                  <span className="text-2xl font-extrabold text-[#0a0f1e] tracking-tight">{s.value}</span>
-                  <p className="text-xs text-[#8896ab] mt-0.5 max-w-[120px] leading-snug">{s.label}</p>
+                  <span className="font-heading text-4xl text-[#00b85f] leading-none">{s.value}</span>
+                  <p className="text-xs text-[#7070a0] mt-0.5 max-w-[120px] leading-snug">{s.label}</p>
                 </div>
               ))}
             </div>

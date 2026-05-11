@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRef, useState, useEffect } from "react";
 import { gsap } from "gsap";
@@ -102,13 +102,15 @@ export default function HowItWorks() {
     <section id="how-it-works" className="py-[8.75rem] max-w-[1200px] mx-auto px-6">
       {/* Header */}
       <div className="text-center mb-20">
-        <span className="text-[#8896ab] text-xs font-semibold uppercase tracking-widest">
-          The process
-        </span>
-        <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
+        <div className="flex items-center justify-center gap-2.5">
+          <span className="block w-5 h-px bg-[#00b85f]" />
+          <span className="text-[#00b85f] text-[10px] font-medium tracking-[.2em] uppercase">The process</span>
+          <span className="block w-5 h-px bg-[#00b85f]" />
+        </div>
+        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
           Paste. Review.
           <br />
-          <span className="text-[#ff5b35]">Ship With Confidence.</span>
+          <span className="text-[#00b85f]">Ship With Confidence.</span>
         </h2>
         <p className="text-muted-foreground mt-4 max-w-md mx-auto">
           Four steps. Under two minutes. No repo connection needed.
@@ -129,7 +131,7 @@ export default function HowItWorks() {
           >
             <defs>
               <linearGradient id="hiw-grad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
-                <stop offset="0%" stopColor="#ff5b35" />
+                <stop offset="0%" stopColor="#00b85f" />
                 <stop offset="100%" stopColor="#1a7be8" />
               </linearGradient>
             </defs>
@@ -137,7 +139,7 @@ export default function HowItWorks() {
             <line
               className="hiw-track"
               x1="0.5" y1="0" x2="0.5" y2={svgHeight}
-              stroke="#e8edf5" strokeOpacity="1" strokeWidth="1"
+              stroke="#e2e2ee" strokeOpacity="1" strokeWidth="1"
             />
             {/* Animated draw line */}
             <line
@@ -154,7 +156,7 @@ export default function HowItWorks() {
           {STEPS.map((step, i) => (
             <div key={i} className="hiw-step relative flex gap-7 md:gap-10 items-start">
               {/* Icon node */}
-              <div className="relative z-10 shrink-0 w-[78px] h-[78px] rounded-2xl border border-[#e8edf5] bg-[var(--cw-surface-elevated)] flex flex-col items-center justify-center shadow-xl">
+              <div className="relative z-10 shrink-0 w-[78px] h-[78px] rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface-elevated)] flex flex-col items-center justify-center shadow-xl">
                 <span className="text-2xl leading-none">{step.icon}</span>
                 <span className="text-[10px] font-mono text-muted-foreground mt-1 opacity-60">{step.num}</span>
               </div>
@@ -163,14 +165,14 @@ export default function HowItWorks() {
               <div className="pt-2 flex-1 relative">
                 <span
                   aria-hidden
-                  className="absolute -top-3 left-0 font-extrabold leading-none select-none pointer-events-none"
-                  style={{ fontSize: "80px", color: "#f0f2f5", zIndex: 0 }}
+                  className="absolute -top-3 left-0 font-heading leading-none select-none pointer-events-none"
+                  style={{ fontSize: "88px", color: "#ededf5", zIndex: 0 }}
                 >
                   {step.num}
                 </span>
                 <h3 className="relative text-xl font-semibold mb-2" style={{ zIndex: 1 }}>{step.title}</h3>
                 <p className="text-muted-foreground leading-relaxed max-w-lg mb-3">{step.desc}</p>
-                <p className="text-xs text-muted-foreground/60 font-mono border-l-2 border-[#ff5b35]/30 pl-3">
+                <p className="text-xs text-muted-foreground/60 font-mono border-l-2 border-[#00b85f]/30 pl-3">
                   {step.detail}
                 </p>
               </div>

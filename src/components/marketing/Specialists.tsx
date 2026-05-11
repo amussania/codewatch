@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
@@ -12,7 +12,7 @@ const SPECIALISTS = [
   {
     icon: "🔒",
     name: "Security Specialist",
-    color: "#ff5b35",
+    color: "#00b85f",
     badge: "ALWAYS ON",
     tags: ["OWASP Top 10", "Auth flows", "Injection", "Secrets", "Timing attacks"],
     desc: "OWASP Top 10, auth flows, injection, timing attacks, exposed secrets, insecure patterns, environment variable leaks. Runs on every single review.",
@@ -78,19 +78,21 @@ export default function Specialists() {
   );
 
   return (
-    <section ref={sectionRef} id="features" className="py-[8.75rem] bg-[#f8faff]">
+    <section ref={sectionRef} id="features" className="py-[8.75rem] bg-[#f7f7fa]">
       <div className="max-w-[1200px] mx-auto px-6">
       {/* Header */}
       <div className="text-center mb-16">
-        <span className="text-[#8896ab] text-xs font-semibold uppercase tracking-widest">
-          The specialists
-        </span>
-        <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
+        <div className="flex items-center justify-center gap-2.5">
+          <span className="block w-5 h-px bg-[#00b85f]" />
+          <span className="text-[#00b85f] text-[10px] font-medium tracking-[.2em] uppercase">The specialists</span>
+          <span className="block w-5 h-px bg-[#00b85f]" />
+        </div>
+        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
           Five specialists.
           <br />
-          <span className="text-[#ff5b35]">One Master Score.</span>
+          <span className="text-[#00b85f]">One Master Score.</span>
         </h2>
-        <p className="text-muted-foreground mt-4 max-w-lg mx-auto leading-relaxed">
+        <p className="font-serif italic font-light text-[#7070a0] text-[17px] mt-4 max-w-lg mx-auto leading-relaxed">
           Three specialists run on every review. Two are optional. All five run in parallel.
           You get one Master Production Score built from all of them.
         </p>
@@ -103,7 +105,7 @@ export default function Specialists() {
             key={s.name}
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 400, damping: 28 }}
-            className="spec-card group relative rounded-2xl border border-[#e8edf5] bg-[var(--cw-surface)] p-6 flex flex-col gap-4 overflow-hidden"
+            className="spec-card group relative rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-6 flex flex-col gap-4 overflow-hidden"
           >
             {/* Corner glow on hover */}
             <div
@@ -147,7 +149,7 @@ export default function Specialists() {
             <p className="text-sm text-muted-foreground leading-relaxed flex-1">{s.desc}</p>
 
             {/* Example catch */}
-            <div className="rounded-lg bg-[#f8faff] border border-[#e8edf5] px-3 py-2.5">
+            <div className="rounded-lg bg-[#f7f7fa] border border-[#e2e2ee] px-3 py-2.5">
               <p className="text-[10px] uppercase tracking-wider font-medium mb-1" style={{ color: s.color }}>
                 {s.example.label}
               </p>

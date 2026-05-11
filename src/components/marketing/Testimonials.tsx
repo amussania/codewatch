@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRef, useState } from "react";
 import { motion, useMotionValue, useAnimation, type PanInfo } from "framer-motion";
@@ -10,7 +10,7 @@ const TESTIMONIALS = [
     role: "Senior Engineer",
     company: "Fintech startup",
     avatar: "RM",
-    color: "#ff5b35",
+    color: "#00b85f",
     score: { before: 58, after: 91 },
   },
   {
@@ -71,19 +71,21 @@ export default function Testimonials() {
   }
 
   return (
-    <section className="py-[8.75rem] overflow-hidden bg-[#f8faff]" id="testimonials">
+    <section className="py-[8.75rem] overflow-hidden bg-[#f7f7fa]" id="testimonials">
       <div className="max-w-[1200px] mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-14">
-          <span className="text-[#8896ab] text-xs font-semibold uppercase tracking-widest">
-            Testimonials
-          </span>
-          <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
+          <div className="flex items-center justify-center gap-2.5">
+          <span className="block w-5 h-px bg-[#00b85f]" />
+          <span className="text-[#00b85f] text-[10px] font-medium tracking-[.2em] uppercase">Testimonials</span>
+          <span className="block w-5 h-px bg-[#00b85f]" />
+        </div>
+          <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
             What the market
             <br />
-            <span className="text-[#ff5b35]">actually needed.</span>
+            <span className="text-[#00b85f]">actually needed.</span>
           </h2>
-          <p className="text-muted-foreground mt-4 max-w-sm mx-auto">
+          <p className="font-serif italic font-light text-[#7070a0] text-[17px] mt-4 max-w-sm mx-auto">
             Developers, founders, and agencies who review code for a living.
           </p>
         </div>
@@ -107,7 +109,7 @@ export default function Testimonials() {
               <motion.div
                 key={i}
                 style={{ width: CARD_W, minWidth: CARD_W }}
-                className="rounded-2xl border border-[#e8edf5] bg-[var(--cw-surface)] p-6 flex flex-col gap-5"
+                className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-6 flex flex-col gap-5"
               >
                 {/* Stars */}
                 <div className="flex gap-0.5">
@@ -117,19 +119,19 @@ export default function Testimonials() {
                 </div>
 
                 {/* Quote */}
-                <p className="text-sm text-foreground/80 leading-relaxed flex-1">
+                <p className="font-serif italic font-light text-sm text-foreground/80 leading-relaxed flex-1">
                   &ldquo;{t.quote}&rdquo;
                 </p>
 
                 {/* Score delta */}
-                <div className="flex items-center gap-2 py-2.5 px-3 rounded-lg bg-[#f8faff] border border-[#e8edf5]">
+                <div className="flex items-center gap-2 py-2.5 px-3 rounded-lg bg-[#f7f7fa] border border-[#e2e2ee]">
                   <div className="text-center">
                     <div className="text-xs text-muted-foreground mb-0.5">Before</div>
                     <div className="text-lg font-bold text-muted-foreground">{t.score.before}</div>
                   </div>
-                  <div className="flex-1 h-px bg-[#f0f3f9] relative">
+                  <div className="flex-1 h-px bg-[#ededf5] relative">
                     <div
-                      className="absolute top-1/2 -translate-y-1/2 right-0 text-[#ff5b35] text-xs font-bold"
+                      className="absolute top-1/2 -translate-y-1/2 right-0 text-[#00b85f] text-xs font-bold"
                       style={{ color: t.color }}
                     >
                       +{t.score.after - t.score.before}
@@ -142,7 +144,7 @@ export default function Testimonials() {
                 </div>
 
                 {/* Author */}
-                <div className="flex items-center gap-3 pt-1 border-t border-[#e8edf5]">
+                <div className="flex items-center gap-3 pt-1 border-t border-[#e2e2ee]">
                   <div
                     className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
                     style={{ backgroundColor: t.color }}
@@ -172,7 +174,7 @@ export default function Testimonials() {
             >
               <motion.div
                 animate={{ width: i === currentIdx ? 20 : 8, opacity: i === currentIdx ? 1 : 0.35 }}
-                className="h-1.5 rounded-full bg-[#ff5b35]"
+                className="h-1.5 rounded-full bg-[#00b85f]"
               />
             </button>
           ))}

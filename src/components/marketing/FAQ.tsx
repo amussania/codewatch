@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -50,7 +50,7 @@ function FAQItem({ faq, index, isOpen, onToggle }: {
   onToggle: () => void;
 }) {
   return (
-    <div className="border-b border-[#e8edf5] last:border-0">
+    <div className="border-b border-[#e2e2ee] last:border-0">
       <button
         onClick={onToggle}
         aria-expanded={isOpen}
@@ -62,7 +62,7 @@ function FAQItem({ faq, index, isOpen, onToggle }: {
         <motion.div
           animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ type: "spring", stiffness: 420, damping: 26 }}
-          className="shrink-0 mt-0.5 w-5 h-5 rounded-full border border-[#e8edf5] flex items-center justify-center text-muted-foreground group-hover:border-[#ff5b35]/40 group-hover:text-[#ff5b35] transition-colors"
+          className="shrink-0 mt-0.5 w-5 h-5 rounded-full border border-[#e2e2ee] flex items-center justify-center text-muted-foreground group-hover:border-[#00b85f]/40 group-hover:text-[#00b85f] transition-colors"
         >
           <span className="text-xs font-bold leading-none">+</span>
         </motion.div>
@@ -111,26 +111,28 @@ export default function FAQ() {
   );
 
   return (
-    <section ref={sectionRef} id="faq" className="py-[8.75rem] bg-[#f8faff]">
+    <section ref={sectionRef} id="faq" className="py-[8.75rem] bg-[#f7f7fa]">
       <div className="max-w-3xl mx-auto px-6">
       {/* Header */}
       <div className="text-center mb-14">
-        <span className="text-[#8896ab] text-xs font-semibold uppercase tracking-widest">
-          FAQ
-        </span>
-        <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
+        <div className="flex items-center justify-center gap-2.5">
+          <span className="block w-5 h-px bg-[#00b85f]" />
+          <span className="text-[#00b85f] text-[10px] font-medium tracking-[.2em] uppercase">FAQ</span>
+          <span className="block w-5 h-px bg-[#00b85f]" />
+        </div>
+        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
           Common questions
         </h2>
-        <p className="text-muted-foreground mt-4 max-w-sm mx-auto">
+        <p className="font-serif italic font-light text-[#7070a0] text-[17px] mt-4 max-w-sm mx-auto">
           Still have questions?{" "}
-          <a href="mailto:hello@codewatch.dev" className="text-[#ff5b35] hover:underline">
+          <a href="mailto:hello@codewatch.dev" className="text-[#00b85f] hover:underline">
             Email us
           </a>
           {" "}— we reply the same business day.
         </p>
       </div>
 
-      <div className="rounded-2xl border border-[#e8edf5] bg-[var(--cw-surface)] px-6 divide-y-0">
+      <div className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] px-6 divide-y-0">
         {FAQS.map((faq, i) => (
           <div key={i} className="faq-item">
             <FAQItem

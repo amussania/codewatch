@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRef } from "react";
 import { gsap } from "gsap";
@@ -53,31 +53,33 @@ export default function Comparison() {
   );
 
   return (
-    <section ref={sectionRef} className="py-[8.75rem] bg-[#f8faff]">
+    <section ref={sectionRef} className="py-[8.75rem] bg-[#f7f7fa]">
       <div className="max-w-[1200px] mx-auto px-6">
       <div className="text-center mb-16">
-        <span className="text-[#8896ab] text-xs font-semibold uppercase tracking-widest">
-          Comparison
-        </span>
-        <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
+        <div className="flex items-center justify-center gap-2.5">
+          <span className="block w-5 h-px bg-[#00b85f]" />
+          <span className="text-[#00b85f] text-[10px] font-medium tracking-[.2em] uppercase">Comparison</span>
+          <span className="block w-5 h-px bg-[#00b85f]" />
+        </div>
+        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
           How we stack up
           <br />
-          <span className="text-[#ff5b35]">against the market.</span>
+          <span className="text-[#00b85f]">against the market.</span>
         </h2>
-        <p className="text-muted-foreground mt-5 max-w-lg mx-auto leading-relaxed">
+        <p className="font-serif italic font-light text-[#7070a0] text-[17px] mt-5 max-w-lg mx-auto leading-relaxed">
           Every competitor does code review. Not one of them does what the market actually needs in 2026.
         </p>
       </div>
 
-      <div className="rounded-2xl border border-[#e8edf5] overflow-hidden">
+      <div className="rounded-2xl border border-[#e2e2ee] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-sm min-w-[640px]">
             <thead>
-              <tr className="border-b border-[#e8edf5] bg-[#f4f6fb]">
+              <tr className="border-b border-[#e2e2ee] bg-[#f2f2f8]">
                 <th className="text-left px-5 py-4 text-[11px] font-semibold text-muted-foreground uppercase tracking-widest w-[240px]">
                   Feature
                 </th>
-                <th className="px-5 py-4 text-center text-[11px] font-semibold text-[#ff5b35] uppercase tracking-widest">
+                <th className="px-5 py-4 text-center text-[11px] font-semibold text-[#00b85f] uppercase tracking-widest">
                   CODEWATCH
                 </th>
                 {COMPETITORS.map((c) => (
@@ -94,17 +96,17 @@ export default function Comparison() {
               {ROWS.map((row, i) => (
                 <tr
                   key={i}
-                  className="comp-row border-b border-[#e8edf5] last:border-0 hover:bg-[#f4f6fb] transition-colors"
+                  className="comp-row border-b border-[#e2e2ee] last:border-0 hover:bg-[#f2f2f8] transition-colors"
                 >
                   <td className="px-5 py-4 text-foreground/80">
                     {row.label}
                     {row.sub && (
-                      <span className="ml-2 inline-block text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#ff5b35]/10 text-[#ff5b35] border border-[#ff5b35]/20 tracking-wider align-middle">
+                      <span className="ml-2 inline-block text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#00b85f]/10 text-[#00b85f] border border-[#00b85f]/20 tracking-wider align-middle">
                         {row.sub}
                       </span>
                     )}
                   </td>
-                  <td className="px-5 py-4 text-center bg-[#ff5b35]/[0.025]">
+                  <td className="px-5 py-4 text-center bg-[#00b85f]/[0.025]">
                     <CellContent val={row.cw} isCW />
                   </td>
                   <td className="px-5 py-4 text-center"><CellContent val={row.cr} /></td>

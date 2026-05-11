@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { motion, useSpring } from "framer-motion";
 import Link from "next/link";
@@ -28,14 +28,14 @@ export default function FinalCTA() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className="relative max-w-3xl mx-auto rounded-3xl border border-[#e8edf5] bg-[#f8faff] px-8 py-16 text-center overflow-hidden"
+        className="relative max-w-3xl mx-auto rounded-3xl border border-[#e2e2ee] bg-[#f7f7fa] px-8 py-16 text-center overflow-hidden"
         style={{ boxShadow: "0 2px 40px rgba(0,0,0,0.06)" }}
       >
         {/* Background glows */}
         <motion.div
           animate={{ opacity: [0.08, 0.18, 0.08], scale: [1, 1.06, 1] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-16 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full bg-[#ff5b35] opacity-[0.08] blur-3xl pointer-events-none"
+          className="absolute -top-16 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full bg-[#00b85f] opacity-[0.08] blur-3xl pointer-events-none"
         />
         <motion.div
           animate={{ opacity: [0.05, 0.12, 0.05], scale: [1.04, 1, 1.04] }}
@@ -44,12 +44,12 @@ export default function FinalCTA() {
         />
 
         <div className="relative">
-          <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mb-4">
+          <h2 className="font-heading text-[clamp(52px,8vw,96px)] leading-[.93] tracking-[.02em] mb-4">
             Ship Code You Can
             <br />
-            <span className="text-[#ff5b35]">Stand Behind.</span>
+            <span className="text-[#00b85f]">Stand Behind.</span>
           </h2>
-          <p className="text-muted-foreground max-w-md mx-auto mb-8 leading-relaxed">
+          <p className="font-serif italic font-light text-[#7070a0] max-w-md mx-auto mb-8 leading-relaxed text-lg">
             Ten free reviews. No credit card. Your actual code, your actual vulnerabilities,
             your actual fix — in under two minutes.
           </p>
@@ -59,7 +59,7 @@ export default function FinalCTA() {
               <Link href="/signup">
                 <Button
                   size="lg"
-                  className="bg-[#ff5b35] hover:bg-[#ff5b35]/90 text-white border-0 px-8 shadow-xl shadow-[#ff5b3533] text-base"
+                  className="bg-[#00b85f] hover:bg-[#00b85f]/90 text-white border-0 px-8 shadow-xl shadow-[#00b85f33] text-base"
                 >
                   Get 10 Free Reviews →
                 </Button>

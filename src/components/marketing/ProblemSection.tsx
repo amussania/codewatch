@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRef } from "react";
 import { gsap } from "gsap";
@@ -14,7 +14,7 @@ const PROBLEMS = [
     statLabel: "more vulnerabilities in AI-generated code",
     title: "Security Gaps Nobody Catches",
     desc: "Every other tool reviews syntax. AI-generated code has 2.74× more security vulnerabilities than human-written code. They all look syntactically correct. Most tools will pass them.",
-    color: "#ff5b35",
+    color: "#00b85f",
   },
   {
     icon: "💸",
@@ -75,18 +75,20 @@ export default function ProblemSection() {
   );
 
   return (
-    <section ref={sectionRef} className="py-[8.75rem] max-w-[1200px] mx-auto px-6 bg-[#f8faff]" id="features">
+    <section ref={sectionRef} className="py-[8.75rem] max-w-[1200px] mx-auto px-6 bg-[#f7f7fa]" id="features">
       {/* Header */}
       <div className="text-center mb-16">
-        <span className="text-[#8896ab] text-xs font-semibold uppercase tracking-widest">
-          The problem
-        </span>
-        <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
+        <div className="flex items-center justify-center gap-2.5">
+          <span className="block w-5 h-px bg-[#00b85f]" />
+          <span className="text-[#00b85f] text-[10px] font-medium tracking-[.2em] uppercase">The problem</span>
+          <span className="block w-5 h-px bg-[#00b85f]" />
+        </div>
+        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
           AI writes the code.
           <br />
-          <span className="text-[#ff5b35]">Who reviews it?</span>
+          <span className="text-[#00b85f]">Who reviews it?</span>
         </h2>
-        <p className="text-muted-foreground mt-5 max-w-lg mx-auto leading-relaxed">
+        <p className="font-serif italic font-light text-[#7070a0] text-[17px] mt-5 max-w-lg mx-auto leading-relaxed">
           41% of all code is now AI-generated. The tools built to review human code were not built
           for this. They pass what they were not designed to catch.
         </p>
@@ -97,7 +99,7 @@ export default function ProblemSection() {
         {PROBLEMS.map((p) => (
           <div
             key={p.title}
-            className="problem-card group relative rounded-2xl border border-[#e8edf5] bg-white p-7 overflow-hidden" style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.06)" }}
+            className="problem-card group relative rounded-2xl border border-[#e2e2ee] bg-white p-7 overflow-hidden" style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.06)" }}
           >
             {/* Subtle corner glow */}
             <div
@@ -108,7 +110,7 @@ export default function ProblemSection() {
             <div className="text-3xl mb-5">{p.icon}</div>
 
             <div className="mb-5">
-              <span className="text-3xl font-bold" style={{ color: p.color }}>
+              <span className="font-heading text-[52px] leading-none" style={{ color: "#00b85f" }}>
                 {p.stat}
               </span>
               <span className="text-xs text-muted-foreground ml-2">{p.statLabel}</span>
@@ -121,10 +123,10 @@ export default function ProblemSection() {
       </div>
 
       {/* Stats bar */}
-      <div className="problem-stats-bar rounded-2xl border border-[#e8edf5] bg-[var(--cw-surface)] px-8 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 divide-x-0 md:divide-x divide-[#e8edf5]">
+      <div className="problem-stats-bar rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] px-8 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 divide-x-0 md:divide-x divide-[#e2e2ee]">
         {STATS.map((s) => (
           <div key={s.label} className="problem-stat text-center">
-            <div className="text-3xl font-bold text-foreground">{s.value}</div>
+            <div className="font-heading text-[44px] leading-none text-[#00b85f]">{s.value}</div>
             <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
           </div>
         ))}

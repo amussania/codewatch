@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -42,7 +42,7 @@ export default function Navbar() {
   return (
     <>
       {/* ── Header bar ── */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#e8edf5]">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#e2e2ee]">
         <nav className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0">
@@ -54,7 +54,7 @@ export default function Navbar() {
             >
               ◈
             </motion.div>
-            <span className="font-extrabold tracking-tight text-foreground">CODEWATCH</span>
+            <span className="font-heading text-xl tracking-[.08em] text-foreground">CODEWATCH</span>
           </Link>
 
           {/* Desktop links */}
@@ -96,7 +96,7 @@ export default function Navbar() {
             onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
-            className="md:hidden p-2 -mr-2 rounded-lg text-foreground hover:bg-[#f0f3f9] transition-colors"
+            className="md:hidden p-2 -mr-2 rounded-lg text-foreground hover:bg-[#ededf5] transition-colors"
           >
             <HamburgerIcon open={menuOpen} />
           </button>
@@ -125,14 +125,14 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 320, damping: 32, mass: 0.9 }}
-              className="fixed top-0 right-0 bottom-0 z-[60] w-72 flex flex-col bg-[var(--cw-surface)] border-l border-[#e8edf5] md:hidden"
+              className="fixed top-0 right-0 bottom-0 z-[60] w-72 flex flex-col bg-[var(--cw-surface)] border-l border-[#e2e2ee] md:hidden"
             >
               {/* Drawer header */}
-              <div className="flex items-center justify-between px-5 h-16 border-b border-[#e8edf5] shrink-0">
+              <div className="flex items-center justify-between px-5 h-16 border-b border-[#e2e2ee] shrink-0">
                 <Link
                   href="/"
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 font-extrabold text-foreground"
+                  className="flex items-center gap-2 font-heading text-xl tracking-[.08em] text-foreground"
                 >
                   <span className="w-6 h-6 rounded-md bg-[var(--cw-coral)] flex items-center justify-center text-[10px] text-white font-bold">
                     ◈
@@ -142,7 +142,7 @@ export default function Navbar() {
                 <button
                   onClick={() => setMenuOpen(false)}
                   aria-label="Close menu"
-                  className="p-1.5 rounded-lg text-foreground hover:bg-[#f0f3f9] transition-colors"
+                  className="p-1.5 rounded-lg text-foreground hover:bg-[#ededf5] transition-colors"
                 >
                   <HamburgerIcon open={true} />
                 </button>
@@ -160,7 +160,7 @@ export default function Navbar() {
                     <Link
                       href={href}
                       onClick={() => setMenuOpen(false)}
-                      className="flex items-center px-3 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-[#f4f6fb] transition-colors"
+                      className="flex items-center px-3 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-[#f2f2f8] transition-colors"
                     >
                       {label}
                     </Link>
@@ -173,12 +173,12 @@ export default function Navbar() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.22, duration: 0.25 }}
-                className="p-5 border-t border-[#e8edf5] flex flex-col gap-2.5 shrink-0"
+                className="p-5 border-t border-[#e2e2ee] flex flex-col gap-2.5 shrink-0"
               >
                 <Link href="/login" onClick={() => setMenuOpen(false)}>
                   <Button
                     variant="outline"
-                    className="w-full border-[#e8edf5] text-foreground hover:bg-[#f4f6fb]"
+                    className="w-full border-[#e2e2ee] text-foreground hover:bg-[#f2f2f8]"
                   >
                     Sign in
                   </Button>

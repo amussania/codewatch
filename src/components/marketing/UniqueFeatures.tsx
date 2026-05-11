@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRef } from "react";
 import { gsap } from "gsap";
@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 const FEATURES = [
   {
     pill: "UNIQUE",
-    pillColor: "#ff5b35",
+    pillColor: "#00b85f",
     name: "Business Logic Context",
     body: "Every other tool is domain-blind. They review code in a vacuum. They can tell you the code is syntactically valid. They cannot tell you it is logically wrong for your business.",
     quote:
@@ -20,7 +20,7 @@ const FEATURES = [
   },
   {
     pill: "UNIQUE",
-    pillColor: "#ff5b35",
+    pillColor: "#00b85f",
     name: "AI Origin Probability",
     body: "41% of global code is now AI-generated. App stores are rejecting vibe-coded apps. Enterprise teams are setting quality gates. CODEWATCH scores every review with a 0–100% probability that the submitted code was AI-generated, based on structural tells: overly symmetric error handling, missing edge cases, no evidence of iteration, generic naming patterns.",
     extra:
@@ -75,27 +75,29 @@ export default function UniqueFeatures() {
   return (
     <section ref={sectionRef} className="py-[8.75rem] max-w-[1200px] mx-auto px-6">
       <div className="text-center mb-16">
-        <span className="text-[#8896ab] text-xs font-semibold uppercase tracking-widest">
-          What Nobody Else Does
-        </span>
-        <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
+        <div className="flex items-center justify-center gap-2.5">
+          <span className="block w-5 h-px bg-[#00b85f]" />
+          <span className="text-[#00b85f] text-[10px] font-medium tracking-[.2em] uppercase">What Nobody Else Does</span>
+          <span className="block w-5 h-px bg-[#00b85f]" />
+        </div>
+        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
           The gaps every
           <br />
-          <span className="text-[#ff5b35]">competitor leaves open.</span>
+          <span className="text-[#00b85f]">competitor leaves open.</span>
         </h2>
-        <p className="text-muted-foreground mt-5 max-w-lg mx-auto leading-relaxed">
+        <p className="font-serif italic font-light text-[#7070a0] text-[17px] mt-5 max-w-lg mx-auto leading-relaxed">
           Every competitor catches syntax errors and common patterns. These capabilities exist nowhere else in the market.
         </p>
       </div>
 
-      <div className="flex flex-col border border-[#e8edf5] rounded-2xl overflow-hidden divide-y divide-[#e8edf5]">
+      <div className="flex flex-col border border-[#e2e2ee] rounded-2xl overflow-hidden divide-y divide-[#e2e2ee]">
         {FEATURES.map((f, i) => (
           <div
             key={i}
             className="uf-item grid md:grid-cols-[280px_1fr] bg-[var(--cw-surface)] hover:bg-[var(--cw-surface-elevated)] transition-colors duration-200"
           >
             {/* Left: pill + title */}
-            <div className="p-8 md:p-10 border-b md:border-b-0 md:border-r border-[#e8edf5] flex flex-col justify-center">
+            <div className="p-8 md:p-10 border-b md:border-b-0 md:border-r border-[#e2e2ee] flex flex-col justify-center">
               <span
                 className="inline-block text-[10px] font-bold px-2.5 py-1 rounded mb-4 tracking-[0.06em] w-fit border"
                 style={{
@@ -118,7 +120,7 @@ export default function UniqueFeatures() {
                 {f.body.slice(f.body.indexOf(".") + 2)}
               </p>
               {f.quote && (
-                <blockquote className="mt-4 pl-4 border-l-2 border-[#ff5b35]/35 text-sm text-foreground/50 italic leading-relaxed">
+                <blockquote className="mt-4 pl-4 border-l-2 border-[#00b85f]/35 text-sm text-foreground/50 italic leading-relaxed">
                   {f.quote}
                 </blockquote>
               )}

@@ -9,7 +9,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --font-serif: var(--font-serif);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -47,59 +48,62 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
   /* CodeWatch tokens */
-  --color-cw-coral: var(--cw-coral);
+  --color-cw-green: var(--cw-green);
   --color-cw-blue: var(--cw-blue);
   --color-cw-surface: var(--cw-surface);
   --color-cw-surface-elevated: var(--cw-surface-elevated);
 }
 
-/* CodeWatch light palette */
+/* CodeWatch light palette — Bebas Neue / DM Mono / Fraunces design system */
 :root {
   --background: #ffffff;
-  --foreground: #0a0f1e;
-  --card: #ffffff;
-  --card-foreground: #0a0f1e;
+  --foreground: #0a0a12;
+  --card: #f7f7fa;
+  --card-foreground: #0a0a12;
   --popover: #ffffff;
-  --popover-foreground: #0a0f1e;
-  --primary: #ff5b35;
+  --popover-foreground: #0a0a12;
+  --primary: #00b85f;
   --primary-foreground: #ffffff;
-  --secondary: #f8faff;
-  --secondary-foreground: #0a0f1e;
-  --muted: #f8faff;
-  --muted-foreground: #8896ab;
-  --accent: #f0f3f9;
-  --accent-foreground: #0a0f1e;
-  --destructive: #ff5b35;
-  --border: #e8edf5;
-  --input: #e8edf5;
-  --ring: #ff5b35;
+  --secondary: #f7f7fa;
+  --secondary-foreground: #0a0a12;
+  --muted: #f7f7fa;
+  --muted-foreground: #7070a0;
+  --accent: #ededf5;
+  --accent-foreground: #0a0a12;
+  --destructive: #ef4444;
+  --border: #e2e2ee;
+  --input: #e2e2ee;
+  --ring: #00b85f;
   --radius: 0.625rem;
 
-  /* Sidebar (dashboard) — keep slightly elevated */
-  --sidebar: #f8faff;
-  --sidebar-foreground: #0a0f1e;
-  --sidebar-primary: #ff5b35;
+  /* Sidebar (dashboard) */
+  --sidebar: #f7f7fa;
+  --sidebar-foreground: #0a0a12;
+  --sidebar-primary: #00b85f;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f0f3f9;
-  --sidebar-accent-foreground: #0a0f1e;
-  --sidebar-border: #e8edf5;
-  --sidebar-ring: #ff5b35;
+  --sidebar-accent: #ededf5;
+  --sidebar-accent-foreground: #0a0a12;
+  --sidebar-border: #e2e2ee;
+  --sidebar-ring: #00b85f;
 
   /* Charts */
-  --chart-1: #ff5b35;
+  --chart-1: #00b85f;
   --chart-2: #1a7be8;
   --chart-3: #00c4a0;
   --chart-4: #f5a623;
   --chart-5: #9b59b6;
 
   /* CodeWatch design tokens */
-  --cw-coral: #ff5b35;
+  --cw-green: #00b85f;
   --cw-blue: #1a7be8;
-  --cw-coral-glow: rgba(255, 91, 53, 0.22);
+  --cw-green-glow: rgba(0, 184, 95, 0.20);
   --cw-blue-glow: rgba(26, 123, 232, 0.22);
+  /* Keep --cw-coral pointing to green so var(--cw-coral) usages still work */
+  --cw-coral: #00b85f;
+  --cw-coral-glow: rgba(0, 184, 95, 0.20);
   --cw-surface: #ffffff;
-  --cw-surface-elevated: #f8faff;
-  --cw-card-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  --cw-surface-elevated: #f7f7fa;
+  --cw-card-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
 }
 
 @layer base {
@@ -111,16 +115,10 @@
   }
   html {
     @apply font-sans;
-    font-feature-settings: "cv11", "ss01";
   }
   @media (pointer: fine) {
     * { cursor: none !important; }
   }
-}
-
-/* Card shadow utility */
-.cw-card {
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
 }
 
 /* Ticker scroll */
@@ -139,8 +137,8 @@
 }
 
 /* Glow utilities */
-.glow-coral {
-  box-shadow: 0 0 32px rgba(255, 91, 53, 0.3), 0 0 64px rgba(255, 91, 53, 0.12);
+.glow-green {
+  box-shadow: 0 0 32px rgba(0, 184, 95, 0.25), 0 0 64px rgba(0, 184, 95, 0.10);
 }
 .glow-blue {
   box-shadow: 0 0 32px rgba(26, 123, 232, 0.25), 0 0 64px rgba(26, 123, 232, 0.10);

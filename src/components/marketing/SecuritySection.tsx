@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRef } from "react";
 import { gsap } from "gsap";
@@ -12,7 +12,7 @@ const PILLARS = [
     icon: "🔒",
     title: "Your code never touches our disk",
     desc: "Every review runs in a sandboxed, ephemeral process. When the review ends, the process is destroyed. There is no database write. There is no file system write. Zero persistence by design.",
-    color: "#ff5b35",
+    color: "#00b85f",
   },
   {
     icon: "🔑",
@@ -67,15 +67,17 @@ export default function SecuritySection() {
     <section ref={sectionRef} id="security" className="py-[8.75rem] max-w-[1200px] mx-auto px-6">
       {/* Header */}
       <div className="text-center mb-16">
-        <span className="text-[#8896ab] text-xs font-semibold uppercase tracking-widest">
-          Security
-        </span>
-        <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
+        <div className="flex items-center justify-center gap-2.5">
+          <span className="block w-5 h-px bg-[#00b85f]" />
+          <span className="text-[#00b85f] text-[10px] font-medium tracking-[.2em] uppercase">Security</span>
+          <span className="block w-5 h-px bg-[#00b85f]" />
+        </div>
+        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
           Your code is never stored.
           <br />
-          <span className="text-[#ff5b35]">By design.</span>
+          <span className="text-[#00b85f]">By design.</span>
         </h2>
-        <p className="text-muted-foreground mt-4 max-w-lg mx-auto leading-relaxed">
+        <p className="font-serif italic font-light text-[#7070a0] text-[17px] mt-4 max-w-lg mx-auto leading-relaxed">
           We built CODEWATCH for teams reviewing proprietary, production code.
           Security is not a feature. It is the architecture.
         </p>
@@ -88,7 +90,7 @@ export default function SecuritySection() {
           {PILLARS.map((p) => (
             <div
               key={p.title}
-              className="sec-pillar rounded-xl border border-[#e8edf5] bg-[var(--cw-surface)] p-5 flex gap-4"
+              className="sec-pillar rounded-xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-5 flex gap-4"
             >
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 mt-0.5"
@@ -105,7 +107,7 @@ export default function SecuritySection() {
         </div>
 
         {/* Right: data flow diagram */}
-        <div className="rounded-2xl border border-[#e8edf5] bg-[var(--cw-surface)] p-8 flex flex-col justify-center">
+        <div className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-8 flex flex-col justify-center">
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/50 mb-8 text-center">
             What happens to your code
           </p>
@@ -113,7 +115,7 @@ export default function SecuritySection() {
             {FLOW_STEPS.map((step, i) => (
               <div key={step.label}>
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#f8faff] border border-[#e8edf5] flex items-center justify-center text-lg shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#f7f7fa] border border-[#e2e2ee] flex items-center justify-center text-lg shrink-0">
                     {step.icon}
                   </div>
                   <div className="flex-1">
@@ -127,13 +129,13 @@ export default function SecuritySection() {
                   )}
                 </div>
                 {i < FLOW_STEPS.length - 1 && (
-                  <div className="ml-5 w-px h-5 bg-[#f0f3f9]" />
+                  <div className="ml-5 w-px h-5 bg-[#ededf5]" />
                 )}
               </div>
             ))}
           </div>
 
-          <div className="mt-8 rounded-xl bg-[#ff5b35]/[0.06] border border-[#ff5b35]/15 p-4 text-center">
+          <div className="mt-8 rounded-xl bg-[#00b85f]/[0.06] border border-[#00b85f]/15 p-4 text-center">
             <p className="text-xs text-muted-foreground leading-relaxed">
               <span className="text-foreground/80 font-medium">Never used for AI training.</span>{" "}
               Model-level opt-outs are enforced at the API contract level with every provider we use.
