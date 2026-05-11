@@ -11,51 +11,48 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 const SPECIALISTS = [
   {
     icon: "🔒",
-    name: "Security Auditor",
+    name: "Security Specialist",
     color: "#ff6b6b",
-    tags: ["OWASP Top 10", "Auth flows", "Injection", "Secrets"],
-    desc: "Finds timing attacks, SQL injection, exposed secrets, insecure deserialization, and broken authentication — before they reach production.",
-    example: { label: "Recent catch", text: "JWT secret exposed in client bundle via environment variable leak" },
+    badge: "ALWAYS ON",
+    tags: ["OWASP Top 10", "Auth flows", "Injection", "Secrets", "Timing attacks"],
+    desc: "OWASP Top 10, auth flows, injection, timing attacks, exposed secrets, insecure patterns, environment variable leaks. Runs on every single review.",
+    example: { label: "Recent catch", text: "SQL injection vector in dynamic query builder — passed every existing test" },
   },
   {
     icon: "⚡",
-    name: "Performance Engineer",
-    color: "#fbbf24",
-    tags: ["N+1 queries", "Memory leaks", "Async", "Caching"],
-    desc: "Detects O(n²) loops, missing database indexes, unbounded memory growth, and blocking operations in async code.",
-    example: { label: "Recent catch", text: "O(n²) nested loop in paginated API endpoint serving 50k req/min" },
+    name: "Reliability Engineer",
+    color: "#4da3ff",
+    badge: "ALWAYS ON",
+    tags: ["Null guards", "Timeouts", "Error propagation", "Input validation"],
+    desc: "Null guards, timeout enforcement, error propagation, retry logic, circuit breakers, input validation at every entry point. The edge cases that fail at 2AM.",
+    example: { label: "Recent catch", text: "No timeout on external API call — would have hung indefinitely under load" },
   },
   {
-    icon: "🏗️",
-    name: "Architecture Reviewer",
-    color: "#4a9fff",
-    tags: ["Coupling", "SOLID", "Patterns", "Scalability"],
-    desc: "Reviews separation of concerns, dependency inversion, scalability patterns, and data flow between layers.",
-    example: { label: "Recent catch", text: "Business logic leaking into HTTP layer — suggested service + repository pattern" },
+    icon: "📊",
+    name: "Business Logic Reviewer",
+    color: "#00c4a0",
+    badge: "ALWAYS ON",
+    tags: ["Your rules", "Pricing logic", "Permissions", "State machines"],
+    desc: "Validates code against your described rules. Price calculations, fee structures, user permissions, state transitions. No other tool does this.",
+    example: { label: "Recent catch", text: "GST rounding incorrect for Indian customer — was under-charging by ₹2 per transaction" },
+  },
+  {
+    icon: "⚙️",
+    name: "Performance Engineer",
+    color: "#fbbf24",
+    badge: "OPTIONAL",
+    tags: ["N+1 queries", "O(n²) patterns", "Memory leaks", "Async blocking"],
+    desc: "N+1 query detection, O(n²) pattern recognition, memory leak identification, async blocking detection, database index recommendations.",
+    example: { label: "Recent catch", text: "O(n²) nested loop in paginated API endpoint serving 50k requests/min" },
   },
   {
     icon: "✨",
-    name: "Quality Analyst",
+    name: "Quality Gatekeeper",
     color: "#c4b5fd",
-    tags: ["Complexity", "Naming", "Dead code", "Coverage"],
-    desc: "Enforces naming conventions, flags functions with cyclomatic complexity above threshold, removes dead code, and identifies untestable constructs.",
-    example: { label: "Recent catch", text: "Cyclomatic complexity of 23 in auth middleware — refactor to state machine suggested" },
-  },
-  {
-    icon: "🔌",
-    name: "API Designer",
-    color: "#86efac",
-    tags: ["REST", "GraphQL", "Versioning", "Contracts"],
-    desc: "Reviews HTTP status code usage, REST resource naming, pagination design, API versioning strategy, and breaking-change risk.",
-    example: { label: "Recent catch", text: "404 vs 403 distinction missing — leaks existence of private user resources" },
-  },
-  {
-    icon: "📝",
-    name: "Tech Writer AI",
-    color: "#fda4af",
-    tags: ["JSDoc", "README", "OpenAPI", "Changelogs"],
-    desc: "Auto-generates JSDoc comments, OpenAPI spec from route handlers, README sections, and inline explanations from your code's context.",
-    example: { label: "Recent output", text: "Generated full OpenAPI 3.1 spec from 47 Express route handlers in 4 seconds" },
+    badge: "OPTIONAL",
+    tags: ["Complexity", "Naming", "Dead code", "Test gaps"],
+    desc: "Cyclomatic complexity, naming conventions, dead code elimination, test coverage gaps, function length thresholds. Enforces consistency at scale.",
+    example: { label: "Recent catch", text: "Cyclomatic complexity of 31 in payment middleware — refactored to state machine" },
   },
 ];
 
@@ -88,16 +85,18 @@ export default function Specialists() {
           The specialists
         </span>
         <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
-          Six AI experts. One review.
+          Five specialists.
+          <br />
+          <span className="text-[#ff6b6b]">One Master Score.</span>
         </h2>
         <p className="text-muted-foreground mt-4 max-w-lg mx-auto leading-relaxed">
-          Each specialist is trained for a specific domain. Run them individually for a
-          targeted review, or all at once for a comprehensive audit.
+          Three specialists run on every review. Two are optional. All five run in parallel.
+          You get one Master Production Score built from all of them.
         </p>
       </div>
 
       {/* Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5" id="features">
         {SPECIALISTS.map((s) => (
           <motion.div
             key={s.name}
@@ -111,7 +110,7 @@ export default function Specialists() {
               style={{ backgroundColor: s.color }}
             />
 
-            {/* Icon + name */}
+            {/* Icon + name + badge */}
             <div className="flex items-center gap-3">
               <div
                 className="w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0"
@@ -119,7 +118,15 @@ export default function Specialists() {
               >
                 {s.icon}
               </div>
-              <h3 className="font-semibold text-base">{s.name}</h3>
+              <div>
+                <h3 className="font-semibold text-base leading-tight">{s.name}</h3>
+                <span
+                  className="text-[9px] font-bold tracking-[0.06em] px-1.5 py-0.5 rounded"
+                  style={{ backgroundColor: `${s.color}18`, color: s.color }}
+                >
+                  {s.badge}
+                </span>
+              </div>
             </div>
 
             {/* Tags */}

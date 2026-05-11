@@ -10,31 +10,31 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 const STEPS = [
   {
     num: "01",
-    icon: "⌨️",
-    title: "Paste your code",
-    desc: "Drop in any snippet — a function, a PR diff, or an entire file. No formatting or cleanup needed. 30+ languages supported out of the box.",
-    detail: "Supports TypeScript, Python, Go, Rust, Java, Ruby, SQL, and more.",
+    icon: "📋",
+    title: "Paste Your Code",
+    desc: "Drop in any function, file, or diff. Thirty-plus languages. No formatting required. No GitHub connection. No OAuth. No setup.",
+    detail: "Supports TypeScript, Python, Go, Rust, Java, Kotlin, Swift, Ruby, PHP, C#, SQL, GraphQL, and more.",
   },
   {
     num: "02",
-    icon: "🤖",
-    title: "Choose your specialists",
-    desc: "Pick from six AI specialists — Security Auditor, Performance Engineer, Architecture Reviewer, and more — or let CodeWatch auto-assign based on what it detects.",
-    detail: "Multi-specialist mode runs all six in parallel.",
+    icon: "💬",
+    title: "Set Business Context",
+    desc: "Tell CODEWATCH what your code is supposed to do. Describe your pricing rules, user roles, state transitions, or fee structures. This is what no other tool does.",
+    detail: "Example: \"This function calculates GST for Indian customers. Base rate 18%. Essential goods at 5%.\"",
   },
   {
     num: "03",
-    icon: "🧠",
-    title: "Receive expert analysis",
-    desc: "Get detailed findings with line-level annotations, severity ratings, suggested fixes, and explanations written the way a senior engineer would write them.",
-    detail: "Average review depth: 14 annotated findings per 100 lines.",
+    icon: "🔬",
+    title: "Panel Reviews in Parallel",
+    desc: "Five specialists review your code simultaneously. Security, reliability, performance, business logic, and quality — all scored independently. You get a Master Production Score.",
+    detail: "All five specialists run in parallel. Total review time: under 2 minutes.",
   },
   {
     num: "04",
-    icon: "🚀",
-    title: "Fix and ship with confidence",
-    desc: "Apply fixes inline, re-run the review instantly, and watch your quality score improve. Your review history tracks progress across every PR.",
-    detail: "Teams that use CodeWatch ship 2.3× fewer post-deploy incidents.",
+    icon: "✅",
+    title: "Get the Fixed Code",
+    desc: "Not a to-do list. The rewritten code. Hardened error propagation, environment variables replacing secrets, timeouts on every external call, input validation. Optionally run the Humanisation Layer.",
+    detail: "Paste it back. Ship it. Done.",
   },
 ];
 
@@ -106,10 +106,12 @@ export default function HowItWorks() {
           The process
         </span>
         <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
-          From paste to production-ready
+          Paste. Review.
+          <br />
+          <span className="text-[#ff6b6b]">Ship With Confidence.</span>
         </h2>
         <p className="text-muted-foreground mt-4 max-w-md mx-auto">
-          Four steps. Under 30 seconds. No setup, no config, no waiting.
+          Four steps. Under two minutes. No repo connection needed.
         </p>
       </div>
 

@@ -1,28 +1,32 @@
 import type { Metadata } from "next";
 import Hero from "@/components/marketing/Hero";
-import HowItWorks from "@/components/marketing/HowItWorks";
-import Pricing from "@/components/marketing/Pricing";
-import AnimatedSection from "@/components/shared/AnimatedSection";
+import Ticker from "@/components/marketing/Ticker";
 import ProblemSection from "@/components/marketing/ProblemSection";
+import HowItWorks from "@/components/marketing/HowItWorks";
 import Specialists from "@/components/marketing/Specialists";
+import UniqueFeatures from "@/components/marketing/UniqueFeatures";
+import Comparison from "@/components/marketing/Comparison";
 import Testimonials from "@/components/marketing/Testimonials";
 import SecuritySection from "@/components/marketing/SecuritySection";
+import Pricing from "@/components/marketing/Pricing";
 import FAQ from "@/components/marketing/FAQ";
 import FinalCTA from "@/components/marketing/FinalCTA";
+import Footer from "@/components/marketing/Footer";
+import AnimatedSection from "@/components/shared/AnimatedSection";
 
 export const metadata: Metadata = {
-  title: "Code Review by AI Specialists",
+  title: "Multi-Specialist AI Code Review · Business-Logic Aware",
   description:
-    "Paste your code. Get instant, expert-level feedback on security vulnerabilities, performance bottlenecks, and architectural decisions — in seconds. Free for early adopters. No account needed to try.",
+    "Five AI specialists review your code in parallel. Business logic validation, AI origin detection, fail-safe rewrites, and the Humanisation Layer. No repo connection needed. 10 free reviews.",
   openGraph: {
-    title: "CodeWatch — Code Review by AI Specialists",
+    title: "CODEWATCH — The Senior Engineer Your AI-Generated Code Has Never Had",
     description:
-      "Paste your code. Get instant, expert-level feedback on security, performance, and code quality. Supports 30+ languages. Results in under 10 seconds. Free for early adopters.",
+      "Five AI specialists. Business logic awareness. Fail-safe rewrite. The Humanisation Layer. CODEWATCH is the only code review tool that validates your code against your actual business rules.",
   },
   twitter: {
-    title: "CodeWatch — Code Review by AI Specialists",
+    title: "CODEWATCH — Multi-Specialist AI Code Review",
     description:
-      "Paste your code. Get instant, expert-level feedback on security, performance, and code quality. Supports 30+ languages. No account needed.",
+      "Paste your code. Get five specialists in parallel. Business logic validation, AI origin detection, and the actual fixed code. 10 free reviews. No card required.",
   },
 };
 
@@ -30,6 +34,7 @@ export default function LandingPage() {
   return (
     <main>
       <Hero />
+      <Ticker />
 
       <AnimatedSection className="contents">
         <ProblemSection />
@@ -39,16 +44,20 @@ export default function LandingPage() {
 
       <AnimatedSection className="contents">
         <Specialists />
+        <UniqueFeatures />
+        <Comparison />
+        <Testimonials />
+        <SecuritySection />
       </AnimatedSection>
 
       <Pricing />
 
       <AnimatedSection className="contents">
-        <Testimonials />
-        <SecuritySection />
         <FAQ />
         <FinalCTA />
       </AnimatedSection>
+
+      <Footer />
     </main>
   );
 }

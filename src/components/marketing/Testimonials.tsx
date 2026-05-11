@@ -5,56 +5,38 @@ import { motion, useMotionValue, useAnimation, type PanInfo } from "framer-motio
 
 const TESTIMONIALS = [
   {
-    quote: "CodeWatch caught a timing attack in our auth service that had been in production for 8 months. Our own security review missed it twice. I don't start a PR without it now.",
-    name: "Sarah K.",
-    role: "Staff Security Engineer",
-    company: "Stripe",
-    avatar: "SK",
+    quote: "We had a race condition in our payment flow that had been in the codebase for four months. Every code review missed it because the syntax was perfect. CODEWATCH caught it in under twenty seconds because I described our payment state machine in the business context field. That single catch was worth twelve months of subscription.",
+    name: "Rahul M.",
+    role: "Senior Engineer",
+    company: "Fintech startup",
+    avatar: "RM",
     color: "#ff6b6b",
-    score: { before: 61, after: 94 },
+    score: { before: 58, after: 91 },
   },
   {
-    quote: "We went from 4-day review cycles to shipping same-day. CodeWatch runs in our CI pipeline and flags issues before a human even looks at the PR. It's like having a senior engineer on every diff.",
-    name: "Marcus T.",
-    role: "CTO",
-    company: "Mercado (YC S23)",
-    avatar: "MT",
-    color: "#4a9fff",
-    score: { before: 72, after: 97 },
+    quote: "I'm not a senior engineer. I use Cursor to build most of the product. The AI Origin score was 94% on the first file I submitted — and CODEWATCH found that our tax calculation logic was completely wrong for Indian GST rules. We were under-charging customers. The fix saved us from a compliance nightmare.",
+    name: "Priya S.",
+    role: "Founder & CTO",
+    company: "SaaS product",
+    avatar: "PS",
+    color: "#00c4a0",
+    score: { before: 44, after: 87 },
   },
   {
-    quote: "The Performance Engineer specialist found an N+1 query in a checkout flow we'd already optimised. It was hiding behind a conditional. CodeWatch found it in under 10 seconds.",
-    name: "Elena R.",
-    role: "Senior Backend Engineer",
-    company: "Shopify",
-    avatar: "ER",
-    color: "#c4b5fd",
-    score: { before: 68, after: 91 },
-  },
-  {
-    quote: "I was sceptical about AI review. Then it flagged a missing rate limiter on our password reset endpoint the same day I'd written it. Saved us from a nightmare during launch week.",
-    name: "James L.",
-    role: "Backend Engineer",
-    company: "Linear",
-    avatar: "JL",
-    color: "#86efac",
-    score: { before: 55, after: 88 },
-  },
-  {
-    quote: "Our team's average review score went from 64 to 89 in six weeks. Juniors get specific, actionable feedback instead of vague comments. The quality uplift has been real.",
-    name: "Priya M.",
-    role: "Engineering Manager",
-    company: "Notion",
-    avatar: "PM",
-    color: "#fbbf24",
-    score: { before: 64, after: 89 },
+    quote: "We review code for fourteen client companies. The white-label reports are the reason we chose CODEWATCH over everything else. Our clients see our branding, our commentary, our recommendations. They have no idea there's AI behind it. We've increased our review retainer fees by forty percent.",
+    name: "Arjun K.",
+    role: "Agency Director",
+    company: "Dev agency",
+    avatar: "AK",
+    color: "#4da3ff",
+    score: { before: 63, after: 96 },
   },
 ];
 
 const CARD_W = 380;
 const CARD_GAP = 20;
 const VISIBLE_DESKTOP = 3;
-const MAX_IDX = TESTIMONIALS.length - VISIBLE_DESKTOP;
+const MAX_IDX = Math.max(0, TESTIMONIALS.length - VISIBLE_DESKTOP);
 
 export default function Testimonials() {
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -97,10 +79,12 @@ export default function Testimonials() {
             Testimonials
           </span>
           <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
-            Trusted by engineers who ship
+            What the market
+            <br />
+            <span className="text-[#ff6b6b]">actually needed.</span>
           </h2>
           <p className="text-muted-foreground mt-4 max-w-sm mx-auto">
-            From solo developers to engineering teams at fast-growing companies.
+            Developers, founders, and agencies who review code for a living.
           </p>
         </div>
       </div>

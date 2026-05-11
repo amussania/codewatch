@@ -12,54 +12,82 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const PLANS = [
   {
-    name: "Starter",
-    price: "Free",
-    period: "",
-    desc: "For individuals who want to try AI code review.",
+    name: "Solo",
+    price: "$12",
+    period: "/ mo",
+    reviews: "100 reviews / mo",
+    desc: "For developers who want expert-level review without the enterprise overhead.",
     features: [
-      "3 reviews / month",
-      "2 specialist types",
-      "Score history (7 days)",
-      "Community support",
+      "All 5 specialists",
+      "Business Logic Context",
+      "AI Origin Probability",
+      "Zero code retention",
+      "30+ languages",
     ],
-    cta: "Start for free",
+    cta: "Get 10 Free Reviews",
     href: "/signup",
     featured: false,
   },
   {
     name: "Pro",
-    price: "$29",
+    price: "$30",
     period: "/ mo",
-    desc: "Unlimited reviews for developers who care about quality.",
+    reviews: "350 reviews / mo",
+    desc: "For developers who need the full toolkit, including rewrites and white-label output.",
     features: [
-      "Unlimited reviews",
-      "All 6 specialist types",
-      "Full history + CSV export",
+      "Everything in Solo",
+      "Fail-Safe Rewrite included",
+      "Humanisation Layer",
+      "White-label reports",
       "Priority review queue",
-      "Slack & GitHub integration",
-      "API access",
+      "Credit rollover (up to 200)",
     ],
-    cta: "Start 14-day trial",
+    cta: "Get 10 Free Reviews",
     href: "/signup?plan=pro",
     featured: true,
   },
   {
-    name: "Team",
-    price: "$99",
+    name: "Studio",
+    price: "$72",
     period: "/ mo",
-    desc: "Shared workspace for engineering teams.",
+    reviews: "1,000 reviews / mo",
+    desc: "For small teams and freelancers reviewing client code at volume.",
     features: [
-      "5 seats (+ $15 / extra seat)",
-      "Team review dashboard",
-      "Shared history & annotations",
-      "SSO + audit log",
-      "SLA + dedicated support",
-      "Custom specialist prompts",
+      "Everything in Pro",
+      "3 user seats included",
+      "Team review history",
+      "White-label client reports",
+      "Webhook integrations",
     ],
-    cta: "Talk to sales",
-    href: "/contact",
+    cta: "Get Started",
+    href: "/signup?plan=studio",
     featured: false,
   },
+  {
+    name: "Agency",
+    price: "$155",
+    period: "/ mo",
+    reviews: "3,000 reviews / mo",
+    desc: "For agencies running code review as a client-facing service.",
+    features: [
+      "Everything in Studio",
+      "Unlimited user seats",
+      "Custom business logic templates",
+      "Priority support + SLA",
+      "Reseller billing support",
+    ],
+    cta: "Get Started",
+    href: "/signup?plan=agency",
+    featured: false,
+  },
+];
+
+const CREDIT_TABLE = [
+  { range: "< 100 lines", credits: "1 credit" },
+  { range: "100 – 300 lines", credits: "2 credits" },
+  { range: "300 – 600 lines", credits: "4 credits" },
+  { range: "600 – 1,500 lines", credits: "8 credits" },
+  { range: "Production Clearance", credits: "12 credits" },
 ];
 
 export default function Pricing() {
@@ -72,7 +100,7 @@ export default function Pricing() {
         opacity: 0,
         y: 28,
         duration: 0.75,
-        stagger: 0.13,
+        stagger: 0.1,
         ease: "power3.out",
         scrollTrigger: {
           trigger: containerRef.current,
@@ -92,44 +120,37 @@ export default function Pricing() {
           Pricing
         </span>
         <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
-          Simple, honest pricing
+          Pay for what you review.
+          <br />
+          <span className="text-[#ff6b6b]">Not for what you don&apos;t.</span>
         </h2>
         <p className="text-muted-foreground mt-4 max-w-sm mx-auto">
-          No hidden fees. Cancel any time. Volume discounts available for teams over 20.
+          Credit-based. No seat taxes. No lock-in. Local taxes calculated at checkout.
         </p>
       </div>
 
-      <div ref={containerRef} className="grid md:grid-cols-3 gap-6 items-center">
+      {/* Plan cards */}
+      <div ref={containerRef} className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-12">
         {PLANS.map((plan) => (
           <div key={plan.name} className="pricing-card relative">
-            {/* ── Glow bloom on featured card ── */}
             {plan.featured && (
               <>
-                {/* Static border glow */}
                 <div className="absolute -inset-[1px] rounded-[18px] bg-gradient-to-b from-[#ff6b6b]/60 via-[#ff6b6b]/20 to-[#4a9fff]/40 -z-10" />
-                {/* Pulsing bloom */}
                 <motion.div
-                  animate={{ opacity: [0.12, 0.28, 0.12], scale: [1, 1.04, 1] }}
+                  animate={{ opacity: [0.10, 0.24, 0.10], scale: [1, 1.04, 1] }}
                   transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
                   className="absolute -inset-5 rounded-3xl bg-[#ff6b6b] blur-2xl -z-20 pointer-events-none"
-                />
-                {/* Blue counter-glow */}
-                <motion.div
-                  animate={{ opacity: [0.06, 0.14, 0.06], scale: [1.02, 1, 1.02] }}
-                  transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
-                  className="absolute -inset-5 rounded-3xl bg-[#4a9fff] blur-3xl -z-20 pointer-events-none"
                 />
               </>
             )}
 
             <div
-              className={`relative rounded-2xl border p-7 flex flex-col gap-6 h-full ${
+              className={`relative rounded-2xl border p-6 flex flex-col gap-5 h-full ${
                 plan.featured
                   ? "border-[#ff6b6b]/30 bg-[var(--cw-surface-elevated)]"
                   : "border-white/8 bg-[var(--cw-surface)]"
               }`}
             >
-              {/* Most popular badge */}
               {plan.featured && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
                   <span className="px-3 py-1 rounded-full bg-[#ff6b6b] text-white text-xs font-semibold shadow-lg shadow-[#ff6b6b44]">
@@ -138,34 +159,31 @@ export default function Pricing() {
                 </div>
               )}
 
-              {/* Plan name + desc */}
               <div>
-                <h3 className="font-semibold text-lg">{plan.name}</h3>
-                <p className="text-muted-foreground text-sm mt-1 leading-snug">{plan.desc}</p>
+                <h3 className="font-semibold text-base">{plan.name}</h3>
+                <p className="text-muted-foreground text-xs mt-1 leading-snug">{plan.desc}</p>
               </div>
 
-              {/* Price */}
-              <div className="flex items-baseline gap-1">
-                <span className="text-4xl font-bold tracking-tight">{plan.price}</span>
-                {plan.period && (
+              <div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-bold tracking-tight">{plan.price}</span>
                   <span className="text-muted-foreground text-sm">{plan.period}</span>
-                )}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">{plan.reviews}</p>
               </div>
 
-              {/* Features */}
-              <ul className="space-y-2.5 flex-1">
+              <ul className="space-y-2 flex-1">
                 {plan.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2.5 text-sm text-muted-foreground">
-                    <span className="text-[#ff6b6b] mt-px shrink-0 text-xs">✓</span>
+                  <li key={f} className="flex items-start gap-2 text-xs text-muted-foreground">
+                    <span className="text-[#ff6b6b] mt-px shrink-0">✓</span>
                     {f}
                   </li>
                 ))}
               </ul>
 
-              {/* CTA */}
               <Link href={plan.href}>
                 <Button
-                  className={`w-full transition-all ${
+                  className={`w-full transition-all text-sm ${
                     plan.featured
                       ? "bg-[#ff6b6b] hover:bg-[#ff6b6b]/90 text-white border-0 shadow-lg shadow-[#ff6b6b33]"
                       : "bg-white/6 hover:bg-white/10 text-foreground border border-white/10"
@@ -179,13 +197,50 @@ export default function Pricing() {
         ))}
       </div>
 
-      {/* Footer note */}
-      <p className="text-center text-xs text-muted-foreground mt-8">
-        All plans include SSL encryption, SOC2-compliant infrastructure, and zero training-data retention.
-        {" "}
-        <Link href="/security" className="text-[#ff6b6b] hover:underline">
-          Security details →
-        </Link>
+      {/* Credit system + top-up */}
+      <div className="grid md:grid-cols-2 gap-5 mb-8">
+        {/* Credit table */}
+        <div className="rounded-2xl border border-white/8 bg-[var(--cw-surface)] p-6">
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60 mb-4">
+            Credit Usage
+          </p>
+          <div className="space-y-2.5">
+            {CREDIT_TABLE.map((row) => (
+              <div key={row.range} className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">{row.range}</span>
+                <span className="text-foreground font-medium">{row.credits}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Top-up + notes */}
+        <div className="rounded-2xl border border-white/8 bg-[var(--cw-surface)] p-6 flex flex-col justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60 mb-4">
+              Top-up Credits
+            </p>
+            <div className="flex items-baseline gap-2 mb-3">
+              <span className="text-3xl font-bold">$2.99</span>
+              <span className="text-muted-foreground text-sm">/ 25 reviews</span>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Buy additional credits any time. No subscription required. Credits never expire.
+            </p>
+          </div>
+          <div className="mt-6">
+            <Link href="/signup">
+              <Button className="w-full bg-white/6 hover:bg-white/10 text-foreground border border-white/10 text-sm">
+                Top up credits
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <p className="text-center text-xs text-muted-foreground">
+        All plans include zero code retention, row-level tenant isolation, and all five specialists.
+        Local taxes (GST, VAT) calculated at checkout where applicable.
       </p>
     </section>
   );

@@ -10,36 +10,36 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const FAQS = [
   {
-    q: "Is my code safe? Will it be used to train AI models?",
-    a: "Never. Your code is processed in an ephemeral sandbox, never written to disk, and deleted the moment your review is complete. We contractually opt out of model training at the API level with every provider we use. See our Security page for the full technical breakdown.",
+    q: "How does the credit system work?",
+    a: "Reviews are priced by code length: under 100 lines costs 1 credit, 100–300 lines costs 2 credits, 300–600 lines costs 4 credits, 600–1,500 lines costs 8 credits. A Production Clearance review — all five specialists plus Fail-Safe Rewrite — costs 12 credits regardless of file size. Credits reset monthly. Unused credits do not roll over except on Pro plans, where up to 200 credits roll over.",
   },
   {
-    q: "Which programming languages does CodeWatch support?",
-    a: "CodeWatch supports 30+ languages including TypeScript, JavaScript, Python, Go, Rust, Java, Kotlin, Swift, Ruby, PHP, C#, C++, SQL, GraphQL, and more. The Security Auditor and Performance Engineer specialists have language-specific rule sets for each.",
+    q: "Is my code stored anywhere?",
+    a: "No. Code is processed in an ephemeral compute environment and destroyed at the end of the review. Nothing is written to disk. Nothing is retained in our database. The review result is returned to you and then deleted from our systems. This is not a policy — it is the architecture.",
   },
   {
-    q: "How accurate is CodeWatch compared to a senior human engineer?",
-    a: "In our internal benchmarks across 500 open-source PRs, CodeWatch caught 94% of issues that were later flagged in production — compared to an average of 67% for human-only review. It's particularly strong on systematic patterns (N+1 queries, OWASP vulnerabilities, complexity hotspots) that humans miss under time pressure. It doesn't replace human judgment on architecture — but it makes humans faster and more consistent.",
+    q: "Do I need a GitHub account or repository connection?",
+    a: "No. CODEWATCH is paste-based. You paste code, you get a review. There is no OAuth flow, no repository permission request, no webhook setup required to use the product. It works in thirty seconds with no prior configuration. A freelancer reviewing client code, a founder checking what their developer sent, a consultant auditing legacy code with no Git access — all of them can use CODEWATCH immediately.",
   },
   {
-    q: "Can I use CodeWatch on private or proprietary code?",
-    a: "Yes. CodeWatch is designed for proprietary codebases. Your code is never logged, indexed, or shared. Enterprise customers can also deploy CodeWatch inside their own VPC so code never leaves their infrastructure at all.",
+    q: "Which programming languages does CODEWATCH support?",
+    a: "CODEWATCH supports all major languages including TypeScript, JavaScript, Python, Go, Rust, Java, Kotlin, Swift, Ruby, PHP, C, C++, C#, SQL, GraphQL, Solidity, and more. The Business Logic Reviewer operates at the logic level and is language-agnostic — it validates your rules regardless of which language implements them.",
   },
   {
-    q: "How does billing work? Can I cancel any time?",
-    a: "Pro and Team plans are billed monthly with no lock-in. You can cancel at any time from your account settings — your plan stays active until the end of the billing period. We don't charge cancellation fees or require notice periods.",
+    q: "What is Business Logic Context and how do I use it?",
+    a: "Before submitting your code, you describe what the code is supposed to do in business terms. You write things like: \"This function calculates the GST-inclusive price for Indian customers. The base rate is 18%. For essential goods it drops to 5%.\" CODEWATCH uses that description to validate whether your code correctly implements those rules. Syntax-only tools cannot do this. No other code review product does this.",
   },
   {
-    q: "What's the difference between the six specialists?",
-    a: "Each specialist has a distinct focus: Security Auditor (OWASP, auth, injection), Performance Engineer (queries, memory, async), Architecture Reviewer (coupling, SOLID, patterns), Quality Analyst (complexity, naming, dead code), API Designer (REST/GraphQL contracts), and Tech Writer AI (JSDoc, OpenAPI, READMEs). You can run one or all six in parallel.",
+    q: "What is the Humanisation Layer?",
+    a: "After the Fail-Safe Rewrite, you can run the Humanisation Layer. It applies engineering fingerprints that make the code read as if it was built by an experienced human developer: variable naming drift that reflects how a developer's mental model evolves, WHY comments referencing specific decisions and incidents, intentional TODOs a real developer would leave, asymmetric error handling focused on what has burned them before. The code remains 100% functionally identical. It no longer reads as AI-generated.",
   },
   {
-    q: "How long does a review take?",
-    a: "Most reviews complete in 6–12 seconds for files up to 500 lines. Larger files (up to 2,000 lines) typically complete in under 30 seconds. Running all six specialists in parallel adds roughly 4 seconds to the baseline.",
+    q: "Can I use CODEWATCH for client code reviews?",
+    a: "Yes. The Agency tier includes white-label report generation. Reports are exported with your own branding, your own commentary fields, and no reference to CODEWATCH. Your clients see your analysis. They have no idea there is AI behind it. Multiple agency customers have increased their review retainer fees after switching to CODEWATCH.",
   },
   {
-    q: "Does CodeWatch integrate with GitHub or my CI pipeline?",
-    a: "Yes. The Pro plan includes a GitHub App that runs CodeWatch automatically on every pull request and posts findings as inline review comments. A webhook API lets you plug into any CI system — CircleCI, GitLab CI, Bitbucket Pipelines, and more.",
+    q: "What happens when I run out of credits?",
+    a: "You can top up at any time for $2.99 per 25 credits. Your monthly subscription renews on its normal cycle. There are no overage charges — if you run out of credits, reviews are paused until you top up or your plan renews. You will never be charged more than you agreed to.",
   },
 ];
 
@@ -125,7 +125,7 @@ export default function FAQ() {
           <a href="mailto:hello@codewatch.dev" className="text-[#ff6b6b] hover:underline">
             Email us
           </a>
-          {" "}— we reply within one business day.
+          {" "}— we reply the same business day.
         </p>
       </div>
 

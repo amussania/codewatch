@@ -9,35 +9,35 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const PROBLEMS = [
   {
-    icon: "⏳",
-    stat: "4.2 days",
-    statLabel: "average PR review wait",
-    title: "Review cycles kill momentum",
-    desc: "Engineers context-switch, lose flow state, and watch their PRs stagnate in queues. Every day of waiting is a day not shipping.",
+    icon: "🔒",
+    stat: "2.74×",
+    statLabel: "more vulnerabilities in AI-generated code",
+    title: "Security Gaps Nobody Catches",
+    desc: "Every other tool reviews syntax. AI-generated code has 2.74× more security vulnerabilities than human-written code. They all look syntactically correct. Most tools will pass them.",
     color: "#ff6b6b",
   },
   {
-    icon: "🎲",
-    stat: "3×",
-    statLabel: "variance between reviewers",
-    title: "Feedback is a lottery",
-    desc: "A junior reviewer misses the timing attack. A senior catches the N+1 query but not the missing index. No two reviews are the same.",
+    icon: "💸",
+    stat: "$0",
+    statLabel: "caught by syntax-only review",
+    title: "Silent Business Logic Errors",
+    desc: "Your tool reviews syntax. Not your pricing logic. Not your GST rules. Not your discount calculation. The code works. The business rule is wrong. Nobody finds out until customers are undercharged.",
     color: "#f59e0b",
   },
   {
-    icon: "🔥",
-    stat: "67%",
-    statLabel: "of prod bugs were in the diff",
-    title: "Issues slip straight to production",
-    desc: "Human reviewers miss edge cases, especially under deadline pressure. The bugs that cost the most are the ones nobody spotted in review.",
+    icon: "⚡",
+    stat: "1.7×",
+    statLabel: "more runtime errors in vibe-coded deployments",
+    title: "Fails at 2AM on the Edge Case",
+    desc: "AI-generated code handles the happy path perfectly. It fails on the edge case at 2AM when the payment gateway times out and there is no retry logic and no fallback and no error logging.",
     color: "#4a9fff",
   },
 ];
 
 const STATS = [
-  { value: "12,400+", label: "Reviews completed" },
-  { value: "94%", label: "Issues caught pre-merge" },
-  { value: "< 8s", label: "Average review time" },
+  { value: "41%", label: "of code is now AI-generated" },
+  { value: "2.74×", label: "more vulnerabilities in AI code" },
+  { value: "< 2min", label: "Full panel review time" },
   { value: "30+", label: "Languages supported" },
 ];
 
@@ -82,13 +82,13 @@ export default function ProblemSection() {
           The problem
         </span>
         <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
-          Code review is broken.
+          AI writes the code.
           <br />
-          <span className="text-muted-foreground font-normal">We&apos;re fixing it.</span>
+          <span className="text-[#ff6b6b]">Who reviews it?</span>
         </h2>
         <p className="text-muted-foreground mt-5 max-w-lg mx-auto leading-relaxed">
-          Traditional code review is slow, inconsistent, and misses the things that matter most.
-          CodeWatch gives every engineer instant access to specialist-level analysis.
+          41% of all code is now AI-generated. The tools built to review human code were not built
+          for this. They pass what they were not designed to catch.
         </p>
       </div>
 

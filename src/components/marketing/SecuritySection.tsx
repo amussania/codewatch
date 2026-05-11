@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef } from "react";
-import { motion } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -10,47 +9,37 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const PILLARS = [
   {
-    icon: "🔐",
-    title: "Zero data retention",
-    desc: "Your code is analyzed entirely in memory and never written to disk. No snippet, diff, or review is stored after the session ends.",
-    badge: "Verified",
+    icon: "🔒",
+    title: "Your code never touches our disk",
+    desc: "Every review runs in a sandboxed, ephemeral process. When the review ends, the process is destroyed. There is no database write. There is no file system write. Zero persistence by design.",
     color: "#ff6b6b",
   },
   {
-    icon: "🔒",
-    title: "AES-256 in transit & at rest",
-    desc: "All data is encrypted with AES-256 over TLS 1.3. API keys are hashed with bcrypt. We never have access to your raw credentials.",
-    badge: "Audited",
-    color: "#4a9fff",
+    icon: "🔑",
+    title: "Row-level tenant isolation",
+    desc: "Every user account operates in a fully isolated tenant context. No shared query surfaces. No shared caches. Your review history is cryptographically inaccessible to any other user.",
+    color: "#4da3ff",
   },
   {
-    icon: "🏛️",
-    title: "SOC 2 Type II",
-    desc: "Our infrastructure undergoes annual SOC 2 Type II audits. Security controls, availability, and confidentiality are independently verified.",
-    badge: "Certified",
-    color: "#86efac",
+    icon: "🗑️",
+    title: "Zero Data Retention by default",
+    desc: "The review result is returned to you and then deleted. We do not store your code, your review output, or any metadata derived from your code. Default on every plan.",
+    color: "#00c4a0",
   },
   {
-    icon: "🌍",
-    title: "GDPR & CCPA compliant",
-    desc: "We process no personal data from your code. You can delete your account and all associated metadata at any time with one click.",
-    badge: "Compliant",
-    color: "#c4b5fd",
-  },
-  {
-    icon: "🚫",
-    title: "Never used for training",
-    desc: "Your code is never used to train AI models — ours or third-party providers. Model-level opt-outs are enforced at the API contract level.",
-    badge: "Contractual",
+    icon: "💣",
+    title: "Delete everything, anytime",
+    desc: "One button. Your account, your review history, your business logic context configurations — permanently purged. GDPR Article 17 compliant. No waiting period.",
     color: "#fbbf24",
   },
-  {
-    icon: "🏢",
-    title: "Private cloud deployment",
-    desc: "Enterprise customers can run CodeWatch in their own VPC or on-premises. No code leaves your infrastructure.",
-    badge: "Enterprise",
-    color: "#fda4af",
-  },
+];
+
+const FLOW_STEPS = [
+  { label: "Your code", icon: "📋", note: "Paste in browser" },
+  { label: "Encrypted transit", icon: "🔐", note: "TLS 1.3" },
+  { label: "Ephemeral sandbox", icon: "⚡", note: "Isolated process" },
+  { label: "Review result", icon: "✅", note: "Returned to you" },
+  { label: "Process destroyed", icon: "🗑️", note: "Zero retention" },
 ];
 
 export default function SecuritySection() {
@@ -62,7 +51,7 @@ export default function SecuritySection() {
         y: 28,
         opacity: 0,
         duration: 0.65,
-        stagger: { amount: 0.45 },
+        stagger: { amount: 0.35 },
         ease: "power3.out",
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -82,60 +71,75 @@ export default function SecuritySection() {
           Security
         </span>
         <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
-          Your code stays yours
+          Your code is never stored.
+          <br />
+          <span className="text-[#ff6b6b]">By design.</span>
         </h2>
         <p className="text-muted-foreground mt-4 max-w-lg mx-auto leading-relaxed">
-          We built CodeWatch for the security-conscious from day one. Every architectural
-          decision prioritises your code&apos;s privacy over convenience.
+          We built CODEWATCH for teams reviewing proprietary, production code.
+          Security is not a feature. It is the architecture.
         </p>
       </div>
 
-      {/* Hero promise */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="relative rounded-2xl border border-[#ff6b6b]/20 bg-[var(--cw-surface-elevated)] p-8 mb-10 text-center overflow-hidden"
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-[#ff6b6b]/5 to-transparent pointer-events-none" />
-        <div className="text-4xl mb-4">🛡️</div>
-        <h3 className="text-xl font-semibold mb-2">
-          Your code is never stored, indexed, or shared
-        </h3>
-        <p className="text-muted-foreground max-w-lg mx-auto text-sm leading-relaxed">
-          We operate a strict zero-persistence policy. Analysis runs in an ephemeral sandbox.
-          When your review is complete, every byte of your code is purged — no exceptions.
-        </p>
-      </motion.div>
-
-      {/* Pillars grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {PILLARS.map((p) => (
-          <div
-            key={p.title}
-            className="sec-pillar rounded-xl border border-white/8 bg-[var(--cw-surface)] p-5 flex gap-4"
-          >
+      {/* 2-column layout */}
+      <div className="grid lg:grid-cols-2 gap-8">
+        {/* Left: security pillars */}
+        <div className="space-y-4">
+          {PILLARS.map((p) => (
             <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 mt-0.5"
-              style={{ backgroundColor: `${p.color}15`, border: `1px solid ${p.color}25` }}
+              key={p.title}
+              className="sec-pillar rounded-xl border border-white/8 bg-[var(--cw-surface)] p-5 flex gap-4"
             >
-              {p.icon}
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1.5">
-                <h3 className="font-semibold text-sm">{p.title}</h3>
-                <span
-                  className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full shrink-0"
-                  style={{ backgroundColor: `${p.color}18`, color: p.color }}
-                >
-                  {p.badge}
-                </span>
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 mt-0.5"
+                style={{ backgroundColor: `${p.color}15`, border: `1px solid ${p.color}25` }}
+              >
+                {p.icon}
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">{p.desc}</p>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-sm mb-1.5">{p.title}</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">{p.desc}</p>
+              </div>
             </div>
+          ))}
+        </div>
+
+        {/* Right: data flow diagram */}
+        <div className="rounded-2xl border border-white/8 bg-[var(--cw-surface)] p-8 flex flex-col justify-center">
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/50 mb-8 text-center">
+            What happens to your code
+          </p>
+          <div className="flex flex-col gap-0">
+            {FLOW_STEPS.map((step, i) => (
+              <div key={step.label}>
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/8 flex items-center justify-center text-lg shrink-0">
+                    {step.icon}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-foreground/80">{step.label}</p>
+                    <p className="text-xs text-muted-foreground">{step.note}</p>
+                  </div>
+                  {i === FLOW_STEPS.length - 1 && (
+                    <span className="text-[10px] font-bold text-[#00c4a0] bg-[#00c4a0]/10 border border-[#00c4a0]/20 px-2 py-0.5 rounded">
+                      ZERO STORED
+                    </span>
+                  )}
+                </div>
+                {i < FLOW_STEPS.length - 1 && (
+                  <div className="ml-5 w-px h-5 bg-white/10" />
+                )}
+              </div>
+            ))}
           </div>
-        ))}
+
+          <div className="mt-8 rounded-xl bg-[#ff6b6b]/[0.06] border border-[#ff6b6b]/15 p-4 text-center">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              <span className="text-foreground/80 font-medium">Never used for AI training.</span>{" "}
+              Model-level opt-outs are enforced at the API contract level with every provider we use.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -51,10 +51,10 @@ function SpringButton({ children }: { children: React.ReactNode }) {
   );
 }
 
-const TRUST_BADGES = [
-  "No account needed to try",
-  "Supports 30+ languages",
-  "Results in <10 seconds",
+const STATS = [
+  { value: "41%", label: "of all code is now AI-generated" },
+  { value: "2.74×", label: "more security vulnerabilities in AI code" },
+  { value: "75%", label: "of those vulnerabilities are silent" },
 ];
 
 /* ── Hero ────────────────────────────────────────────────────── */
@@ -81,7 +81,7 @@ export default function Hero() {
 
         {/* ── Left: copy ── */}
         <div>
-          {/* Beta pill */}
+          {/* Eyebrow pill */}
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0  }}
@@ -89,20 +89,23 @@ export default function Hero() {
             className="inline-flex items-center gap-2 px-3 py-1.5 mb-7 rounded-full border border-[#ff6b6b]/30 bg-[#ff6b6b]/10 text-[#ff6b6b] text-xs font-medium"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#ff6b6b] animate-pulse" />
-            Now in beta — free for early adopters
+            Multi-Specialist AI Code Review · Business-Logic Aware
           </motion.div>
 
-          {/* Headline — each word-row has its own overflow-hidden clip */}
+          {/* Headline */}
           <h1 className="font-bold tracking-tight text-5xl lg:text-[3.6rem] leading-[1.08] mb-6">
             <div>
-              <CharReveal text="Code Review" delay={0.08} />
+              <CharReveal text="The Senior Engineer" delay={0.08} />
             </div>
             <div className="mt-1">
               <CharReveal
-                text="by AI Specialists"
+                text="Your AI-Generated"
                 delay={0.32}
                 className="text-[#ff6b6b]"
               />
+            </div>
+            <div className="mt-1">
+              <CharReveal text="Code Has Never Had" delay={0.58} />
             </div>
           </h1>
 
@@ -110,19 +113,18 @@ export default function Hero() {
           <motion.p
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0  }}
-            transition={{ duration: 0.55, delay: 0.78 }}
+            transition={{ duration: 0.55, delay: 0.88 }}
             className="text-[1.05rem] text-muted-foreground leading-relaxed mb-9 max-w-[420px]"
           >
-            Paste your code. Get instant, expert-level feedback on security
-            vulnerabilities, performance bottlenecks, and architectural
-            decisions — in seconds.
+            AI writes your code fast. CODEWATCH makes sure it&apos;s fit for production.
+            Five specialists. Your business rules. The actual fixed code.
           </motion.p>
 
           {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0  }}
-            transition={{ duration: 0.55, delay: 0.95 }}
+            transition={{ duration: 0.55, delay: 1.05 }}
             className="flex flex-wrap gap-3"
           >
             <SpringButton>
@@ -131,7 +133,7 @@ export default function Hero() {
                   size="lg"
                   className="bg-[#ff6b6b] hover:bg-[#ff6b6b]/90 text-white border-0 px-7 shadow-xl shadow-[#ff6b6b44] text-[0.95rem]"
                 >
-                  Review my code — it&apos;s free
+                  Get 10 Free Reviews →
                 </Button>
               </Link>
             </SpringButton>
@@ -143,25 +145,30 @@ export default function Hero() {
                   variant="outline"
                   className="border-white/12 text-foreground hover:bg-white/6 px-7 text-[0.95rem]"
                 >
-                  See how it works
+                  See How It Works
                 </Button>
               </Link>
             </SpringButton>
           </motion.div>
 
-          {/* Trust badges */}
+          {/* Why this matters now */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.25 }}
-            className="flex flex-wrap items-center gap-5 mt-10"
+            transition={{ delay: 1.35 }}
+            className="mt-10"
           >
-            {TRUST_BADGES.map((label) => (
-              <span key={label} className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                <span className="text-[#ff6b6b] text-xs">✓</span>
-                {label}
-              </span>
-            ))}
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50 mb-4 font-semibold">
+              Why this matters right now
+            </p>
+            <div className="flex flex-wrap gap-6">
+              {STATS.map((s) => (
+                <div key={s.value}>
+                  <span className="text-2xl font-bold text-foreground">{s.value}</span>
+                  <p className="text-xs text-muted-foreground mt-0.5 max-w-[120px] leading-snug">{s.label}</p>
+                </div>
+              ))}
+            </div>
           </motion.div>
         </div>
 

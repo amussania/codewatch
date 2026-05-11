@@ -43,15 +43,14 @@ export default function FinalCTA() {
         />
 
         <div className="relative">
-          <div className="text-5xl mb-5">🚀</div>
           <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-            Ship code you&apos;re proud of.
+            Ship Code You Can
             <br />
-            <span className="text-[#ff6b6b]">Start reviewing in 30 seconds.</span>
+            <span className="text-[#ff6b6b]">Stand Behind.</span>
           </h2>
           <p className="text-muted-foreground max-w-md mx-auto mb-8 leading-relaxed">
-            No account required for your first review. Paste your code, choose a specialist,
-            and see what you&apos;ve been missing.
+            Ten free reviews. No credit card. Your actual code, your actual vulnerabilities,
+            your actual fix — in under two minutes.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3">
@@ -61,25 +60,14 @@ export default function FinalCTA() {
                   size="lg"
                   className="bg-[#ff6b6b] hover:bg-[#ff6b6b]/90 text-white border-0 px-8 shadow-xl shadow-[#ff6b6b33] text-base"
                 >
-                  Review my code — it&apos;s free
-                </Button>
-              </Link>
-            </SpringButton>
-            <SpringButton>
-              <Link href="/demo">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white/12 text-foreground hover:bg-white/6 px-8 text-base"
-                >
-                  Watch a demo
+                  Get 10 Free Reviews →
                 </Button>
               </Link>
             </SpringButton>
           </div>
 
           <p className="text-xs text-muted-foreground mt-6">
-            No credit card · No setup · Results in under 10 seconds
+            10 free reviews · No card required · Cancel anytime · Your code never stored · Local taxes calculated at checkout
           </p>
         </div>
       </motion.div>

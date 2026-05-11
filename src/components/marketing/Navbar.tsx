@@ -7,10 +7,11 @@ import { useScrollProgress } from "@/hooks/useScrollProgress";
 import { Button } from "@/components/ui/button";
 
 const NAV_LINKS = [
+  { label: "How It Works", href: "#how-it-works" },
   { label: "Features", href: "#features" },
-  { label: "How it Works", href: "#how-it-works" },
+  { label: "Security", href: "#security" },
   { label: "Pricing", href: "#pricing" },
-  { label: "Docs", href: "/docs" },
+  { label: "FAQ", href: "#faq" },
 ];
 
 function HamburgerIcon({ open }: { open: boolean }) {
@@ -103,7 +104,7 @@ export default function Navbar() {
                 size="sm"
                 className="bg-[var(--cw-coral)] hover:bg-[var(--cw-coral)]/90 text-white border-0 shadow-lg shadow-[var(--cw-coral-glow)]"
               >
-                Get started free
+                Get 10 Free Reviews
               </Button>
             </Link>
           </div>
@@ -202,7 +203,7 @@ export default function Navbar() {
                 </Link>
                 <Link href="/signup" onClick={() => setMenuOpen(false)}>
                   <Button className="w-full bg-[var(--cw-coral)] hover:bg-[var(--cw-coral)]/90 text-white border-0 shadow-md shadow-[var(--cw-coral-glow)]">
-                    Get started free
+                    Get 10 Free Reviews
                   </Button>
                 </Link>
               </motion.div>
