@@ -123,6 +123,12 @@
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
 }
 
+/* Ticker scroll */
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 /* Terminal cursor blink */
 @keyframes blink {
   0%, 100% { opacity: 1; }
