@@ -6,9 +6,9 @@ import HowItWorks from "@/components/marketing/HowItWorks";
 import Specialists from "@/components/marketing/Specialists";
 import UniqueFeatures from "@/components/marketing/UniqueFeatures";
 import Comparison from "@/components/marketing/Comparison";
+import Pricing from "@/components/marketing/Pricing";
 import Testimonials from "@/components/marketing/Testimonials";
 import SecuritySection from "@/components/marketing/SecuritySection";
-import Pricing from "@/components/marketing/Pricing";
 import FAQ from "@/components/marketing/FAQ";
 import FinalCTA from "@/components/marketing/FinalCTA";
 import Footer from "@/components/marketing/Footer";
@@ -46,13 +46,13 @@ export default function LandingPage() {
         <Specialists />
         <UniqueFeatures />
         <Comparison />
-        <Testimonials />
-        <SecuritySection />
       </AnimatedSection>
 
       <Pricing />
 
       <AnimatedSection className="contents">
+        <Testimonials />
+        <SecuritySection />
         <FAQ />
         <FinalCTA />
       </AnimatedSection>
