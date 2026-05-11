@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { gsap } from "gsap";
@@ -14,7 +14,7 @@ const PROBLEMS = [
     statLabel: "more vulnerabilities in AI-generated code",
     title: "Security Gaps Nobody Catches",
     desc: "Every other tool reviews syntax. AI-generated code has 2.74× more security vulnerabilities than human-written code. They all look syntactically correct. Most tools will pass them.",
-    color: "#ff6b6b",
+    color: "#ff5b35",
   },
   {
     icon: "💸",
@@ -30,7 +30,7 @@ const PROBLEMS = [
     statLabel: "more runtime errors in vibe-coded deployments",
     title: "Fails at 2AM on the Edge Case",
     desc: "AI-generated code handles the happy path perfectly. It fails on the edge case at 2AM when the payment gateway times out and there is no retry logic and no fallback and no error logging.",
-    color: "#4a9fff",
+    color: "#1a7be8",
   },
 ];
 
@@ -75,16 +75,16 @@ export default function ProblemSection() {
   );
 
   return (
-    <section ref={sectionRef} className="py-28 max-w-7xl mx-auto px-6" id="features">
+    <section ref={sectionRef} className="py-[7.5rem] max-w-[1200px] mx-auto px-6 bg-[#f8faff]" id="features">
       {/* Header */}
       <div className="text-center mb-16">
-        <span className="text-[#ff6b6b] text-sm font-medium uppercase tracking-widest">
+        <span className="text-[#ff5b35] text-sm font-medium uppercase tracking-widest">
           The problem
         </span>
         <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
           AI writes the code.
           <br />
-          <span className="text-[#ff6b6b]">Who reviews it?</span>
+          <span className="text-[#ff5b35]">Who reviews it?</span>
         </h2>
         <p className="text-muted-foreground mt-5 max-w-lg mx-auto leading-relaxed">
           41% of all code is now AI-generated. The tools built to review human code were not built
@@ -97,7 +97,7 @@ export default function ProblemSection() {
         {PROBLEMS.map((p) => (
           <div
             key={p.title}
-            className="problem-card group relative rounded-2xl border border-white/8 bg-[var(--cw-surface)] p-7 overflow-hidden"
+            className="problem-card group relative rounded-2xl border border-[#e8edf5] bg-white p-7 overflow-hidden" style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.06)" }}
           >
             {/* Subtle corner glow */}
             <div
@@ -121,7 +121,7 @@ export default function ProblemSection() {
       </div>
 
       {/* Stats bar */}
-      <div className="problem-stats-bar rounded-2xl border border-white/8 bg-[var(--cw-surface)] px-8 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 divide-x-0 md:divide-x divide-white/8">
+      <div className="problem-stats-bar rounded-2xl border border-[#e8edf5] bg-[var(--cw-surface)] px-8 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 divide-x-0 md:divide-x divide-[#e8edf5]">
         {STATS.map((s) => (
           <div key={s.label} className="problem-stat text-center">
             <div className="text-3xl font-bold text-foreground">{s.value}</div>

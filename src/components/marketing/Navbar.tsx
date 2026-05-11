@@ -1,9 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, useSpring } from "framer-motion";
-import { useScrollProgress } from "@/hooks/useScrollProgress";
 import { Button } from "@/components/ui/button";
 
 const NAV_LINKS = [
@@ -38,30 +37,13 @@ function HamburgerIcon({ open }: { open: boolean }) {
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const scroll = useScrollProgress();
-  const frosted = scroll > 0.04;
-
   const logoRotate = useSpring(0, { stiffness: 400, damping: 20 });
 
   return (
     <>
       {/* ── Header bar ── */}
-      <header className="fixed top-0 left-0 right-0 z-50">
-        {/* Frosted glass layer mounted/unmounted via AnimatePresence */}
-        <AnimatePresence>
-          {frosted && (
-            <motion.div
-              key="frosted-bg"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25, ease: "easeInOut" }}
-              className="absolute inset-0 bg-background/80 backdrop-blur-xl border-b border-white/8 pointer-events-none"
-            />
-          )}
-        </AnimatePresence>
-
-        <nav className="relative max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#e8edf5]">
+        <nav className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0">
             <motion.div
@@ -114,7 +96,7 @@ export default function Navbar() {
             onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
-            className="md:hidden p-2 -mr-2 rounded-lg text-foreground hover:bg-white/8 transition-colors"
+            className="md:hidden p-2 -mr-2 rounded-lg text-foreground hover:bg-[#f0f3f9] transition-colors"
           >
             <HamburgerIcon open={menuOpen} />
           </button>
@@ -143,10 +125,10 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 320, damping: 32, mass: 0.9 }}
-              className="fixed top-0 right-0 bottom-0 z-[60] w-72 flex flex-col bg-[var(--cw-surface)] border-l border-white/8 md:hidden"
+              className="fixed top-0 right-0 bottom-0 z-[60] w-72 flex flex-col bg-[var(--cw-surface)] border-l border-[#e8edf5] md:hidden"
             >
               {/* Drawer header */}
-              <div className="flex items-center justify-between px-5 h-16 border-b border-white/8 shrink-0">
+              <div className="flex items-center justify-between px-5 h-16 border-b border-[#e8edf5] shrink-0">
                 <Link
                   href="/"
                   onClick={() => setMenuOpen(false)}
@@ -160,7 +142,7 @@ export default function Navbar() {
                 <button
                   onClick={() => setMenuOpen(false)}
                   aria-label="Close menu"
-                  className="p-1.5 rounded-lg text-foreground hover:bg-white/8 transition-colors"
+                  className="p-1.5 rounded-lg text-foreground hover:bg-[#f0f3f9] transition-colors"
                 >
                   <HamburgerIcon open={true} />
                 </button>
@@ -178,7 +160,7 @@ export default function Navbar() {
                     <Link
                       href={href}
                       onClick={() => setMenuOpen(false)}
-                      className="flex items-center px-3 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-white/6 transition-colors"
+                      className="flex items-center px-3 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-[#f4f6fb] transition-colors"
                     >
                       {label}
                     </Link>
@@ -191,12 +173,12 @@ export default function Navbar() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.22, duration: 0.25 }}
-                className="p-5 border-t border-white/8 flex flex-col gap-2.5 shrink-0"
+                className="p-5 border-t border-[#e8edf5] flex flex-col gap-2.5 shrink-0"
               >
                 <Link href="/login" onClick={() => setMenuOpen(false)}>
                   <Button
                     variant="outline"
-                    className="w-full border-white/10 text-foreground hover:bg-white/6"
+                    className="w-full border-[#e8edf5] text-foreground hover:bg-[#f4f6fb]"
                   >
                     Sign in
                   </Button>

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 const LINKS = {
   Product: [
@@ -24,14 +24,14 @@ const LINKS = {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/8 bg-[var(--cw-surface)]">
-      <div className="max-w-7xl mx-auto px-6 pt-16 pb-10">
+    <footer className="border-t border-[#e8edf5] bg-[var(--cw-surface)]">
+      <div className="max-w-[1200px] mx-auto px-6 pt-16 pb-10">
         {/* Main grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 mb-4">
-              <div className="w-7 h-7 rounded-lg bg-[#ff6b6b] flex items-center justify-center text-white text-xs font-bold select-none">
+              <div className="w-7 h-7 rounded-lg bg-[#ff5b35] flex items-center justify-center text-white text-xs font-bold select-none">
                 ◈
               </div>
               <span className="font-semibold tracking-tight text-foreground">CODEWATCH</span>
@@ -64,7 +64,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="border-t border-[#e8edf5] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground/50">
             © 2026 Mieux Demain Private Limited. All rights reserved.
           </p>

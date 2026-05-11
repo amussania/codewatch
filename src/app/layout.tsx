@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "sonner";
@@ -7,7 +7,12 @@ import SmoothScroll from "@/components/shared/SmoothScroll";
 import CustomCursor from "@/components/shared/CustomCursor";
 import PageTransition from "@/components/shared/PageTransition";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -72,7 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      className={`${plusJakarta.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
@@ -101,7 +106,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <PageTransition>{children}</PageTransition>
           </SmoothScroll>
         </TooltipProvider>
-        <Toaster theme="dark" position="bottom-right" />
+        <Toaster theme="light" position="bottom-right" />
       </body>
     </html>
   );

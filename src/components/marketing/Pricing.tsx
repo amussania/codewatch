@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
@@ -113,16 +113,16 @@ export default function Pricing() {
   );
 
   return (
-    <section id="pricing" className="py-28 max-w-7xl mx-auto px-6">
+    <section id="pricing" className="py-[7.5rem] max-w-[1200px] mx-auto px-6">
       {/* Header */}
       <div className="text-center mb-16">
-        <span className="text-[#ff6b6b] text-sm font-medium uppercase tracking-widest">
+        <span className="text-[#ff5b35] text-sm font-medium uppercase tracking-widest">
           Pricing
         </span>
         <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
           Pay for what you review.
           <br />
-          <span className="text-[#ff6b6b]">Not for what you don&apos;t.</span>
+          <span className="text-[#ff5b35]">Not for what you don&apos;t.</span>
         </h2>
         <p className="text-muted-foreground mt-4 max-w-sm mx-auto">
           Credit-based. No seat taxes. No lock-in. Local taxes calculated at checkout.
@@ -135,11 +135,11 @@ export default function Pricing() {
           <div key={plan.name} className="pricing-card relative">
             {plan.featured && (
               <>
-                <div className="absolute -inset-[1px] rounded-[18px] bg-gradient-to-b from-[#ff6b6b]/60 via-[#ff6b6b]/20 to-[#4a9fff]/40 -z-10" />
+                <div className="absolute -inset-[1px] rounded-[18px] bg-gradient-to-b from-[#ff5b35]/60 via-[#ff5b35]/20 to-[#1a7be8]/40 -z-10" />
                 <motion.div
                   animate={{ opacity: [0.10, 0.24, 0.10], scale: [1, 1.04, 1] }}
                   transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -inset-5 rounded-3xl bg-[#ff6b6b] blur-2xl -z-20 pointer-events-none"
+                  className="absolute -inset-5 rounded-3xl bg-[#ff5b35] blur-2xl -z-20 pointer-events-none"
                 />
               </>
             )}
@@ -147,13 +147,13 @@ export default function Pricing() {
             <div
               className={`relative rounded-2xl border p-6 flex flex-col gap-5 h-full ${
                 plan.featured
-                  ? "border-[#ff6b6b]/30 bg-[var(--cw-surface-elevated)]"
-                  : "border-white/8 bg-[var(--cw-surface)]"
+                  ? "border-[#ff5b35]/30 bg-[var(--cw-surface-elevated)]"
+                  : "border-[#e8edf5] bg-[var(--cw-surface)]"
               }`}
             >
               {plan.featured && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="px-3 py-1 rounded-full bg-[#ff6b6b] text-white text-xs font-semibold shadow-lg shadow-[#ff6b6b44]">
+                  <span className="px-3 py-1 rounded-full bg-[#ff5b35] text-white text-xs font-semibold shadow-lg shadow-[#ff5b3544]">
                     Most popular
                   </span>
                 </div>
@@ -175,7 +175,7 @@ export default function Pricing() {
               <ul className="space-y-2 flex-1">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-xs text-muted-foreground">
-                    <span className="text-[#ff6b6b] mt-px shrink-0">✓</span>
+                    <span className="text-[#ff5b35] mt-px shrink-0">✓</span>
                     {f}
                   </li>
                 ))}
@@ -185,8 +185,8 @@ export default function Pricing() {
                 <Button
                   className={`w-full transition-all text-sm ${
                     plan.featured
-                      ? "bg-[#ff6b6b] hover:bg-[#ff6b6b]/90 text-white border-0 shadow-lg shadow-[#ff6b6b33]"
-                      : "bg-white/6 hover:bg-white/10 text-foreground border border-white/10"
+                      ? "bg-[#ff5b35] hover:bg-[#ff5b35]/90 text-white border-0 shadow-lg shadow-[#ff5b3533]"
+                      : "bg-[#f8faff] hover:bg-[#edf0f7] text-foreground border border-[#e8edf5]"
                   }`}
                 >
                   {plan.cta}
@@ -200,7 +200,7 @@ export default function Pricing() {
       {/* Credit system + top-up */}
       <div className="grid md:grid-cols-2 gap-5 mb-8">
         {/* Credit table */}
-        <div className="rounded-2xl border border-white/8 bg-[var(--cw-surface)] p-6">
+        <div className="rounded-2xl border border-[#e8edf5] bg-[var(--cw-surface)] p-6">
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60 mb-4">
             Credit Usage
           </p>
@@ -215,7 +215,7 @@ export default function Pricing() {
         </div>
 
         {/* Top-up + notes */}
-        <div className="rounded-2xl border border-white/8 bg-[var(--cw-surface)] p-6 flex flex-col justify-between">
+        <div className="rounded-2xl border border-[#e8edf5] bg-[var(--cw-surface)] p-6 flex flex-col justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60 mb-4">
               Top-up Credits
@@ -230,7 +230,7 @@ export default function Pricing() {
           </div>
           <div className="mt-6">
             <Link href="/signup">
-              <Button className="w-full bg-white/6 hover:bg-white/10 text-foreground border border-white/10 text-sm">
+              <Button className="w-full bg-[#f8faff] hover:bg-[#edf0f7] text-foreground border border-[#e8edf5] text-sm">
                 Top up credits
               </Button>
             </Link>

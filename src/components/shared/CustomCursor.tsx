@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, useSpring } from "framer-motion";
 
-const CORAL = "#ff6b6b";
+const CORAL = "#ff5b35";
 
 export default function CustomCursor() {
   const [hovered, setHovered] = useState(false);

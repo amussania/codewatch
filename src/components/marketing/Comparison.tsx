@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { gsap } from "gsap";
@@ -25,7 +25,7 @@ const COMPETITORS = ["CodeRabbit", "Greptile", "Copilot", "Codacy"];
 
 function CellContent({ val, isCW }: { val: CellVal; isCW?: boolean }) {
   if (val === true)      return <span className="text-[#00c4a0] font-bold text-base leading-none">✓</span>;
-  if (val === false)     return <span className="text-white/20 text-base leading-none">✗</span>;
+  if (val === false)     return <span className="text-[#c5cdd9] text-base leading-none">✗</span>;
   if (val === "partial") return <span className="text-amber-400 text-base leading-none">◉</span>;
   if (isCW)             return <span className="text-[#00c4a0] font-semibold text-sm">{val}</span>;
   return <span className="text-muted-foreground text-sm">{val}</span>;
@@ -53,30 +53,31 @@ export default function Comparison() {
   );
 
   return (
-    <section ref={sectionRef} className="py-28 max-w-7xl mx-auto px-6">
+    <section ref={sectionRef} className="py-[7.5rem] bg-[#f8faff]">
+      <div className="max-w-[1200px] mx-auto px-6">
       <div className="text-center mb-16">
-        <span className="text-[#ff6b6b] text-sm font-medium uppercase tracking-widest">
+        <span className="text-[#ff5b35] text-sm font-medium uppercase tracking-widest">
           Comparison
         </span>
         <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
           How we stack up
           <br />
-          <span className="text-[#ff6b6b]">against the market.</span>
+          <span className="text-[#ff5b35]">against the market.</span>
         </h2>
         <p className="text-muted-foreground mt-5 max-w-lg mx-auto leading-relaxed">
           Every competitor does code review. Not one of them does what the market actually needs in 2026.
         </p>
       </div>
 
-      <div className="rounded-2xl border border-white/8 overflow-hidden">
+      <div className="rounded-2xl border border-[#e8edf5] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-sm min-w-[640px]">
             <thead>
-              <tr className="border-b border-white/8 bg-white/[0.03]">
+              <tr className="border-b border-[#e8edf5] bg-[#f4f6fb]">
                 <th className="text-left px-5 py-4 text-[11px] font-semibold text-muted-foreground uppercase tracking-widest w-[240px]">
                   Feature
                 </th>
-                <th className="px-5 py-4 text-center text-[11px] font-semibold text-[#ff6b6b] uppercase tracking-widest">
+                <th className="px-5 py-4 text-center text-[11px] font-semibold text-[#ff5b35] uppercase tracking-widest">
                   CODEWATCH
                 </th>
                 {COMPETITORS.map((c) => (
@@ -93,17 +94,17 @@ export default function Comparison() {
               {ROWS.map((row, i) => (
                 <tr
                   key={i}
-                  className="comp-row border-b border-white/8 last:border-0 hover:bg-white/[0.015] transition-colors"
+                  className="comp-row border-b border-[#e8edf5] last:border-0 hover:bg-[#f4f6fb] transition-colors"
                 >
                   <td className="px-5 py-4 text-foreground/80">
                     {row.label}
                     {row.sub && (
-                      <span className="ml-2 inline-block text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#ff6b6b]/10 text-[#ff6b6b] border border-[#ff6b6b]/20 tracking-wider align-middle">
+                      <span className="ml-2 inline-block text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#ff5b35]/10 text-[#ff5b35] border border-[#ff5b35]/20 tracking-wider align-middle">
                         {row.sub}
                       </span>
                     )}
                   </td>
-                  <td className="px-5 py-4 text-center bg-[#ff6b6b]/[0.025]">
+                  <td className="px-5 py-4 text-center bg-[#ff5b35]/[0.025]">
                     <CellContent val={row.cw} isCW />
                   </td>
                   <td className="px-5 py-4 text-center"><CellContent val={row.cr} /></td>
@@ -115,6 +116,7 @@ export default function Comparison() {
             </tbody>
           </table>
         </div>
+      </div>
       </div>
     </section>
   );

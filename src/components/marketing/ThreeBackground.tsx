@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef, useMemo, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
@@ -17,8 +17,8 @@ function ParticleMesh() {
   const { nodePositions, nodeColors } = useMemo(() => {
     const nodePositions = new Float32Array(NODE_COUNT * 3);
     const nodeColors = new Float32Array(NODE_COUNT * 3);
-    const coral = new THREE.Color("#ff6b6b");
-    const blue = new THREE.Color("#4a9fff");
+    const coral = new THREE.Color("#ff5b35");
+    const blue = new THREE.Color("#1a7be8");
 
     for (let i = 0; i < NODE_COUNT; i++) {
       nodePositions[i * 3]     = (Math.random() - 0.5) * 11;
@@ -90,7 +90,7 @@ function ParticleMesh() {
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[linePositions, 3]} />
         </bufferGeometry>
-        <lineBasicMaterial color="#4a9fff" transparent opacity={0.13} />
+        <lineBasicMaterial color="#1a7be8" transparent opacity={0.13} />
       </lineSegments>
     </group>
   );

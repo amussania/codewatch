@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
@@ -12,7 +12,7 @@ const SPECIALISTS = [
   {
     icon: "🔒",
     name: "Security Specialist",
-    color: "#ff6b6b",
+    color: "#ff5b35",
     badge: "ALWAYS ON",
     tags: ["OWASP Top 10", "Auth flows", "Injection", "Secrets", "Timing attacks"],
     desc: "OWASP Top 10, auth flows, injection, timing attacks, exposed secrets, insecure patterns, environment variable leaks. Runs on every single review.",
@@ -78,16 +78,17 @@ export default function Specialists() {
   );
 
   return (
-    <section ref={sectionRef} id="features" className="py-28 max-w-7xl mx-auto px-6">
+    <section ref={sectionRef} id="features" className="py-[7.5rem] bg-[#f8faff]">
+      <div className="max-w-[1200px] mx-auto px-6">
       {/* Header */}
       <div className="text-center mb-16">
-        <span className="text-[#ff6b6b] text-sm font-medium uppercase tracking-widest">
+        <span className="text-[#ff5b35] text-sm font-medium uppercase tracking-widest">
           The specialists
         </span>
         <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
           Five specialists.
           <br />
-          <span className="text-[#ff6b6b]">One Master Score.</span>
+          <span className="text-[#ff5b35]">One Master Score.</span>
         </h2>
         <p className="text-muted-foreground mt-4 max-w-lg mx-auto leading-relaxed">
           Three specialists run on every review. Two are optional. All five run in parallel.
@@ -102,7 +103,7 @@ export default function Specialists() {
             key={s.name}
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 400, damping: 28 }}
-            className="spec-card group relative rounded-2xl border border-white/8 bg-[var(--cw-surface)] p-6 flex flex-col gap-4 overflow-hidden"
+            className="spec-card group relative rounded-2xl border border-[#e8edf5] bg-[var(--cw-surface)] p-6 flex flex-col gap-4 overflow-hidden"
           >
             {/* Corner glow on hover */}
             <div
@@ -146,7 +147,7 @@ export default function Specialists() {
             <p className="text-sm text-muted-foreground leading-relaxed flex-1">{s.desc}</p>
 
             {/* Example catch */}
-            <div className="rounded-lg bg-white/[0.04] border border-white/[0.06] px-3 py-2.5">
+            <div className="rounded-lg bg-[#f8faff] border border-[#e8edf5] px-3 py-2.5">
               <p className="text-[10px] uppercase tracking-wider font-medium mb-1" style={{ color: s.color }}>
                 {s.example.label}
               </p>
@@ -154,6 +155,7 @@ export default function Specialists() {
             </div>
           </motion.div>
         ))}
+      </div>
       </div>
     </section>
   );

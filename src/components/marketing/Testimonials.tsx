@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 import { motion, useMotionValue, useAnimation, type PanInfo } from "framer-motion";
@@ -10,7 +10,7 @@ const TESTIMONIALS = [
     role: "Senior Engineer",
     company: "Fintech startup",
     avatar: "RM",
-    color: "#ff6b6b",
+    color: "#ff5b35",
     score: { before: 58, after: 91 },
   },
   {
@@ -71,17 +71,17 @@ export default function Testimonials() {
   }
 
   return (
-    <section className="py-28 overflow-hidden" id="testimonials">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-[7.5rem] overflow-hidden bg-[#f8faff]" id="testimonials">
+      <div className="max-w-[1200px] mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-14">
-          <span className="text-[#ff6b6b] text-sm font-medium uppercase tracking-widest">
+          <span className="text-[#ff5b35] text-sm font-medium uppercase tracking-widest">
             Testimonials
           </span>
           <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
             What the market
             <br />
-            <span className="text-[#ff6b6b]">actually needed.</span>
+            <span className="text-[#ff5b35]">actually needed.</span>
           </h2>
           <p className="text-muted-foreground mt-4 max-w-sm mx-auto">
             Developers, founders, and agencies who review code for a living.
@@ -90,7 +90,7 @@ export default function Testimonials() {
       </div>
 
       {/* Drag carousel — extends past container edges */}
-      <div className="max-w-7xl mx-auto px-6 overflow-visible">
+      <div className="max-w-[1200px] mx-auto px-6 overflow-visible">
         <div className="overflow-hidden -mx-6 px-6">
           <motion.div
             animate={controls}
@@ -107,7 +107,7 @@ export default function Testimonials() {
               <motion.div
                 key={i}
                 style={{ width: CARD_W, minWidth: CARD_W }}
-                className="rounded-2xl border border-white/8 bg-[var(--cw-surface)] p-6 flex flex-col gap-5"
+                className="rounded-2xl border border-[#e8edf5] bg-[var(--cw-surface)] p-6 flex flex-col gap-5"
               >
                 {/* Stars */}
                 <div className="flex gap-0.5">
@@ -122,14 +122,14 @@ export default function Testimonials() {
                 </p>
 
                 {/* Score delta */}
-                <div className="flex items-center gap-2 py-2.5 px-3 rounded-lg bg-white/[0.04] border border-white/[0.06]">
+                <div className="flex items-center gap-2 py-2.5 px-3 rounded-lg bg-[#f8faff] border border-[#e8edf5]">
                   <div className="text-center">
                     <div className="text-xs text-muted-foreground mb-0.5">Before</div>
                     <div className="text-lg font-bold text-muted-foreground">{t.score.before}</div>
                   </div>
-                  <div className="flex-1 h-px bg-white/10 relative">
+                  <div className="flex-1 h-px bg-[#f0f3f9] relative">
                     <div
-                      className="absolute top-1/2 -translate-y-1/2 right-0 text-[#ff6b6b] text-xs font-bold"
+                      className="absolute top-1/2 -translate-y-1/2 right-0 text-[#ff5b35] text-xs font-bold"
                       style={{ color: t.color }}
                     >
                       +{t.score.after - t.score.before}
@@ -142,7 +142,7 @@ export default function Testimonials() {
                 </div>
 
                 {/* Author */}
-                <div className="flex items-center gap-3 pt-1 border-t border-white/6">
+                <div className="flex items-center gap-3 pt-1 border-t border-[#e8edf5]">
                   <div
                     className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
                     style={{ backgroundColor: t.color }}
@@ -172,7 +172,7 @@ export default function Testimonials() {
             >
               <motion.div
                 animate={{ width: i === currentIdx ? 20 : 8, opacity: i === currentIdx ? 1 : 0.35 }}
-                className="h-1.5 rounded-full bg-[#ff6b6b]"
+                className="h-1.5 rounded-full bg-[#ff5b35]"
               />
             </button>
           ))}

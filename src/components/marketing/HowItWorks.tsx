@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState, useEffect } from "react";
 import { gsap } from "gsap";
@@ -99,16 +99,16 @@ export default function HowItWorks() {
   );
 
   return (
-    <section id="how-it-works" className="py-28 max-w-7xl mx-auto px-6">
+    <section id="how-it-works" className="py-[7.5rem] max-w-[1200px] mx-auto px-6">
       {/* Header */}
       <div className="text-center mb-20">
-        <span className="text-[#ff6b6b] text-sm font-medium uppercase tracking-widest">
+        <span className="text-[#ff5b35] text-sm font-medium uppercase tracking-widest">
           The process
         </span>
         <h2 className="text-4xl lg:text-5xl font-bold mt-3 tracking-tight">
           Paste. Review.
           <br />
-          <span className="text-[#ff6b6b]">Ship With Confidence.</span>
+          <span className="text-[#ff5b35]">Ship With Confidence.</span>
         </h2>
         <p className="text-muted-foreground mt-4 max-w-md mx-auto">
           Four steps. Under two minutes. No repo connection needed.
@@ -129,8 +129,8 @@ export default function HowItWorks() {
           >
             <defs>
               <linearGradient id="hiw-grad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
-                <stop offset="0%" stopColor="#ff6b6b" />
-                <stop offset="100%" stopColor="#4a9fff" />
+                <stop offset="0%" stopColor="#ff5b35" />
+                <stop offset="100%" stopColor="#1a7be8" />
               </linearGradient>
             </defs>
             {/* Static track */}
@@ -154,7 +154,7 @@ export default function HowItWorks() {
           {STEPS.map((step, i) => (
             <div key={i} className="hiw-step relative flex gap-7 md:gap-10 items-start">
               {/* Icon node */}
-              <div className="relative z-10 shrink-0 w-[78px] h-[78px] rounded-2xl border border-white/10 bg-[var(--cw-surface-elevated)] flex flex-col items-center justify-center shadow-xl">
+              <div className="relative z-10 shrink-0 w-[78px] h-[78px] rounded-2xl border border-[#e8edf5] bg-[var(--cw-surface-elevated)] flex flex-col items-center justify-center shadow-xl">
                 <span className="text-2xl leading-none">{step.icon}</span>
                 <span className="text-[10px] font-mono text-muted-foreground mt-1 opacity-60">{step.num}</span>
               </div>
@@ -163,7 +163,7 @@ export default function HowItWorks() {
               <div className="pt-2 flex-1">
                 <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
                 <p className="text-muted-foreground leading-relaxed max-w-lg mb-3">{step.desc}</p>
-                <p className="text-xs text-muted-foreground/60 font-mono border-l-2 border-[#ff6b6b]/30 pl-3">
+                <p className="text-xs text-muted-foreground/60 font-mono border-l-2 border-[#ff5b35]/30 pl-3">
                   {step.detail}
                 </p>
               </div>

@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 const SPECIALIST_SCORES = [
-  { name: "Security", score: 31, color: "#ff6b6b" },
+  { name: "Security", score: 31, color: "#ff5b35" },
   { name: "Reliability", score: 58, color: "#4da3ff" },
   { name: "Business Logic", score: 22, color: "#00c4a0" },
   { name: "Performance", score: 67, color: "#fbbf24" },
@@ -12,8 +12,8 @@ const SPECIALIST_SCORES = [
 ];
 
 const ISSUES = [
-  { dot: "#ff6b6b", label: "SQL injection in query builder", severity: "CRITICAL" },
-  { dot: "#ff6b6b", label: "Hardcoded API key in source", severity: "CRITICAL" },
+  { dot: "#ff5b35", label: "SQL injection in query builder", severity: "CRITICAL" },
+  { dot: "#ff5b35", label: "Hardcoded API key in source", severity: "CRITICAL" },
   { dot: "#fbbf24", label: "No timeout on external fetch", severity: "HIGH" },
   { dot: "#00c4a0", label: "GST rounding incorrect (18% rule)", severity: "LOGIC" },
 ];
@@ -49,9 +49,9 @@ export default function HeroVisual() {
       transition={{ duration: 0.85, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
       className="relative select-none"
     >
-      {/* Ambient glows */}
-      <div className="absolute -inset-10 rounded-full bg-[#ff6b6b] opacity-[0.07] blur-3xl pointer-events-none" />
-      <div className="absolute -inset-10 rounded-full bg-[#4da3ff] opacity-[0.04] blur-3xl pointer-events-none translate-x-10 translate-y-4" />
+      {/* Ambient glows — visible on white bg */}
+      <div className="absolute -inset-10 rounded-full bg-[#ff5b35] opacity-[0.12] blur-3xl pointer-events-none" />
+      <div className="absolute -inset-10 rounded-full bg-[#1a7be8] opacity-[0.08] blur-3xl pointer-events-none translate-x-10 translate-y-4" />
 
       {/* Floating chips */}
       <motion.div
@@ -81,10 +81,10 @@ export default function HeroVisual() {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-            className="w-[390px] rounded-2xl border border-white/10 bg-[var(--cw-surface)] shadow-2xl overflow-hidden"
+            className="w-[390px] rounded-2xl border border-[#e8edf5] bg-[var(--cw-surface)] shadow-2xl overflow-hidden"
           >
             {/* Window chrome */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-white/8 bg-[var(--cw-surface-elevated)]">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-[#e8edf5] bg-[var(--cw-surface-elevated)]">
               <div className="flex items-center gap-3">
                 <div className="flex gap-1.5">
                   {["#ff5f57","#ffbd2e","#28c840"].map((c) => (
@@ -94,7 +94,7 @@ export default function HeroVisual() {
                 <span className="text-[11px] text-muted-foreground font-mono">production-clearance</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="text-[10px] font-bold text-[#ff6b6b] bg-[#ff6b6b]/10 border border-[#ff6b6b]/20 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-bold text-[#ff5b35] bg-[#ff5b35]/10 border border-[#ff5b35]/20 px-2 py-0.5 rounded">
                   HIGH RISK
                 </span>
               </div>
@@ -104,11 +104,11 @@ export default function HeroVisual() {
             <div className="flex items-center gap-4 px-4 pt-4 pb-3">
               <div className="shrink-0 relative">
                 <svg width="64" height="64" viewBox="0 0 64 64">
-                  <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="5" />
+                  <circle cx="32" cy="32" r="26" fill="none" stroke="#e8edf5" strokeWidth="5" />
                   <motion.circle
                     cx="32" cy="32" r="26"
                     fill="none"
-                    stroke="#ff6b6b"
+                    stroke="#ff5b35"
                     strokeWidth="5"
                     strokeLinecap="round"
                     strokeDasharray={`${2 * Math.PI * 26}`}
@@ -117,7 +117,7 @@ export default function HeroVisual() {
                     transition={{ duration: 1.4, delay: 0.8, ease: "easeOut" }}
                     transform="rotate(-90 32 32)"
                   />
-                  <text x="32" y="36" textAnchor="middle" fill="#ff6b6b" fontSize="14" fontWeight="700" fontFamily="monospace">
+                  <text x="32" y="36" textAnchor="middle" fill="#ff5b35" fontSize="14" fontWeight="700" fontFamily="monospace">
                     42
                   </text>
                 </svg>
@@ -129,7 +129,7 @@ export default function HeroVisual() {
                   {SPECIALIST_SCORES.map((s, i) => (
                     <div key={s.name} className="flex items-center gap-2">
                       <span className="text-[9px] text-muted-foreground w-[80px] truncate">{s.name}</span>
-                      <div className="flex-1 h-1 rounded-full bg-white/[0.06] overflow-hidden">
+                      <div className="flex-1 h-1 rounded-full bg-[#edf0f7] overflow-hidden">
                         <motion.div
                           className="h-full rounded-full"
                           style={{ backgroundColor: s.color }}
@@ -153,13 +153,13 @@ export default function HeroVisual() {
                   initial={{ opacity: 0, x: 18 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 1.2 + i * 0.09, type: "spring", stiffness: 320, damping: 26 }}
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.06]"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#f8faff] border border-[#e8edf5]"
                 >
                   <div
                     className="w-1.5 h-1.5 rounded-full shrink-0"
                     style={{ backgroundColor: issue.dot, boxShadow: `0 0 5px ${issue.dot}88` }}
                   />
-                  <span className="text-[11px] text-white/60 flex-1 truncate">{issue.label}</span>
+                  <span className="text-[11px] text-[#3d4f6b] flex-1 truncate">{issue.label}</span>
                   <span
                     className="text-[9px] font-bold shrink-0 px-1.5 py-0.5 rounded"
                     style={{ color: issue.dot, backgroundColor: `${issue.dot}15` }}
@@ -174,10 +174,10 @@ export default function HeroVisual() {
             <div className="px-4 pb-4 grid grid-cols-3 gap-2">
               {[
                 { label: "AI Origin", value: "82%", color: "#fbbf24" },
-                { label: "Issues Found", value: "10", color: "#ff6b6b" },
+                { label: "Issues Found", value: "10", color: "#ff5b35" },
                 { label: "Rewrite", value: "Ready", color: "#00c4a0" },
               ].map((m) => (
-                <div key={m.label} className="rounded-lg bg-white/[0.03] border border-white/[0.06] px-2 py-1.5 text-center">
+                <div key={m.label} className="rounded-lg bg-[#f4f6fb] border border-[#e8edf5] px-2 py-1.5 text-center">
                   <p className="text-sm font-bold" style={{ color: m.color }}>{m.value}</p>
                   <p className="text-[9px] text-muted-foreground">{m.label}</p>
                 </div>
