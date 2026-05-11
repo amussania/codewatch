@@ -15,7 +15,6 @@ const doubled = [...ITEMS, ...ITEMS];
 
 export default function Ticker() {
   return (
-    {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
     <div
       className="border-t border-b border-[#e8edf5] overflow-hidden bg-[#f4f6fb] py-3.5"
       onMouseEnter={(e) => {
