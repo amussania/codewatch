@@ -1,3 +1,5 @@
+"use client";
+
 const ITEMS = [
   "Security Specialist",
   "Reliability Engineer",
