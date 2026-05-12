@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const FEATURES = [
   {
@@ -36,6 +37,8 @@ const FEATURES = [
 ];
 
 export default function UniqueFeatures() {
+  const [openIdx, setOpenIdx] = useState<number | null>(0);
+
   return (
     <section className="py-[140px] max-w-[1120px] mx-auto px-6 lg:px-12">
       <motion.div
@@ -59,43 +62,92 @@ export default function UniqueFeatures() {
         </p>
       </motion.div>
 
-      <div className="rounded-2xl border border-[#e8e8e2] bg-white overflow-hidden">
-        {FEATURES.map((f, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.6, delay: i * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className={`flex flex-col md:flex-row hover:bg-[#faf9f6] transition-colors duration-200 ${
-              i < FEATURES.length - 1 ? "border-b border-[#e8e8e2]" : ""
-            }`}
-          >
-            {/* Left 35%: pill + name */}
-            <div className="md:w-[35%] shrink-0 px-8 py-8 flex flex-col gap-3 justify-center border-b md:border-b-0 md:border-r border-[#e8e8e2]">
-              <span
-                className="font-sans text-[10px] uppercase tracking-[0.08em] px-3 py-1 rounded-full w-fit"
-                style={{
-                  backgroundColor: "rgba(255,91,53,0.08)",
-                  color: "#ff5b35",
-                  border: "1px solid rgba(255,91,53,0.15)",
-                }}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="rounded-2xl border border-[#e8e8e2] bg-white overflow-hidden"
+      >
+        {FEATURES.map((f, i) => {
+          const isOpen = openIdx === i;
+          return (
+            <div
+              key={i}
+              className={`border-l-[3px] transition-colors duration-300 ${
+                i < FEATURES.length - 1 ? "border-b border-[#e8e8e2]" : ""
+              }`}
+              style={{
+                borderLeftColor: isOpen ? "#ff5b35" : "transparent",
+                backgroundColor: isOpen ? "#fdf9f7" : undefined,
+              }}
+            >
+              {/* Header row */}
+              <button
+                onClick={() => setOpenIdx(isOpen ? null : i)}
+                aria-expanded={isOpen}
+                className={`w-full flex items-center gap-4 px-6 py-6 text-left transition-colors duration-200 ${
+                  !isOpen ? "hover:bg-[#faf9f6]" : ""
+                }`}
+                style={{ cursor: "pointer" }}
               >
-                {f.pill}
-              </span>
-              <h3 className="text-[18px] font-bold leading-tight text-[#0d0d0d]">{f.name}</h3>
-            </div>
+                {/* Left: pill + name */}
+                <div className="flex flex-col gap-2 flex-1 min-w-0">
+                  <span
+                    className="font-sans text-[10px] uppercase tracking-[0.08em] px-2.5 py-0.5 rounded-full w-fit"
+                    style={{
+                      backgroundColor: "rgba(255,91,53,0.08)",
+                      color: "#ff5b35",
+                      border: "1px solid rgba(255,91,53,0.15)",
+                    }}
+                  >
+                    {f.pill}
+                  </span>
+                  <span
+                    className="text-[18px] font-bold leading-tight"
+                    style={{ color: isOpen ? "#ff5b35" : "#0d0d0d" }}
+                  >
+                    {f.name}
+                  </span>
+                </div>
 
-            {/* Right 65%: description + pull quote */}
-            <div className="flex-1 px-8 py-8 flex flex-col gap-4 justify-center">
-              <p className="text-[15px] text-[#555550] leading-[1.8]">{f.body}</p>
-              <blockquote className="pl-4 border-l-[3px] border-[#ff5b35]">
-                <p className="font-serif italic text-[15px] text-[#888880] leading-[1.7]">{f.quote}</p>
-              </blockquote>
+                {/* Right: rotating plus icon */}
+                <motion.span
+                  animate={{ rotate: isOpen ? 45 : 0 }}
+                  transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  className="shrink-0 w-7 h-7 rounded-full border border-[#e8e8e2] flex items-center justify-center text-[18px] font-light leading-none select-none"
+                  style={{ color: isOpen ? "#ff5b35" : "#999990" }}
+                >
+                  +
+                </motion.span>
+              </button>
+
+              {/* Expandable content */}
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    key="content"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="px-6 pb-6 pt-0">
+                      <p className="text-[15px] text-[#555550] leading-[1.7] mb-4">{f.body}</p>
+                      <blockquote className="pl-4 border-l-[3px] border-[#ff5b35]">
+                        <p className="font-serif italic text-[15px] text-[#888880] leading-[1.7]">
+                          {f.quote}
+                        </p>
+                      </blockquote>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          </motion.div>
-        ))}
-      </div>
+          );
+        })}
+      </motion.div>
     </section>
   );
 }
