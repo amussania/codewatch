@@ -78,7 +78,7 @@ export default function Specialists() {
         </motion.div>
 
         {/* 5-column grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 items-stretch">
           {SPECIALISTS.map((s, i) => (
             <motion.div
               key={s.name}
@@ -87,10 +87,10 @@ export default function Specialists() {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.7, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
               whileHover={{ y: -4, boxShadow: "0 16px 48px rgba(0,0,0,0.08)" }}
-              className="bg-white p-8 flex flex-col gap-3 rounded-2xl border border-[#e8e8e2] hover:border-[#d0d0c8] transition-colors duration-300"
+              className="bg-white p-6 flex flex-col rounded-2xl border border-[#e8e8e2] hover:border-[#d0d0c8] transition-colors duration-300 h-full"
             >
               {/* Number + badge row */}
-              <div className="flex items-start justify-between">
+              <div className="flex items-start justify-between mb-3">
                 <span
                   className="text-[11px] font-bold tracking-[0.06em] tabular-nums"
                   style={{ color: s.color }}
@@ -107,16 +107,16 @@ export default function Specialists() {
 
               {/* Icon */}
               <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0"
+                className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0 mb-3"
                 style={{ backgroundColor: `${s.color}12`, border: `1px solid ${s.color}28` }}
               >
                 {s.icon}
               </div>
 
-              <h3 className="font-semibold text-sm text-[#0d0d0d] leading-tight">{s.name}</h3>
-              <p className="text-xs text-[#555550] leading-[1.7] flex-1">{s.desc}</p>
+              <h3 className="font-semibold text-sm text-[#0d0d0d] leading-tight mb-2">{s.name}</h3>
+              <p className="text-[13px] text-[#555550] leading-[1.65] flex-1">{s.desc}</p>
 
-              <div className="rounded-xl bg-[#f5f4f0] border border-[#e8e8e2] px-3 py-2">
+              <div className="rounded-xl bg-[#f5f4f0] border border-[#e8e8e2] p-3 mt-4">
                 <p className="text-[9px] uppercase tracking-wider font-semibold mb-0.5" style={{ color: s.color }}>
                   {s.example.label}
                 </p>
