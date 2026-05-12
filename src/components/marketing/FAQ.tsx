@@ -49,21 +49,21 @@ function FAQItem({ faq, isOpen, onToggle, delay }: {
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.45, delay, ease: "easeOut" }}
-      className="border-b border-[#e2e2ee] last:border-0"
+      transition={{ duration: 0.7, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className="border-b border-[#e8e8e2] last:border-0"
     >
       <button
         onClick={onToggle}
         aria-expanded={isOpen}
         className="w-full flex items-start justify-between gap-4 py-5 text-left group"
       >
-        <span className="text-sm font-medium leading-snug pr-2 group-hover:text-foreground transition-colors">
+        <span className="text-sm font-medium leading-snug pr-2 text-[#0d0d0d] group-hover:text-[#ff5b35] transition-colors duration-200">
           {faq.q}
         </span>
         <motion.div
           animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ type: "spring", stiffness: 420, damping: 26 }}
-          className="shrink-0 mt-0.5 w-5 h-5 rounded-full border border-[#e2e2ee] flex items-center justify-center text-muted-foreground group-hover:border-[#ff5b35]/40 group-hover:text-[#ff5b35] transition-colors"
+          className="shrink-0 mt-0.5 w-5 h-5 rounded-full border border-[#e8e8e2] flex items-center justify-center text-[#999990] group-hover:border-[#ff5b35]/40 group-hover:text-[#ff5b35] transition-colors"
         >
           <span className="text-xs font-bold leading-none">+</span>
         </motion.div>
@@ -76,10 +76,10 @@ function FAQItem({ faq, isOpen, onToggle, delay }: {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="overflow-hidden"
           >
-            <p className="text-sm text-muted-foreground leading-relaxed pb-5 max-w-2xl">
+            <p className="text-sm text-[#555550] leading-[1.7] pb-5 max-w-2xl">
               {faq.a}
             </p>
           </motion.div>
@@ -93,24 +93,24 @@ export default function FAQ() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="py-[100px] bg-[#f8faff]">
-      <div className="max-w-3xl mx-auto px-6">
+    <section id="faq" className="py-[140px]">
+      <div className="max-w-3xl mx-auto px-6 lg:px-12">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.55, ease: "easeOut" }}
+          transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="text-center mb-14"
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="block w-6 h-px bg-[#ff5b35]" />
-            <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">FAQ</span>
+            <span className="text-[#ff5b35] text-[11px] tracking-[.2em] uppercase font-medium">FAQ</span>
           </div>
-          <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
+          <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[1.15] tracking-[-0.02em] mt-3">
             Common questions
           </h2>
-          <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-4 max-w-sm mx-auto">
+          <p className="text-[17px] text-[#999990] mt-4 max-w-sm mx-auto leading-[1.7]">
             Still have questions?{" "}
             <a href="mailto:hello@codewatch.dev" className="text-[#ff5b35] hover:underline">
               Email us
@@ -119,7 +119,7 @@ export default function FAQ() {
           </p>
         </motion.div>
 
-        <div className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] px-6">
+        <div className="rounded-2xl border border-[#e8e8e2] bg-white px-6">
           {FAQS.map((faq, i) => (
             <FAQItem
               key={i}

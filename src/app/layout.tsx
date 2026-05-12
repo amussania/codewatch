@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, DM_Mono, Fraunces, Geist_Mono } from "next/font/google";
+import { Bebas_Neue, DM_Mono, Fraunces, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "sonner";
@@ -28,6 +28,13 @@ const fraunces = Fraunces({
   display: "swap",
 });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-body",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://codewatch.dev"),
@@ -91,11 +98,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${bebasNeue.variable} ${dmMono.variable} ${fraunces.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${bebasNeue.variable} ${dmMono.variable} ${fraunces.variable} ${geistMono.variable} ${plusJakartaSans.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        {/* Global SVG filter definitions — NoiseOverlay references url(#cw-noise) */}
         <svg
           aria-hidden
           className="absolute w-0 h-0 overflow-hidden"

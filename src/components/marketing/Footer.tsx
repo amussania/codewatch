@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 
 const LINKS = {
   Product: [
@@ -24,8 +24,8 @@ const LINKS = {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-[#e2e2ee] bg-[var(--cw-surface)]">
-      <div className="max-w-[1100px] mx-auto px-6 pt-16 pb-10">
+    <footer className="border-t border-[#e8e8e2] bg-white">
+      <div className="max-w-[1120px] mx-auto px-6 lg:px-12 pt-16 pb-10">
         {/* Main grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
           {/* Brand */}
@@ -34,9 +34,9 @@ export default function Footer() {
               <div className="w-7 h-7 rounded-lg bg-[#ff5b35] flex items-center justify-center text-white text-xs font-bold select-none">
                 ◈
               </div>
-              <span className="font-heading text-xl tracking-[.08em] text-foreground">CODEWATCH</span>
+              <span className="font-heading text-xl tracking-[.08em] text-[#0d0d0d]">CODEWATCH</span>
             </Link>
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-[220px]">
+            <p className="text-sm text-[#999990] leading-[1.7] max-w-[220px]">
               Multi-specialist AI code review with business logic awareness. Built for the era of AI-generated code.
             </p>
           </div>
@@ -44,7 +44,7 @@ export default function Footer() {
           {/* Link columns */}
           {Object.entries(LINKS).map(([heading, links]) => (
             <div key={heading}>
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60 mb-4">
+              <p className="text-[11px] font-semibold uppercase tracking-widest text-[#999990] mb-4">
                 {heading}
               </p>
               <ul className="space-y-3">
@@ -52,7 +52,7 @@ export default function Footer() {
                   <li key={label}>
                     <Link
                       href={href}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+                      className="text-sm text-[#555550] hover:text-[#0d0d0d] transition-colors duration-200"
                     >
                       {label}
                     </Link>
@@ -64,11 +64,11 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-[#e2e2ee] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground/50">
+        <div className="border-t border-[#e8e8e2] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-[#999990]/70">
             © 2026 Mieux Demain Private Limited. All rights reserved.
           </p>
-          <p className="text-xs text-muted-foreground/40 text-center md:text-right max-w-sm">
+          <p className="text-xs text-[#999990]/50 text-center md:text-right max-w-sm">
             Built for the era of AI-generated code. Your code is never stored.
           </p>
         </div>

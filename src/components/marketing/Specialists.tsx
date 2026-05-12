@@ -52,32 +52,32 @@ const SPECIALISTS = [
 
 export default function Specialists() {
   return (
-    <section id="features" className="py-[100px]">
-      <div className="max-w-[1100px] mx-auto px-8">
+    <section id="features" className="py-[140px]">
+      <div className="max-w-[1120px] mx-auto px-6 lg:px-12">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.55, ease: "easeOut" }}
+          transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="text-center mb-16"
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="block w-6 h-px bg-[#ff5b35]" />
-            <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">The specialists</span>
+            <span className="text-[#ff5b35] text-[11px] tracking-[.2em] uppercase font-medium">The specialists</span>
           </div>
-          <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
+          <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[1.15] tracking-[-0.02em] mt-3">
             Five specialists.
             <br />
             <span className="text-[#ff5b35]">One Master Score.</span>
           </h2>
-          <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-4 max-w-lg mx-auto leading-relaxed">
+          <p className="text-[17px] text-[#999990] mt-4 max-w-lg mx-auto leading-[1.7]">
             Three specialists run on every review. Two are optional. All five run in parallel.
             You get one Master Production Score built from all of them.
           </p>
         </motion.div>
 
-        {/* 5-column grid — individual bordered cards */}
+        {/* 5-column grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {SPECIALISTS.map((s, i) => (
             <motion.div
@@ -85,16 +85,18 @@ export default function Specialists() {
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.5, delay: i * 0.08, ease: "easeOut" }}
-              className="bg-white p-7 flex flex-col gap-3 rounded-xl border border-[#e2e2ee] transition-all duration-[250ms] ease-[ease] hover:border-[#ff5b35] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(255,91,53,0.08)]"
+              transition={{ duration: 0.7, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+              whileHover={{ y: -4, boxShadow: "0 16px 48px rgba(0,0,0,0.08)" }}
+              className="bg-white p-8 flex flex-col gap-3 rounded-2xl border border-[#e8e8e2] hover:border-[#d0d0c8] transition-colors duration-300"
             >
+              {/* Number + badge row */}
               <div className="flex items-start justify-between">
-                <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center text-lg shrink-0"
-                  style={{ backgroundColor: `${s.color}18`, border: `1px solid ${s.color}30` }}
+                <span
+                  className="text-[11px] font-bold tracking-[0.06em] tabular-nums"
+                  style={{ color: s.color }}
                 >
-                  {s.icon}
-                </div>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <span
                   className="text-[8px] font-bold tracking-[0.06em] px-1.5 py-0.5 rounded"
                   style={{ backgroundColor: `${s.color}18`, color: s.color }}
@@ -103,14 +105,22 @@ export default function Specialists() {
                 </span>
               </div>
 
-              <h3 className="font-semibold text-sm leading-tight">{s.name}</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed flex-1">{s.desc}</p>
+              {/* Icon */}
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0"
+                style={{ backgroundColor: `${s.color}12`, border: `1px solid ${s.color}28` }}
+              >
+                {s.icon}
+              </div>
 
-              <div className="rounded-lg bg-[#f8faff] border border-[#e2e2ee] px-3 py-2">
-                <p className="text-[9px] uppercase tracking-wider font-medium mb-0.5" style={{ color: s.color }}>
+              <h3 className="font-semibold text-sm text-[#0d0d0d] leading-tight">{s.name}</h3>
+              <p className="text-xs text-[#555550] leading-[1.7] flex-1">{s.desc}</p>
+
+              <div className="rounded-xl bg-[#f5f4f0] border border-[#e8e8e2] px-3 py-2">
+                <p className="text-[9px] uppercase tracking-wider font-semibold mb-0.5" style={{ color: s.color }}>
                   {s.example.label}
                 </p>
-                <p className="text-[11px] text-muted-foreground leading-snug">{s.example.text}</p>
+                <p className="text-[11px] text-[#555550] leading-snug">{s.example.text}</p>
               </div>
             </motion.div>
           ))}

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { motion, useSpring } from "framer-motion";
 import Link from "next/link";
@@ -22,34 +22,34 @@ function SpringButton({ children, className }: { children: React.ReactNode; clas
 
 export default function FinalCTA() {
   return (
-    <section className="py-[100px] px-6">
+    <section className="py-[140px] px-6 lg:px-12">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className="relative max-w-3xl mx-auto rounded-3xl border border-[#e2e2ee] bg-[#f7f7fa] px-8 py-16 text-center overflow-hidden"
-        style={{ boxShadow: "0 2px 40px rgba(0,0,0,0.06)" }}
+        transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="relative max-w-3xl mx-auto rounded-3xl border border-[#e8e8e2] bg-white px-8 py-16 text-center overflow-hidden"
+        style={{ boxShadow: "0 4px 60px rgba(0,0,0,0.06)" }}
       >
         {/* Background glows */}
         <motion.div
-          animate={{ opacity: [0.08, 0.18, 0.08], scale: [1, 1.06, 1] }}
+          animate={{ opacity: [0.06, 0.16, 0.06], scale: [1, 1.06, 1] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-16 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full bg-[#ff5b35] opacity-[0.08] blur-3xl pointer-events-none"
+          className="absolute -top-16 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full bg-[#ff5b35] blur-3xl pointer-events-none"
         />
         <motion.div
-          animate={{ opacity: [0.05, 0.12, 0.05], scale: [1.04, 1, 1.04] }}
+          animate={{ opacity: [0.04, 0.10, 0.04], scale: [1.04, 1, 1.04] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full bg-[#1a7be8] opacity-[0.06] blur-3xl pointer-events-none"
+          className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full bg-[#1a7be8] blur-3xl pointer-events-none"
         />
 
         <div className="relative">
-          <h2 className="font-heading text-[clamp(52px,8vw,96px)] leading-[.93] tracking-[.02em] mb-4">
+          <h2 className="font-heading text-[clamp(52px,8vw,96px)] leading-[1.15] tracking-[-0.02em] mb-4 text-[#0d0d0d]">
             Ship Code You Can
             <br />
             <span className="text-[#ff5b35]">Stand Behind.</span>
           </h2>
-          <p className="font-serif italic font-light text-[#8896ab] max-w-md mx-auto mb-8 leading-relaxed text-lg">
+          <p className="text-[#999990] max-w-md mx-auto mb-8 leading-[1.7] text-lg">
             Ten free reviews. No credit card. Your actual code, your actual vulnerabilities,
             your actual fix — in under two minutes.
           </p>
@@ -59,7 +59,7 @@ export default function FinalCTA() {
               <Link href="/signup">
                 <Button
                   size="lg"
-                  className="bg-[#ff5b35] hover:bg-[#ff5b35]/90 text-white border-0 px-8 shadow-xl shadow-[#ff5b3533] text-base"
+                  className="bg-[#ff5b35] hover:bg-[#ff5b35]/90 text-white border-0 px-8 shadow-xl shadow-[#ff5b3533] text-base rounded-xl font-semibold"
                 >
                   Get 10 Free Reviews →
                 </Button>
@@ -67,7 +67,7 @@ export default function FinalCTA() {
             </SpringButton>
           </div>
 
-          <p className="text-xs text-muted-foreground mt-6">
+          <p className="text-xs text-[#999990] mt-6">
             10 free reviews · No card required · Cancel anytime · Your code never stored · Local taxes calculated at checkout
           </p>
         </div>

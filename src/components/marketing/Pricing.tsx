@@ -86,25 +86,25 @@ const CREDIT_TABLE = [
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="py-[100px] max-w-[1100px] mx-auto px-6">
+    <section id="pricing" className="py-[140px] max-w-[1120px] mx-auto px-6 lg:px-12">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.55, ease: "easeOut" }}
+        transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="text-center mb-16"
       >
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className="block w-6 h-px bg-[#ff5b35]" />
-          <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">Pricing</span>
+          <span className="text-[#ff5b35] text-[11px] tracking-[.2em] uppercase font-medium">Pricing</span>
         </div>
-        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
+        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[1.15] tracking-[-0.02em] mt-3">
           Pay for what you review.
           <br />
           <span className="text-[#ff5b35]">Not for what you don&apos;t.</span>
         </h2>
-        <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-4 max-w-sm mx-auto">
+        <p className="text-[17px] text-[#999990] mt-4 max-w-sm mx-auto leading-[1.7]">
           Credit-based. No seat taxes. No lock-in. Local taxes calculated at checkout.
         </p>
       </motion.div>
@@ -117,14 +117,14 @@ export default function Pricing() {
             initial={{ opacity: 0, y: 28, scale: 0.96 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.55, delay: i * 0.09, ease: "easeOut" }}
+            transition={{ duration: 0.7, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="relative"
           >
             {plan.featured && (
               <>
-                <div className="absolute -inset-[1px] rounded-[18px] bg-gradient-to-b from-[#ff5b35]/60 via-[#ff5b35]/20 to-[#1a7be8]/40 -z-10" />
+                <div className="absolute -inset-[1px] rounded-[20px] bg-gradient-to-b from-[#ff5b35]/60 via-[#ff5b35]/20 to-[#1a7be8]/40 -z-10" />
                 <motion.div
-                  animate={{ opacity: [0.10, 0.24, 0.10], scale: [1, 1.04, 1] }}
+                  animate={{ opacity: [0.10, 0.22, 0.10], scale: [1, 1.04, 1] }}
                   transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
                   className="absolute -inset-5 rounded-3xl bg-[#ff5b35] blur-2xl -z-20 pointer-events-none"
                 />
@@ -134,8 +134,8 @@ export default function Pricing() {
             <div
               className={`relative rounded-2xl border p-6 flex flex-col gap-5 h-full ${
                 plan.featured
-                  ? "border-[#ff5b35]/30 bg-[var(--cw-surface-elevated)]"
-                  : "border-[#e2e2ee] bg-[var(--cw-surface)]"
+                  ? "border-[#ff5b35]/30 bg-white"
+                  : "border-[#e8e8e2] bg-white"
               }`}
             >
               {plan.featured && (
@@ -147,21 +147,21 @@ export default function Pricing() {
               )}
 
               <div>
-                <h3 className="font-semibold text-base">{plan.name}</h3>
-                <p className="text-muted-foreground text-xs mt-1 leading-snug">{plan.desc}</p>
+                <h3 className="font-semibold text-base text-[#0d0d0d]">{plan.name}</h3>
+                <p className="text-[#999990] text-xs mt-1 leading-snug">{plan.desc}</p>
               </div>
 
               <div>
                 <div className="flex items-baseline gap-1">
-                  <span className="font-heading text-[clamp(40px,4vw,52px)] leading-none">{plan.price}</span>
-                  <span className="text-muted-foreground text-sm">{plan.period}</span>
+                  <span className="font-heading text-[clamp(40px,4vw,52px)] leading-none text-[#0d0d0d]">{plan.price}</span>
+                  <span className="text-[#999990] text-sm">{plan.period}</span>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">{plan.reviews}</p>
+                <p className="text-xs text-[#999990] mt-1">{plan.reviews}</p>
               </div>
 
               <ul className="space-y-2 flex-1">
                 {plan.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-xs text-muted-foreground">
+                  <li key={f} className="flex items-start gap-2 text-xs text-[#555550]">
                     <span className="text-[#ff5b35] mt-px shrink-0">✓</span>
                     {f}
                   </li>
@@ -170,10 +170,10 @@ export default function Pricing() {
 
               <Link href={plan.href}>
                 <Button
-                  className={`w-full transition-all text-sm tracking-[.06em] rounded-[5px] ${
+                  className={`w-full transition-all text-sm rounded-xl font-semibold ${
                     plan.featured
                       ? "bg-[#ff5b35] hover:bg-[#ff5b35]/90 text-white border-0 shadow-lg shadow-[#ff5b3533]"
-                      : "bg-[#f7f7fa] hover:bg-[#e6e6f2] text-foreground border border-[#e2e2ee]"
+                      : "bg-[#f5f4f0] hover:bg-[#eeede8] text-[#0d0d0d] border border-[#e8e8e2]"
                   }`}
                 >
                   {plan.cta}
@@ -189,39 +189,39 @@ export default function Pricing() {
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.55, ease: "easeOut" }}
+        transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="grid md:grid-cols-2 gap-5 mb-8"
       >
-        <div className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-6">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60 mb-4">
+        <div className="rounded-2xl border border-[#e8e8e2] bg-white p-6">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#999990] mb-4">
             Credit Usage
           </p>
           <div className="space-y-2.5">
             {CREDIT_TABLE.map((row) => (
               <div key={row.range} className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">{row.range}</span>
-                <span className="text-foreground font-medium">{row.credits}</span>
+                <span className="text-[#555550]">{row.range}</span>
+                <span className="text-[#0d0d0d] font-medium">{row.credits}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-6 flex flex-col justify-between">
+        <div className="rounded-2xl border border-[#e8e8e2] bg-white p-6 flex flex-col justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60 mb-4">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#999990] mb-4">
               Top-up Credits
             </p>
             <div className="flex items-baseline gap-2 mb-3">
-              <span className="font-heading text-[48px] leading-none">$2.99</span>
-              <span className="text-muted-foreground text-sm">/ 25 reviews</span>
+              <span className="font-heading text-[48px] leading-none text-[#0d0d0d]">$2.99</span>
+              <span className="text-[#999990] text-sm">/ 25 reviews</span>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm text-[#555550] leading-[1.7]">
               Buy additional credits any time. No subscription required. Credits never expire.
             </p>
           </div>
           <div className="mt-6">
             <Link href="/signup">
-              <Button className="w-full bg-[#f7f7fa] hover:bg-[#e6e6f2] text-foreground border border-[#e2e2ee] text-sm tracking-[.06em] rounded-[5px]">
+              <Button className="w-full bg-[#f5f4f0] hover:bg-[#eeede8] text-[#0d0d0d] border border-[#e8e8e2] text-sm rounded-xl">
                 Top up credits
               </Button>
             </Link>
@@ -229,7 +229,7 @@ export default function Pricing() {
         </div>
       </motion.div>
 
-      <p className="text-center text-xs text-muted-foreground">
+      <p className="text-center text-xs text-[#999990]">
         All plans include zero code retention, row-level tenant isolation, and all five specialists.
         Local taxes (GST, VAT) calculated at checkout where applicable.
       </p>

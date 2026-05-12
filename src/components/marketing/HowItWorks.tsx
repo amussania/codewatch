@@ -35,52 +35,54 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-[100px] max-w-[1100px] mx-auto px-6">
+    <section id="how-it-works" className="py-[140px] max-w-[1120px] mx-auto px-6 lg:px-12">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.55, ease: "easeOut" }}
+        transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="text-center mb-16"
       >
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className="block w-6 h-px bg-[#ff5b35]" />
-          <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">The process</span>
+          <span className="text-[#ff5b35] text-[11px] tracking-[.2em] uppercase font-medium">The process</span>
         </div>
-        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em]">
+        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[1.15] tracking-[-0.02em]">
           Paste. Review.
           <br />
           <span className="text-[#ff5b35]">Ship With Confidence.</span>
         </h2>
-        <p className="text-muted-foreground mt-4 max-w-md mx-auto">
+        <p className="text-[17px] text-[#999990] mt-4 max-w-md mx-auto leading-[1.7]">
           Four steps. Under two minutes. No repo connection needed.
         </p>
       </motion.div>
 
-      {/* Horizontal 4-column grid — each step staggers in */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[#e2e2ee] border border-[#e2e2ee] rounded-xl overflow-hidden">
+      {/* Steps — 4-column grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {STEPS.map((step, i) => (
           <motion.div
             key={step.num}
             initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.5, delay: i * 0.15, ease: "easeOut" }}
-            className="bg-white p-7 flex flex-col gap-4 relative"
+            transition={{ duration: 0.7, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+            whileHover={{ y: -4, boxShadow: "0 16px 48px rgba(0,0,0,0.08)" }}
+            className="bg-white rounded-2xl border border-[#e8e8e2] p-8 flex flex-col gap-4 relative overflow-hidden hover:border-[#d0d0c8] transition-colors duration-300"
           >
+            {/* Ghost step number */}
             <span
               aria-hidden
-              className="absolute top-5 right-6 font-heading leading-none select-none pointer-events-none text-[#ededf5]"
-              style={{ fontSize: "72px" }}
+              className="absolute top-4 right-5 font-heading leading-none select-none pointer-events-none text-[#f0efe9]"
+              style={{ fontSize: "88px", lineHeight: 1 }}
             >
               {step.num}
             </span>
 
             <div className="text-2xl relative z-10">{step.icon}</div>
-            <h3 className="font-semibold text-base relative z-10">{step.title}</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed flex-1">{step.desc}</p>
-            <p className="text-[11px] text-muted-foreground/60 font-mono border-l-2 border-[#ff5b35]/30 pl-3 leading-snug">
+            <h3 className="font-semibold text-base text-[#0d0d0d] relative z-10">{step.title}</h3>
+            <p className="text-sm text-[#555550] leading-[1.7] flex-1">{step.desc}</p>
+            <p className="text-[11px] text-[#999990] border-l-2 border-[#ff5b35]/30 pl-3 leading-snug">
               {step.detail}
             </p>
           </motion.div>

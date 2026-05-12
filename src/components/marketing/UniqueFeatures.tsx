@@ -48,67 +48,67 @@ const FEATURES = [
 
 export default function UniqueFeatures() {
   return (
-    <section className="py-[100px] max-w-[1100px] mx-auto px-6">
+    <section className="py-[140px] max-w-[1120px] mx-auto px-6 lg:px-12">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.55, ease: "easeOut" }}
+        transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="text-center mb-16"
       >
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className="block w-6 h-px bg-[#ff5b35]" />
-          <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">What Nobody Else Does</span>
+          <span className="text-[#ff5b35] text-[11px] tracking-[.2em] uppercase font-medium">What Nobody Else Does</span>
         </div>
-        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
+        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[1.15] tracking-[-0.02em] mt-3">
           The gaps every
           <br />
           <span className="text-[#ff5b35]">competitor leaves open.</span>
         </h2>
-        <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-5 max-w-lg mx-auto leading-relaxed">
+        <p className="text-[17px] text-[#999990] mt-5 max-w-lg mx-auto leading-[1.7]">
           Every competitor catches syntax errors and common patterns. These capabilities exist nowhere else in the market.
         </p>
       </motion.div>
 
-      <div className="flex flex-col border border-[#e2e2ee] rounded-2xl overflow-hidden divide-y divide-[#e2e2ee]">
+      <div className="flex flex-col border border-[#e8e8e2] rounded-2xl overflow-hidden divide-y divide-[#e8e8e2]">
         {FEATURES.map((f, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.48, delay: i * 0.08, ease: "easeOut" }}
-            className="grid md:grid-cols-[280px_1fr] bg-[var(--cw-surface)] hover:bg-[var(--cw-surface-elevated)] transition-colors duration-200"
+            transition={{ duration: 0.7, delay: i * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="grid md:grid-cols-[280px_1fr] bg-white hover:bg-[#fdfcfb] transition-colors duration-200"
           >
-            <div className="p-8 md:p-10 border-b md:border-b-0 md:border-r border-[#e2e2ee] flex flex-col justify-center">
+            <div className="p-8 md:p-10 border-b md:border-b-0 md:border-r border-[#e8e8e2] flex flex-col justify-center">
               <span
                 className="inline-block text-[10px] font-bold px-2.5 py-1 rounded mb-4 tracking-[0.06em] w-fit border"
                 style={{
-                  backgroundColor: `${f.pillColor}14`,
+                  backgroundColor: `${f.pillColor}12`,
                   color: f.pillColor,
                   borderColor: `${f.pillColor}28`,
                 }}
               >
                 {f.pill}
               </span>
-              <h3 className="text-xl font-bold leading-tight tracking-tight">{f.name}</h3>
+              <h3 className="text-xl font-bold leading-tight tracking-tight text-[#0d0d0d]">{f.name}</h3>
             </div>
 
             <div className="p-8 md:p-10">
-              <p className="text-sm text-muted-foreground leading-[1.85]">
-                <strong className="text-foreground/80 font-semibold">
+              <p className="text-sm text-[#555550] leading-[1.85]">
+                <strong className="text-[#0d0d0d] font-semibold">
                   {f.body.split(".")[0]}.
                 </strong>{" "}
                 {f.body.slice(f.body.indexOf(".") + 2)}
               </p>
               {f.quote && (
-                <blockquote className="mt-4 pl-4 border-l-2 border-[#ff5b35]/35 text-sm text-foreground/50 italic leading-relaxed">
+                <blockquote className="mt-4 pl-4 border-l-2 border-[#ff5b35]/35 text-sm text-[#999990] italic leading-relaxed">
                   {f.quote}
                 </blockquote>
               )}
               {f.extra && (
-                <p className="mt-3 text-sm text-muted-foreground leading-[1.85]">{f.extra}</p>
+                <p className="mt-3 text-sm text-[#555550] leading-[1.85]">{f.extra}</p>
               )}
             </div>
           </motion.div>

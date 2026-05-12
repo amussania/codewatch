@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { motion } from "framer-motion";
 
 const TESTIMONIALS = [
   {
@@ -54,7 +55,7 @@ function Card({ t }: { t: typeof TESTIMONIALS[0] }) {
   return (
     <div
       style={{ width: 420, minWidth: 420, flexShrink: 0 }}
-      className="rounded-2xl border border-[#e2e2ee] bg-white p-6 flex flex-col gap-5"
+      className="rounded-2xl border border-[#e8e8e2] bg-white p-8 flex flex-col gap-5 hover:border-[#d0d0c8] transition-colors duration-300"
     >
       <div className="flex gap-0.5">
         {[...Array(5)].map((_, s) => (
@@ -62,16 +63,16 @@ function Card({ t }: { t: typeof TESTIMONIALS[0] }) {
         ))}
       </div>
 
-      <p className="font-serif italic font-light text-sm text-foreground/80 leading-relaxed flex-1">
+      <p className="italic font-light text-sm text-[#555550] leading-[1.8] flex-1">
         &ldquo;{t.quote}&rdquo;
       </p>
 
-      <div className="flex items-center gap-2 py-2.5 px-3 rounded-lg bg-[#f8faff] border border-[#e2e2ee]">
+      <div className="flex items-center gap-2 py-2.5 px-3 rounded-xl bg-[#f5f4f0] border border-[#e8e8e2]">
         <div className="text-center">
-          <div className="text-xs text-muted-foreground mb-0.5">Before</div>
-          <div className="text-lg font-bold text-muted-foreground">{t.score.before}</div>
+          <div className="text-xs text-[#999990] mb-0.5">Before</div>
+          <div className="text-lg font-bold text-[#999990]">{t.score.before}</div>
         </div>
-        <div className="flex-1 h-px bg-[#ededf5] relative">
+        <div className="flex-1 h-px bg-[#e8e8e2] relative">
           <div
             className="absolute top-1/2 -translate-y-1/2 right-0 text-xs font-bold"
             style={{ color: t.color }}
@@ -80,12 +81,12 @@ function Card({ t }: { t: typeof TESTIMONIALS[0] }) {
           </div>
         </div>
         <div className="text-center">
-          <div className="text-xs text-muted-foreground mb-0.5">After</div>
+          <div className="text-xs text-[#999990] mb-0.5">After</div>
           <div className="text-lg font-bold" style={{ color: t.color }}>{t.score.after}</div>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 pt-1 border-t border-[#e2e2ee]">
+      <div className="flex items-center gap-3 pt-1 border-t border-[#e8e8e2]">
         <div
           className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
           style={{ backgroundColor: t.color }}
@@ -93,8 +94,8 @@ function Card({ t }: { t: typeof TESTIMONIALS[0] }) {
           {t.avatar}
         </div>
         <div>
-          <div className="text-sm font-medium leading-none">{t.name}</div>
-          <div className="text-xs text-muted-foreground mt-1">
+          <div className="text-sm font-semibold leading-none text-[#0d0d0d]">{t.name}</div>
+          <div className="text-xs text-[#999990] mt-1">
             {t.role} · {t.company}
           </div>
         </div>
@@ -110,21 +111,27 @@ export default function Testimonials() {
   const resume = () => { if (trackRef.current) trackRef.current.style.animationPlayState = "running"; };
 
   return (
-    <section className="py-[100px] bg-[#f8faff]" id="testimonials">
-      <div className="max-w-[1100px] mx-auto px-6 text-center mb-14">
+    <section className="py-[140px]" id="testimonials">
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="max-w-[1120px] mx-auto px-6 lg:px-12 text-center mb-14"
+      >
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className="block w-6 h-px bg-[#ff5b35]" />
-          <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">Testimonials</span>
+          <span className="text-[#ff5b35] text-[11px] tracking-[.2em] uppercase font-medium">Testimonials</span>
         </div>
-        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
+        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[1.15] tracking-[-0.02em] mt-3">
           What the market
           <br />
           <span className="text-[#ff5b35]">actually needed.</span>
         </h2>
-        <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-4 max-w-sm mx-auto">
+        <p className="text-[17px] text-[#999990] mt-4 max-w-sm mx-auto leading-[1.7]">
           Developers, founders, and agencies who review code for a living.
         </p>
-      </div>
+      </motion.div>
 
       <div className="overflow-hidden">
         <div
