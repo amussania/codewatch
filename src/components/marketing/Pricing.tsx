@@ -77,40 +77,39 @@ const PLANS = [
 ];
 
 const CREDIT_TABLE = [
-  { range: "< 100 lines", credits: "1 credit" },
-  { range: "100 – 300 lines", credits: "2 credits" },
-  { range: "300 – 600 lines", credits: "4 credits" },
-  { range: "600 – 1,500 lines", credits: "8 credits" },
+  { range: "< 100 lines",        credits: "1 credit" },
+  { range: "100 – 300 lines",    credits: "2 credits" },
+  { range: "300 – 600 lines",    credits: "4 credits" },
+  { range: "600 – 1,500 lines",  credits: "8 credits" },
   { range: "Production Clearance", credits: "12 credits" },
 ];
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="py-[100px] max-w-[1100px] mx-auto px-6">
+    <section id="pricing" className="py-[120px] max-w-[1100px] mx-auto px-8">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.55, ease: "easeOut" }}
-        className="text-center mb-16"
+        className="text-center mb-20"
       >
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <span className="block w-6 h-px bg-[#ff5b35]" />
-          <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">Pricing</span>
-        </div>
-        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
+        <p className="font-sans text-[#ff5b35] text-[10px] tracking-[.2em] uppercase mb-4">
+          — Pricing
+        </p>
+        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em]">
           Pay for what you review.
           <br />
           <span className="text-[#ff5b35]">Not for what you don&apos;t.</span>
         </h2>
-        <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-4 max-w-sm mx-auto">
+        <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-5 max-w-sm mx-auto">
           Credit-based. No seat taxes. No lock-in. Local taxes calculated at checkout.
         </p>
       </motion.div>
 
       {/* Plan cards */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-12">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {PLANS.map((plan, i) => (
           <motion.div
             key={plan.name}
@@ -122,9 +121,9 @@ export default function Pricing() {
           >
             {plan.featured && (
               <>
-                <div className="absolute -inset-[1px] rounded-[18px] bg-gradient-to-b from-[#ff5b35]/60 via-[#ff5b35]/20 to-[#1a7be8]/40 -z-10" />
+                <div className="absolute -inset-[1px] rounded-[14px] bg-gradient-to-b from-[#ff5b35]/50 via-[#ff5b35]/15 to-[#1a7be8]/30 -z-10" />
                 <motion.div
-                  animate={{ opacity: [0.10, 0.24, 0.10], scale: [1, 1.04, 1] }}
+                  animate={{ opacity: [0.08, 0.22, 0.08], scale: [1, 1.04, 1] }}
                   transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
                   className="absolute -inset-5 rounded-3xl bg-[#ff5b35] blur-2xl -z-20 pointer-events-none"
                 />
@@ -132,36 +131,36 @@ export default function Pricing() {
             )}
 
             <div
-              className={`relative rounded-2xl border p-6 flex flex-col gap-5 h-full ${
+              className={`relative rounded-xl border p-8 flex flex-col gap-5 h-full transition-all duration-[250ms] ${
                 plan.featured
-                  ? "border-[#ff5b35]/30 bg-[var(--cw-surface-elevated)]"
-                  : "border-[#e2e2ee] bg-[var(--cw-surface)]"
+                  ? "border-[#ff5b35]/25 bg-[#fafafa] hover:shadow-[0_8px_32px_rgba(255,91,53,0.12)]"
+                  : "border-[#e2e2ee] bg-white hover:border-[#ff5b35] hover:shadow-[0_8px_24px_rgba(255,91,53,0.08)]"
               }`}
             >
               {plan.featured && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="px-3 py-1 rounded-full bg-[#ff5b35] text-white text-xs font-semibold shadow-lg shadow-[#ff5b3544]">
+                  <span className="font-sans px-3 py-1 rounded-full bg-[#ff5b35] text-white text-[9px] font-bold tracking-[.1em] uppercase shadow-lg shadow-[#ff5b3544]">
                     Most popular
                   </span>
                 </div>
               )}
 
               <div>
-                <h3 className="font-semibold text-base">{plan.name}</h3>
-                <p className="text-muted-foreground text-xs mt-1 leading-snug">{plan.desc}</p>
+                <p className="font-sans text-[10px] tracking-[.16em] uppercase text-[#8896ab] mb-1">{plan.name}</p>
+                <p className="text-xs text-[#3d4f6b] leading-snug mt-2">{plan.desc}</p>
               </div>
 
               <div>
                 <div className="flex items-baseline gap-1">
                   <span className="font-heading text-[clamp(40px,4vw,52px)] leading-none">{plan.price}</span>
-                  <span className="text-muted-foreground text-sm">{plan.period}</span>
+                  <span className="font-sans text-[#8896ab] text-xs">{plan.period}</span>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">{plan.reviews}</p>
+                <p className="font-sans text-[10px] text-[#8896ab] mt-1 tracking-[.06em]">{plan.reviews}</p>
               </div>
 
               <ul className="space-y-2 flex-1">
                 {plan.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-xs text-muted-foreground">
+                  <li key={f} className="flex items-start gap-2 text-xs text-[#3d4f6b]">
                     <span className="text-[#ff5b35] mt-px shrink-0">✓</span>
                     {f}
                   </li>
@@ -170,10 +169,10 @@ export default function Pricing() {
 
               <Link href={plan.href}>
                 <Button
-                  className={`w-full transition-all text-sm tracking-[.06em] rounded-[5px] ${
+                  className={`w-full text-xs tracking-[.08em] rounded-[5px] font-sans ${
                     plan.featured
                       ? "bg-[#ff5b35] hover:bg-[#ff5b35]/90 text-white border-0 shadow-lg shadow-[#ff5b3533]"
-                      : "bg-[#f7f7fa] hover:bg-[#e6e6f2] text-foreground border border-[#e2e2ee]"
+                      : "bg-[#f7f7fa] hover:bg-[#ededf5] text-[#0a0f1e] border border-[#e2e2ee]"
                   }`}
                 >
                   {plan.cta}
@@ -190,38 +189,38 @@ export default function Pricing() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
         transition={{ duration: 0.55, ease: "easeOut" }}
-        className="grid md:grid-cols-2 gap-5 mb-8"
+        className="grid md:grid-cols-2 gap-6 mb-8"
       >
-        <div className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-6">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60 mb-4">
-            Credit Usage
+        <div className="rounded-xl border border-[#e2e2ee] bg-white p-8">
+          <p className="font-sans text-[10px] font-semibold uppercase tracking-[.16em] text-[#8896ab]/70 mb-5">
+            — Credit Usage
           </p>
-          <div className="space-y-2.5">
+          <div className="space-y-3">
             {CREDIT_TABLE.map((row) => (
-              <div key={row.range} className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">{row.range}</span>
-                <span className="text-foreground font-medium">{row.credits}</span>
+              <div key={row.range} className="flex items-center justify-between">
+                <span className="text-sm text-[#3d4f6b]">{row.range}</span>
+                <span className="font-sans text-[11px] text-[#0a0f1e] font-medium tracking-[.06em]">{row.credits}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-6 flex flex-col justify-between">
+        <div className="rounded-xl border border-[#e2e2ee] bg-white p-8 flex flex-col justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60 mb-4">
-              Top-up Credits
+            <p className="font-sans text-[10px] font-semibold uppercase tracking-[.16em] text-[#8896ab]/70 mb-5">
+              — Top-up Credits
             </p>
             <div className="flex items-baseline gap-2 mb-3">
               <span className="font-heading text-[48px] leading-none">$2.99</span>
-              <span className="text-muted-foreground text-sm">/ 25 reviews</span>
+              <span className="font-sans text-[#8896ab] text-xs">/ 25 reviews</span>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm text-[#3d4f6b] leading-relaxed">
               Buy additional credits any time. No subscription required. Credits never expire.
             </p>
           </div>
           <div className="mt-6">
             <Link href="/signup">
-              <Button className="w-full bg-[#f7f7fa] hover:bg-[#e6e6f2] text-foreground border border-[#e2e2ee] text-sm tracking-[.06em] rounded-[5px]">
+              <Button className="w-full bg-[#f7f7fa] hover:bg-[#ededf5] text-[#0a0f1e] border border-[#e2e2ee] text-xs tracking-[.08em] rounded-[5px] font-sans">
                 Top up credits
               </Button>
             </Link>
@@ -229,7 +228,7 @@ export default function Pricing() {
         </div>
       </motion.div>
 
-      <p className="text-center text-xs text-muted-foreground">
+      <p className="font-sans text-center text-[10px] text-[#8896ab] tracking-[.06em]">
         All plans include zero code retention, row-level tenant isolation, and all five specialists.
         Local taxes (GST, VAT) calculated at checkout where applicable.
       </p>

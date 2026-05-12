@@ -57,15 +57,15 @@ function FAQItem({ faq, isOpen, onToggle, delay }: {
         aria-expanded={isOpen}
         className="w-full flex items-start justify-between gap-4 py-5 text-left group"
       >
-        <span className="text-sm font-medium leading-snug pr-2 group-hover:text-foreground transition-colors">
+        <span className="text-sm text-[#0a0f1e] font-medium leading-snug pr-2 group-hover:text-[#ff5b35] transition-colors duration-200">
           {faq.q}
         </span>
         <motion.div
           animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ type: "spring", stiffness: 420, damping: 26 }}
-          className="shrink-0 mt-0.5 w-5 h-5 rounded-full border border-[#e2e2ee] flex items-center justify-center text-muted-foreground group-hover:border-[#ff5b35]/40 group-hover:text-[#ff5b35] transition-colors"
+          className="shrink-0 mt-0.5 w-5 h-5 rounded-full border border-[#e2e2ee] flex items-center justify-center text-[#8896ab] group-hover:border-[#ff5b35]/40 group-hover:text-[#ff5b35] transition-colors"
         >
-          <span className="text-xs font-bold leading-none">+</span>
+          <span className="font-sans text-xs font-bold leading-none">+</span>
         </motion.div>
       </button>
 
@@ -79,7 +79,7 @@ function FAQItem({ faq, isOpen, onToggle, delay }: {
             transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
             className="overflow-hidden"
           >
-            <p className="text-sm text-muted-foreground leading-relaxed pb-5 max-w-2xl">
+            <p className="text-sm text-[#3d4f6b] leading-relaxed pb-5 max-w-2xl">
               {faq.a}
             </p>
           </motion.div>
@@ -93,24 +93,23 @@ export default function FAQ() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="py-[100px] bg-[#f8faff]">
-      <div className="max-w-3xl mx-auto px-6">
+    <section id="faq" className="py-[120px] bg-[#fafafa]">
+      <div className="max-w-3xl mx-auto px-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.55, ease: "easeOut" }}
-          className="text-center mb-14"
+          className="text-center mb-16"
         >
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <span className="block w-6 h-px bg-[#ff5b35]" />
-            <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">FAQ</span>
-          </div>
-          <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
+          <p className="font-sans text-[#ff5b35] text-[10px] tracking-[.2em] uppercase mb-4">
+            — FAQ
+          </p>
+          <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em]">
             Common questions
           </h2>
-          <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-4 max-w-sm mx-auto">
+          <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-5 max-w-sm mx-auto">
             Still have questions?{" "}
             <a href="mailto:hello@codewatch.dev" className="text-[#ff5b35] hover:underline">
               Email us
@@ -119,14 +118,14 @@ export default function FAQ() {
           </p>
         </motion.div>
 
-        <div className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] px-6">
+        <div className="rounded-2xl border border-[#e2e2ee] bg-white px-6">
           {FAQS.map((faq, i) => (
             <FAQItem
               key={i}
               faq={faq}
               isOpen={openIdx === i}
               onToggle={() => setOpenIdx(openIdx === i ? null : i)}
-              delay={i * 0.06}
+              delay={i * 0.05}
             />
           ))}
         </div>

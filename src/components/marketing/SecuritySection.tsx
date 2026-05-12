@@ -30,42 +30,40 @@ const PILLARS = [
 ];
 
 const FLOW_STEPS = [
-  { label: "Your code",          icon: "📋", note: "Paste in browser" },
-  { label: "Encrypted transit",  icon: "🔐", note: "TLS 1.3" },
-  { label: "Ephemeral sandbox",  icon: "⚡", note: "Isolated process" },
-  { label: "Review result",      icon: "✅", note: "Returned to you" },
-  { label: "Process destroyed",  icon: "🗑️", note: "Zero retention" },
+  { label: "Your code",         icon: "📋", note: "Paste in browser" },
+  { label: "Encrypted transit", icon: "🔐", note: "TLS 1.3" },
+  { label: "Ephemeral sandbox", icon: "⚡", note: "Isolated process" },
+  { label: "Review result",     icon: "✅", note: "Returned to you" },
+  { label: "Process destroyed", icon: "🗑️", note: "Zero retention" },
 ];
 
 export default function SecuritySection() {
   return (
-    <section id="security" className="py-[100px] max-w-[1100px] mx-auto px-6">
+    <section id="security" className="py-[120px] max-w-[1100px] mx-auto px-8">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.55, ease: "easeOut" }}
-        className="text-center mb-16"
+        className="text-center mb-20"
       >
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <span className="block w-6 h-px bg-[#ff5b35]" />
-          <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">Security</span>
-        </div>
-        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
+        <p className="font-sans text-[#ff5b35] text-[10px] tracking-[.2em] uppercase mb-4">
+          — Security Architecture
+        </p>
+        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em]">
           Your code is never stored.
           <br />
           <span className="text-[#ff5b35]">By design.</span>
         </h2>
-        <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-4 max-w-lg mx-auto leading-relaxed">
+        <p className="text-[#3d4f6b] mt-5 max-w-lg mx-auto leading-relaxed">
           We built CODEWATCH for teams reviewing proprietary, production code.
           Security is not a feature. It is the architecture.
         </p>
       </motion.div>
 
-      {/* 2-column layout */}
       <div className="grid lg:grid-cols-2 gap-8">
-        {/* Left: security pillars */}
+        {/* Security pillars */}
         <div className="space-y-4">
           {PILLARS.map((p, i) => (
             <motion.div
@@ -74,7 +72,7 @@ export default function SecuritySection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.48, delay: i * 0.08, ease: "easeOut" }}
-              className="rounded-xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-5 flex gap-4"
+              className="rounded-xl border border-[#e2e2ee] bg-white p-6 flex gap-4 transition-all duration-[250ms] hover:border-[#ff5b35] hover:shadow-[0_4px_16px_rgba(255,91,53,0.06)]"
             >
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 mt-0.5"
@@ -82,24 +80,24 @@ export default function SecuritySection() {
               >
                 {p.icon}
               </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-sm mb-1.5">{p.title}</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">{p.desc}</p>
+              <div>
+                <h3 className="font-heading text-[17px] tracking-[.02em] mb-1.5">{p.title}</h3>
+                <p className="text-xs text-[#3d4f6b] leading-relaxed">{p.desc}</p>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Right: data flow diagram */}
+        {/* Data flow diagram */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.55, delay: 0.2, ease: "easeOut" }}
-          className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-8 flex flex-col justify-center"
+          className="rounded-2xl border border-[#e2e2ee] bg-white p-8 flex flex-col justify-center"
         >
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/50 mb-8 text-center">
-            What happens to your code
+          <p className="font-sans text-[10px] tracking-[.18em] uppercase text-[#8896ab]/60 mb-8 text-center">
+            — What happens to your code
           </p>
           <div className="flex flex-col gap-0">
             {FLOW_STEPS.map((step, i) => (
@@ -109,11 +107,11 @@ export default function SecuritySection() {
                     {step.icon}
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-foreground/80">{step.label}</p>
-                    <p className="text-xs text-muted-foreground">{step.note}</p>
+                    <p className="text-sm font-medium text-[#0a0f1e]/80">{step.label}</p>
+                    <p className="font-sans text-[10px] text-[#8896ab] tracking-[.06em]">{step.note}</p>
                   </div>
                   {i === FLOW_STEPS.length - 1 && (
-                    <span className="text-[10px] font-bold text-[#00c4a0] bg-[#00c4a0]/10 border border-[#00c4a0]/20 px-2 py-0.5 rounded">
+                    <span className="font-sans text-[9px] font-bold text-[#00c4a0] bg-[#00c4a0]/10 border border-[#00c4a0]/20 px-2 py-0.5 rounded tracking-[.08em]">
                       ZERO STORED
                     </span>
                   )}
@@ -125,9 +123,9 @@ export default function SecuritySection() {
             ))}
           </div>
 
-          <div className="mt-8 rounded-xl bg-[#ff5b35]/[0.06] border border-[#ff5b35]/15 p-4 text-center">
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              <span className="text-foreground/80 font-medium">Never used for AI training.</span>{" "}
+          <div className="mt-8 rounded-xl bg-[#ff5b35]/[0.05] border border-[#ff5b35]/12 p-4 text-center">
+            <p className="text-xs text-[#3d4f6b] leading-relaxed">
+              <span className="text-[#0a0f1e] font-medium">Never used for AI training.</span>{" "}
               Model-level opt-outs are enforced at the API contract level with every provider we use.
             </p>
           </div>

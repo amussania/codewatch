@@ -53,8 +53,8 @@ export default function Navbar() {
       <motion.header
         animate={
           scrolled
-            ? { backgroundColor: "rgba(255,255,255,0.92)", borderBottomColor: "rgba(226,226,238,1)" }
-            : { backgroundColor: "rgba(255,255,255,0)",    borderBottomColor: "rgba(226,226,238,0)" }
+            ? { backgroundColor: "rgba(255,255,255,0.92)", borderBottomColor: "rgba(240,240,240,1)" }
+            : { backgroundColor: "rgba(255,255,255,0)",    borderBottomColor: "rgba(240,240,240,0)" }
         }
         transition={{ duration: 0.22, ease: "easeOut" }}
         style={{

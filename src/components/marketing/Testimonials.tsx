@@ -54,7 +54,7 @@ function Card({ t }: { t: typeof TESTIMONIALS[0] }) {
   return (
     <div
       style={{ width: 420, minWidth: 420, flexShrink: 0 }}
-      className="rounded-2xl border border-[#e2e2ee] bg-white p-6 flex flex-col gap-5"
+      className="rounded-xl border border-[#e2e2ee] bg-white p-8 flex flex-col gap-5 transition-all duration-[250ms] hover:border-[#ff5b35] hover:shadow-[0_8px_24px_rgba(255,91,53,0.08)]"
     >
       <div className="flex gap-0.5">
         {[...Array(5)].map((_, s) => (
@@ -62,39 +62,39 @@ function Card({ t }: { t: typeof TESTIMONIALS[0] }) {
         ))}
       </div>
 
-      <p className="font-serif italic font-light text-sm text-foreground/80 leading-relaxed flex-1">
+      <p className="font-serif italic font-light text-sm text-[#3d4f6b] leading-relaxed flex-1">
         &ldquo;{t.quote}&rdquo;
       </p>
 
-      <div className="flex items-center gap-2 py-2.5 px-3 rounded-lg bg-[#f8faff] border border-[#e2e2ee]">
+      <div className="flex items-center gap-3 py-3 px-4 rounded-lg bg-[#fafafa] border border-[#e2e2ee]">
         <div className="text-center">
-          <div className="text-xs text-muted-foreground mb-0.5">Before</div>
-          <div className="text-lg font-bold text-muted-foreground">{t.score.before}</div>
+          <div className="font-sans text-[9px] text-[#8896ab] uppercase tracking-[.1em] mb-1">Before</div>
+          <div className="font-heading text-2xl leading-none text-[#8896ab]">{t.score.before}</div>
         </div>
-        <div className="flex-1 h-px bg-[#ededf5] relative">
+        <div className="flex-1 h-px bg-[#e2e2ee] relative mx-2">
           <div
-            className="absolute top-1/2 -translate-y-1/2 right-0 text-xs font-bold"
+            className="absolute top-1/2 -translate-y-1/2 right-0 font-sans text-[10px] font-bold tracking-[.06em]"
             style={{ color: t.color }}
           >
             +{t.score.after - t.score.before}
           </div>
         </div>
         <div className="text-center">
-          <div className="text-xs text-muted-foreground mb-0.5">After</div>
-          <div className="text-lg font-bold" style={{ color: t.color }}>{t.score.after}</div>
+          <div className="font-sans text-[9px] text-[#8896ab] uppercase tracking-[.1em] mb-1">After</div>
+          <div className="font-heading text-2xl leading-none" style={{ color: t.color }}>{t.score.after}</div>
         </div>
       </div>
 
       <div className="flex items-center gap-3 pt-1 border-t border-[#e2e2ee]">
         <div
-          className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
+          className="w-9 h-9 rounded-full flex items-center justify-center font-sans text-[10px] font-bold text-white shrink-0 tracking-[.04em]"
           style={{ backgroundColor: t.color }}
         >
           {t.avatar}
         </div>
         <div>
-          <div className="text-sm font-medium leading-none">{t.name}</div>
-          <div className="text-xs text-muted-foreground mt-1">
+          <div className="text-sm font-medium leading-none text-[#0a0f1e]">{t.name}</div>
+          <div className="font-sans text-[10px] text-[#8896ab] mt-1 tracking-[.06em]">
             {t.role} · {t.company}
           </div>
         </div>
@@ -110,18 +110,17 @@ export default function Testimonials() {
   const resume = () => { if (trackRef.current) trackRef.current.style.animationPlayState = "running"; };
 
   return (
-    <section className="py-[100px] bg-[#f8faff]" id="testimonials">
-      <div className="max-w-[1100px] mx-auto px-6 text-center mb-14">
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <span className="block w-6 h-px bg-[#ff5b35]" />
-          <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">Testimonials</span>
-        </div>
-        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
+    <section className="py-[120px] bg-[#fafafa]" id="testimonials">
+      <div className="max-w-[1100px] mx-auto px-8 text-center mb-16">
+        <p className="font-sans text-[#ff5b35] text-[10px] tracking-[.2em] uppercase mb-4">
+          — Testimonials
+        </p>
+        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em]">
           What the market
           <br />
           <span className="text-[#ff5b35]">actually needed.</span>
         </h2>
-        <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-4 max-w-sm mx-auto">
+        <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-5 max-w-sm mx-auto">
           Developers, founders, and agencies who review code for a living.
         </p>
       </div>
@@ -129,7 +128,7 @@ export default function Testimonials() {
       <div className="overflow-hidden">
         <div
           ref={trackRef}
-          className="flex gap-5 pl-6"
+          className="flex gap-6 pl-8"
           style={{ width: "fit-content", animation: "ticker 40s linear infinite" }}
           onMouseEnter={pause}
           onMouseLeave={resume}
