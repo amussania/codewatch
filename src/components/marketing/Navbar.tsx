@@ -50,12 +50,19 @@ export default function Navbar() {
   return (
     <>
       {/* ── Header bar ── */}
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      <motion.header
+        animate={
           scrolled
-            ? "bg-white/90 backdrop-blur-xl border-b border-[#e2e2ee]"
-            : "bg-transparent border-b border-transparent"
-        }`}
+            ? { backgroundColor: "rgba(255,255,255,0.92)", borderBottomColor: "rgba(226,226,238,1)" }
+            : { backgroundColor: "rgba(255,255,255,0)",    borderBottomColor: "rgba(226,226,238,0)" }
+        }
+        transition={{ duration: 0.22, ease: "easeOut" }}
+        style={{
+          backdropFilter: scrolled ? "blur(20px) saturate(180%)" : "blur(0px)",
+          borderBottomWidth: 1,
+          borderBottomStyle: "solid",
+        }}
+        className="fixed top-0 left-0 right-0 z-50"
       >
         <nav className="max-w-[1100px] mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
@@ -115,7 +122,7 @@ export default function Navbar() {
             <HamburgerIcon open={menuOpen} />
           </button>
         </nav>
-      </header>
+      </motion.header>
 
       {/* ── Mobile drawer ── */}
       <AnimatePresence>

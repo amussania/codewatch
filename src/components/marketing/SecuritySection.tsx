@@ -1,11 +1,6 @@
-﻿"use client";
+"use client";
 
-import { useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+import { motion } from "framer-motion";
 
 const PILLARS = [
   {
@@ -35,38 +30,24 @@ const PILLARS = [
 ];
 
 const FLOW_STEPS = [
-  { label: "Your code", icon: "📋", note: "Paste in browser" },
-  { label: "Encrypted transit", icon: "🔐", note: "TLS 1.3" },
-  { label: "Ephemeral sandbox", icon: "⚡", note: "Isolated process" },
-  { label: "Review result", icon: "✅", note: "Returned to you" },
-  { label: "Process destroyed", icon: "🗑️", note: "Zero retention" },
+  { label: "Your code",          icon: "📋", note: "Paste in browser" },
+  { label: "Encrypted transit",  icon: "🔐", note: "TLS 1.3" },
+  { label: "Ephemeral sandbox",  icon: "⚡", note: "Isolated process" },
+  { label: "Review result",      icon: "✅", note: "Returned to you" },
+  { label: "Process destroyed",  icon: "🗑️", note: "Zero retention" },
 ];
 
 export default function SecuritySection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      gsap.from(".sec-pillar", {
-        y: 28,
-        opacity: 0,
-        duration: 0.65,
-        stagger: { amount: 0.35 },
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 78%",
-          toggleActions: "play none none none",
-        },
-      });
-    },
-    { scope: sectionRef }
-  );
-
   return (
-    <section ref={sectionRef} id="security" className="py-[100px] max-w-[1100px] mx-auto px-6">
+    <section id="security" className="py-[100px] max-w-[1100px] mx-auto px-6">
       {/* Header */}
-      <div className="text-center mb-16">
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.55, ease: "easeOut" }}
+        className="text-center mb-16"
+      >
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className="block w-6 h-px bg-[#ff5b35]" />
           <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">Security</span>
@@ -80,16 +61,20 @@ export default function SecuritySection() {
           We built CODEWATCH for teams reviewing proprietary, production code.
           Security is not a feature. It is the architecture.
         </p>
-      </div>
+      </motion.div>
 
       {/* 2-column layout */}
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Left: security pillars */}
         <div className="space-y-4">
-          {PILLARS.map((p) => (
-            <div
+          {PILLARS.map((p, i) => (
+            <motion.div
               key={p.title}
-              className="sec-pillar rounded-xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-5 flex gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.48, delay: i * 0.08, ease: "easeOut" }}
+              className="rounded-xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-5 flex gap-4"
             >
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 mt-0.5"
@@ -101,12 +86,18 @@ export default function SecuritySection() {
                 <h3 className="font-semibold text-sm mb-1.5">{p.title}</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">{p.desc}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
         {/* Right: data flow diagram */}
-        <div className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-8 flex flex-col justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.55, delay: 0.2, ease: "easeOut" }}
+          className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-8 flex flex-col justify-center"
+        >
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/50 mb-8 text-center">
             What happens to your code
           </p>
@@ -140,7 +131,7 @@ export default function SecuritySection() {
               Model-level opt-outs are enforced at the API contract level with every provider we use.
             </p>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,14 +1,8 @@
-﻿"use client";
+"use client";
 
-import { useRef } from "react";
 import { motion } from "framer-motion";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const PLANS = [
   {
@@ -91,31 +85,16 @@ const CREDIT_TABLE = [
 ];
 
 export default function Pricing() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      gsap.from(".pricing-card", {
-        scale: 0.93,
-        opacity: 0,
-        y: 28,
-        duration: 0.75,
-        stagger: 0.1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 78%",
-          toggleActions: "play none none none",
-        },
-      });
-    },
-    { scope: containerRef }
-  );
-
   return (
     <section id="pricing" className="py-[100px] max-w-[1100px] mx-auto px-6">
       {/* Header */}
-      <div className="text-center mb-16">
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.55, ease: "easeOut" }}
+        className="text-center mb-16"
+      >
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className="block w-6 h-px bg-[#ff5b35]" />
           <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">Pricing</span>
@@ -128,12 +107,19 @@ export default function Pricing() {
         <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-4 max-w-sm mx-auto">
           Credit-based. No seat taxes. No lock-in. Local taxes calculated at checkout.
         </p>
-      </div>
+      </motion.div>
 
       {/* Plan cards */}
-      <div ref={containerRef} className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-12">
-        {PLANS.map((plan) => (
-          <div key={plan.name} className="pricing-card relative">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-12">
+        {PLANS.map((plan, i) => (
+          <motion.div
+            key={plan.name}
+            initial={{ opacity: 0, y: 28, scale: 0.96 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.55, delay: i * 0.09, ease: "easeOut" }}
+            className="relative"
+          >
             {plan.featured && (
               <>
                 <div className="absolute -inset-[1px] rounded-[18px] bg-gradient-to-b from-[#ff5b35]/60 via-[#ff5b35]/20 to-[#1a7be8]/40 -z-10" />
@@ -184,7 +170,7 @@ export default function Pricing() {
 
               <Link href={plan.href}>
                 <Button
-                  className={`w-full transition-all text-sm ${
+                  className={`w-full transition-all text-sm tracking-[.06em] rounded-[5px] ${
                     plan.featured
                       ? "bg-[#ff5b35] hover:bg-[#ff5b35]/90 text-white border-0 shadow-lg shadow-[#ff5b3533]"
                       : "bg-[#f7f7fa] hover:bg-[#e6e6f2] text-foreground border border-[#e2e2ee]"
@@ -194,13 +180,18 @@ export default function Pricing() {
                 </Button>
               </Link>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
       {/* Credit system + top-up */}
-      <div className="grid md:grid-cols-2 gap-5 mb-8">
-        {/* Credit table */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.55, ease: "easeOut" }}
+        className="grid md:grid-cols-2 gap-5 mb-8"
+      >
         <div className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-6">
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60 mb-4">
             Credit Usage
@@ -215,7 +206,6 @@ export default function Pricing() {
           </div>
         </div>
 
-        {/* Top-up + notes */}
         <div className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-6 flex flex-col justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60 mb-4">
@@ -231,13 +221,13 @@ export default function Pricing() {
           </div>
           <div className="mt-6">
             <Link href="/signup">
-              <Button className="w-full bg-[#f7f7fa] hover:bg-[#e6e6f2] text-foreground border border-[#e2e2ee] text-sm">
+              <Button className="w-full bg-[#f7f7fa] hover:bg-[#e6e6f2] text-foreground border border-[#e2e2ee] text-sm tracking-[.06em] rounded-[5px]">
                 Top up credits
               </Button>
             </Link>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <p className="text-center text-xs text-muted-foreground">
         All plans include zero code retention, row-level tenant isolation, and all five specialists.

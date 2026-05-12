@@ -1,12 +1,7 @@
-﻿"use client";
+"use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const FAQS = [
   {
@@ -43,14 +38,20 @@ const FAQS = [
   },
 ];
 
-function FAQItem({ faq, index, isOpen, onToggle }: {
+function FAQItem({ faq, isOpen, onToggle, delay }: {
   faq: typeof FAQS[0];
-  index: number;
   isOpen: boolean;
   onToggle: () => void;
+  delay: number;
 }) {
   return (
-    <div className="border-b border-[#e2e2ee] last:border-0">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.45, delay, ease: "easeOut" }}
+      className="border-b border-[#e2e2ee] last:border-0"
+    >
       <button
         onClick={onToggle}
         aria-expanded={isOpen}
@@ -84,65 +85,51 @@ function FAQItem({ faq, index, isOpen, onToggle }: {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
 
 export default function FAQ() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      gsap.from(".faq-item", {
-        y: 20,
-        opacity: 0,
-        duration: 0.55,
-        stagger: 0.07,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          toggleActions: "play none none none",
-        },
-      });
-    },
-    { scope: sectionRef }
-  );
 
   return (
-    <section ref={sectionRef} id="faq" className="py-[100px] bg-[#f7f7fa]">
+    <section id="faq" className="py-[100px] bg-[#f8faff]">
       <div className="max-w-3xl mx-auto px-6">
-      {/* Header */}
-      <div className="text-center mb-14">
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <span className="block w-6 h-px bg-[#ff5b35]" />
-          <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">FAQ</span>
-        </div>
-        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
-          Common questions
-        </h2>
-        <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-4 max-w-sm mx-auto">
-          Still have questions?{" "}
-          <a href="mailto:hello@codewatch.dev" className="text-[#ff5b35] hover:underline">
-            Email us
-          </a>
-          {" "}— we reply the same business day.
-        </p>
-      </div>
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
+          className="text-center mb-14"
+        >
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <span className="block w-6 h-px bg-[#ff5b35]" />
+            <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">FAQ</span>
+          </div>
+          <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
+            Common questions
+          </h2>
+          <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-4 max-w-sm mx-auto">
+            Still have questions?{" "}
+            <a href="mailto:hello@codewatch.dev" className="text-[#ff5b35] hover:underline">
+              Email us
+            </a>
+            {" "}— we reply the same business day.
+          </p>
+        </motion.div>
 
-      <div className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] px-6 divide-y-0">
-        {FAQS.map((faq, i) => (
-          <div key={i} className="faq-item">
+        <div className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] px-6">
+          {FAQS.map((faq, i) => (
             <FAQItem
+              key={i}
               faq={faq}
-              index={i}
               isOpen={openIdx === i}
               onToggle={() => setOpenIdx(openIdx === i ? null : i)}
+              delay={i * 0.06}
             />
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
       </div>
     </section>
   );

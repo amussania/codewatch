@@ -1,11 +1,6 @@
 "use client";
 
-import { useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+import { motion } from "framer-motion";
 
 const STEPS = [
   {
@@ -39,30 +34,16 @@ const STEPS = [
 ];
 
 export default function HowItWorks() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      gsap.from(".hiw-step", {
-        y: 32,
-        opacity: 0,
-        duration: 0.7,
-        stagger: 0.14,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 72%",
-          toggleActions: "play none none none",
-        },
-      });
-    },
-    { scope: sectionRef }
-  );
-
   return (
-    <section id="how-it-works" ref={sectionRef} className="py-[100px] max-w-[1100px] mx-auto px-6">
+    <section id="how-it-works" className="py-[100px] max-w-[1100px] mx-auto px-6">
       {/* Header */}
-      <div className="text-center mb-16">
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.55, ease: "easeOut" }}
+        className="text-center mb-16"
+      >
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className="block w-6 h-px bg-[#ff5b35]" />
           <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">The process</span>
@@ -75,16 +56,19 @@ export default function HowItWorks() {
         <p className="text-muted-foreground mt-4 max-w-md mx-auto">
           Four steps. Under two minutes. No repo connection needed.
         </p>
-      </div>
+      </motion.div>
 
-      {/* Horizontal 4-column grid with 1px borders */}
+      {/* Horizontal 4-column grid — each step staggers in */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[#e2e2ee] border border-[#e2e2ee] rounded-xl overflow-hidden">
-        {STEPS.map((step) => (
-          <div
+        {STEPS.map((step, i) => (
+          <motion.div
             key={step.num}
-            className="hiw-step bg-white p-7 flex flex-col gap-4 relative"
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.5, delay: i * 0.15, ease: "easeOut" }}
+            className="bg-white p-7 flex flex-col gap-4 relative"
           >
-            {/* Step number (large, decorative) */}
             <span
               aria-hidden
               className="absolute top-5 right-6 font-heading leading-none select-none pointer-events-none text-[#ededf5]"
@@ -93,20 +77,13 @@ export default function HowItWorks() {
               {step.num}
             </span>
 
-            {/* Icon */}
             <div className="text-2xl relative z-10">{step.icon}</div>
-
-            {/* Title */}
             <h3 className="font-semibold text-base relative z-10">{step.title}</h3>
-
-            {/* Description */}
             <p className="text-sm text-muted-foreground leading-relaxed flex-1">{step.desc}</p>
-
-            {/* Detail note */}
             <p className="text-[11px] text-muted-foreground/60 font-mono border-l-2 border-[#ff5b35]/30 pl-3 leading-snug">
               {step.detail}
             </p>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>

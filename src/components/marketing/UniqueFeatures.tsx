@@ -1,11 +1,6 @@
-﻿"use client";
+"use client";
 
-import { useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+import { motion } from "framer-motion";
 
 const FEATURES = [
   {
@@ -52,29 +47,16 @@ const FEATURES = [
 ];
 
 export default function UniqueFeatures() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      gsap.from(".uf-item", {
-        y: 28,
-        opacity: 0,
-        duration: 0.65,
-        stagger: 0.1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 78%",
-          toggleActions: "play none none none",
-        },
-      });
-    },
-    { scope: sectionRef }
-  );
-
   return (
-    <section ref={sectionRef} className="py-[100px] max-w-[1100px] mx-auto px-6">
-      <div className="text-center mb-16">
+    <section className="py-[100px] max-w-[1100px] mx-auto px-6">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.55, ease: "easeOut" }}
+        className="text-center mb-16"
+      >
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className="block w-6 h-px bg-[#ff5b35]" />
           <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">What Nobody Else Does</span>
@@ -87,15 +69,18 @@ export default function UniqueFeatures() {
         <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-5 max-w-lg mx-auto leading-relaxed">
           Every competitor catches syntax errors and common patterns. These capabilities exist nowhere else in the market.
         </p>
-      </div>
+      </motion.div>
 
       <div className="flex flex-col border border-[#e2e2ee] rounded-2xl overflow-hidden divide-y divide-[#e2e2ee]">
         {FEATURES.map((f, i) => (
-          <div
+          <motion.div
             key={i}
-            className="uf-item grid md:grid-cols-[280px_1fr] bg-[var(--cw-surface)] hover:bg-[var(--cw-surface-elevated)] transition-colors duration-200"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.48, delay: i * 0.08, ease: "easeOut" }}
+            className="grid md:grid-cols-[280px_1fr] bg-[var(--cw-surface)] hover:bg-[var(--cw-surface-elevated)] transition-colors duration-200"
           >
-            {/* Left: pill + title */}
             <div className="p-8 md:p-10 border-b md:border-b-0 md:border-r border-[#e2e2ee] flex flex-col justify-center">
               <span
                 className="inline-block text-[10px] font-bold px-2.5 py-1 rounded mb-4 tracking-[0.06em] w-fit border"
@@ -110,7 +95,6 @@ export default function UniqueFeatures() {
               <h3 className="text-xl font-bold leading-tight tracking-tight">{f.name}</h3>
             </div>
 
-            {/* Right: description */}
             <div className="p-8 md:p-10">
               <p className="text-sm text-muted-foreground leading-[1.85]">
                 <strong className="text-foreground/80 font-semibold">
@@ -127,7 +111,7 @@ export default function UniqueFeatures() {
                 <p className="mt-3 text-sm text-muted-foreground leading-[1.85]">{f.extra}</p>
               )}
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>

@@ -4,6 +4,24 @@ import { motion, useSpring } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
+function WordReveal({ words, delay = 0, className = "" }: { words: string[]; delay?: number; className?: string }) {
+  return (
+    <>
+      {words.map((word, i) => (
+        <motion.span
+          key={i}
+          className={`inline-block ${className}`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.48, delay: delay + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {word}{i < words.length - 1 ? " " : ""}
+        </motion.span>
+      ))}
+    </>
+  );
+}
+
 function SpringButton({ children }: { children: React.ReactNode }) {
   const scale = useSpring(1, { stiffness: 500, damping: 28 });
   const y     = useSpring(0, { stiffness: 500, damping: 28 });
@@ -40,13 +58,10 @@ export default function Hero() {
           opacity: 0.3,
         }}
       />
-      {/* Top radial glow */}
       <div
         aria-hidden
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[560px] pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse at top, rgba(255,91,53,0.07) 0%, transparent 68%)",
-        }}
+        style={{ background: "radial-gradient(ellipse at top, rgba(255,91,53,0.07) 0%, transparent 68%)" }}
       />
 
       <div className="relative z-10 w-full max-w-[1100px] mx-auto px-6 py-28">
@@ -63,26 +78,27 @@ export default function Hero() {
           </span>
         </motion.div>
 
-        {/* Headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.62, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+        {/* Headline — word by word stagger */}
+        <h1
           className="font-heading leading-[.93] tracking-[.01em] mb-7"
           style={{ fontSize: "clamp(52px, 9vw, 110px)" }}
         >
-          The Senior Engineer
-          <br />
-          <span className="text-[#ff5b35]">Your AI-Generated</span>
-          <br />
-          Code Has Never Had
-        </motion.h1>
+          <div>
+            <WordReveal words={["The", "Senior", "Engineer"]} delay={0.08} />
+          </div>
+          <div>
+            <WordReveal words={["Your", "AI-Generated"]} delay={0.26} className="text-[#ff5b35]" />
+          </div>
+          <div>
+            <WordReveal words={["Code", "Has", "Never", "Had"]} delay={0.4} />
+          </div>
+        </h1>
 
         {/* Sub-copy */}
         <motion.p
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.3 }}
+          transition={{ duration: 0.55, delay: 0.66 }}
           className="font-serif italic font-light text-[18px] text-[#3d4f6b] leading-[1.65] mb-10 max-w-[520px] mx-auto"
         >
           AI writes your code fast. CODEWATCH makes sure it&apos;s fit for production.
@@ -93,7 +109,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.48, delay: 0.46 }}
+          transition={{ duration: 0.48, delay: 0.78 }}
           className="flex flex-wrap items-center justify-center gap-3 mb-16"
         >
           <SpringButton>
@@ -119,11 +135,11 @@ export default function Hero() {
           </SpringButton>
         </motion.div>
 
-        {/* Stats row — 1px border grid */}
+        {/* Stats row */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.68, duration: 0.5 }}
+          transition={{ delay: 0.92, duration: 0.5 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-px bg-[#e2e2ee] border border-[#e2e2ee] rounded-xl overflow-hidden max-w-2xl mx-auto"
         >
           {STATS.map((s) => (
