@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { gsap } from "gsap";
@@ -14,7 +14,7 @@ const PROBLEMS = [
     statLabel: "more vulnerabilities in AI-generated code",
     title: "Security Gaps Nobody Catches",
     desc: "Every other tool reviews syntax. AI-generated code has 2.74× more security vulnerabilities than human-written code. They all look syntactically correct. Most tools will pass them.",
-    color: "#00b85f",
+    color: "#ff5b35",
   },
   {
     icon: "💸",
@@ -75,61 +75,56 @@ export default function ProblemSection() {
   );
 
   return (
-    <section ref={sectionRef} className="py-[8.75rem] max-w-[1200px] mx-auto px-6 bg-[#f7f7fa]" id="features">
+    <section ref={sectionRef} className="py-[100px] bg-[#f8faff]" id="features">
+      <div className="max-w-[1100px] mx-auto px-6">
       {/* Header */}
       <div className="text-center mb-16">
-        <div className="flex items-center justify-center gap-2.5">
-          <span className="block w-5 h-px bg-[#00b85f]" />
-          <span className="text-[#00b85f] text-[10px] font-medium tracking-[.2em] uppercase">The problem</span>
-          <span className="block w-5 h-px bg-[#00b85f]" />
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <span className="block w-6 h-px bg-[#ff5b35]" />
+          <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">The problem</span>
         </div>
         <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
           AI writes the code.
           <br />
-          <span className="text-[#00b85f]">Who reviews it?</span>
+          <span className="text-[#ff5b35]">Who reviews it?</span>
         </h2>
-        <p className="font-serif italic font-light text-[#7070a0] text-[17px] mt-5 max-w-lg mx-auto leading-relaxed">
+        <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-5 max-w-lg mx-auto leading-relaxed">
           41% of all code is now AI-generated. The tools built to review human code were not built
           for this. They pass what they were not designed to catch.
         </p>
       </div>
 
-      {/* Problem cards */}
-      <div className="grid md:grid-cols-3 gap-5 mb-16">
+      {/* Problem cards — 1px border grid */}
+      <div className="grid md:grid-cols-3 gap-px bg-[#e2e2ee] border border-[#e2e2ee] rounded-xl overflow-hidden mb-px">
         {PROBLEMS.map((p) => (
           <div
             key={p.title}
-            className="problem-card group relative rounded-2xl border border-[#e2e2ee] bg-white p-7 overflow-hidden" style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.06)" }}
+            className="problem-card bg-white p-7 flex flex-col gap-4"
           >
-            {/* Subtle corner glow */}
-            <div
-              className="absolute -top-12 -right-12 w-32 h-32 rounded-full blur-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500"
-              style={{ backgroundColor: p.color }}
-            />
+            <div className="text-2xl">{p.icon}</div>
 
-            <div className="text-3xl mb-5">{p.icon}</div>
-
-            <div className="mb-5">
-              <span className="font-heading text-[52px] leading-none" style={{ color: "#00b85f" }}>
+            <div>
+              <span className="font-heading text-[52px] leading-none" style={{ color: p.color }}>
                 {p.stat}
               </span>
-              <span className="text-xs text-muted-foreground ml-2">{p.statLabel}</span>
+              <p className="text-xs text-muted-foreground mt-0.5">{p.statLabel}</p>
             </div>
 
-            <h3 className="text-lg font-semibold mb-2">{p.title}</h3>
+            <h3 className="text-base font-semibold">{p.title}</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
           </div>
         ))}
       </div>
 
-      {/* Stats bar */}
-      <div className="problem-stats-bar rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] px-8 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 divide-x-0 md:divide-x divide-[#e2e2ee]">
+      {/* Stats bar — 1px border grid continuation */}
+      <div className="problem-stats-bar grid grid-cols-2 md:grid-cols-4 gap-px bg-[#e2e2ee] border border-t-0 border-[#e2e2ee] rounded-b-xl overflow-hidden">
         {STATS.map((s) => (
-          <div key={s.label} className="problem-stat text-center">
-            <div className="font-heading text-[44px] leading-none text-[#00b85f]">{s.value}</div>
+          <div key={s.label} className="problem-stat bg-[#f8faff] px-6 py-5 text-center">
+            <div className="font-heading text-[40px] leading-none text-[#ff5b35]">{s.value}</div>
             <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
           </div>
         ))}
+      </div>
       </div>
     </section>
   );

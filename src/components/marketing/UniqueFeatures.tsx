@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { gsap } from "gsap";
@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 const FEATURES = [
   {
     pill: "UNIQUE",
-    pillColor: "#00b85f",
+    pillColor: "#ff5b35",
     name: "Business Logic Context",
     body: "Every other tool is domain-blind. They review code in a vacuum. They can tell you the code is syntactically valid. They cannot tell you it is logically wrong for your business.",
     quote:
@@ -20,7 +20,7 @@ const FEATURES = [
   },
   {
     pill: "UNIQUE",
-    pillColor: "#00b85f",
+    pillColor: "#ff5b35",
     name: "AI Origin Probability",
     body: "41% of global code is now AI-generated. App stores are rejecting vibe-coded apps. Enterprise teams are setting quality gates. CODEWATCH scores every review with a 0–100% probability that the submitted code was AI-generated, based on structural tells: overly symmetric error handling, missing edge cases, no evidence of iteration, generic naming patterns.",
     extra:
@@ -73,19 +73,18 @@ export default function UniqueFeatures() {
   );
 
   return (
-    <section ref={sectionRef} className="py-[8.75rem] max-w-[1200px] mx-auto px-6">
+    <section ref={sectionRef} className="py-[100px] max-w-[1100px] mx-auto px-6">
       <div className="text-center mb-16">
-        <div className="flex items-center justify-center gap-2.5">
-          <span className="block w-5 h-px bg-[#00b85f]" />
-          <span className="text-[#00b85f] text-[10px] font-medium tracking-[.2em] uppercase">What Nobody Else Does</span>
-          <span className="block w-5 h-px bg-[#00b85f]" />
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <span className="block w-6 h-px bg-[#ff5b35]" />
+          <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">What Nobody Else Does</span>
         </div>
         <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
           The gaps every
           <br />
-          <span className="text-[#00b85f]">competitor leaves open.</span>
+          <span className="text-[#ff5b35]">competitor leaves open.</span>
         </h2>
-        <p className="font-serif italic font-light text-[#7070a0] text-[17px] mt-5 max-w-lg mx-auto leading-relaxed">
+        <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-5 max-w-lg mx-auto leading-relaxed">
           Every competitor catches syntax errors and common patterns. These capabilities exist nowhere else in the market.
         </p>
       </div>
@@ -120,7 +119,7 @@ export default function UniqueFeatures() {
                 {f.body.slice(f.body.indexOf(".") + 2)}
               </p>
               {f.quote && (
-                <blockquote className="mt-4 pl-4 border-l-2 border-[#00b85f]/35 text-sm text-foreground/50 italic leading-relaxed">
+                <blockquote className="mt-4 pl-4 border-l-2 border-[#ff5b35]/35 text-sm text-foreground/50 italic leading-relaxed">
                   {f.quote}
                 </blockquote>
               )}

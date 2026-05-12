@@ -47,63 +47,55 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
-  /* CodeWatch tokens */
-  --color-cw-green: var(--cw-green);
+  --color-cw-coral: var(--cw-coral);
   --color-cw-blue: var(--cw-blue);
   --color-cw-surface: var(--cw-surface);
   --color-cw-surface-elevated: var(--cw-surface-elevated);
 }
 
-/* CodeWatch light palette — Bebas Neue / DM Mono / Fraunces design system */
 :root {
   --background: #ffffff;
-  --foreground: #0a0a12;
+  --foreground: #0a0f1e;
   --card: #f7f7fa;
-  --card-foreground: #0a0a12;
+  --card-foreground: #0a0f1e;
   --popover: #ffffff;
-  --popover-foreground: #0a0a12;
-  --primary: #00b85f;
+  --popover-foreground: #0a0f1e;
+  --primary: #ff5b35;
   --primary-foreground: #ffffff;
-  --secondary: #f7f7fa;
-  --secondary-foreground: #0a0a12;
-  --muted: #f7f7fa;
-  --muted-foreground: #7070a0;
-  --accent: #ededf5;
-  --accent-foreground: #0a0a12;
+  --secondary: #f8faff;
+  --secondary-foreground: #0a0f1e;
+  --muted: #f8faff;
+  --muted-foreground: #8896ab;
+  --accent: #f0f3f9;
+  --accent-foreground: #0a0f1e;
   --destructive: #ef4444;
   --border: #e2e2ee;
   --input: #e2e2ee;
-  --ring: #00b85f;
+  --ring: #ff5b35;
   --radius: 0.625rem;
 
-  /* Sidebar (dashboard) */
-  --sidebar: #f7f7fa;
-  --sidebar-foreground: #0a0a12;
-  --sidebar-primary: #00b85f;
+  --sidebar: #f8faff;
+  --sidebar-foreground: #0a0f1e;
+  --sidebar-primary: #ff5b35;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #ededf5;
-  --sidebar-accent-foreground: #0a0a12;
+  --sidebar-accent: #f0f3f9;
+  --sidebar-accent-foreground: #0a0f1e;
   --sidebar-border: #e2e2ee;
-  --sidebar-ring: #00b85f;
+  --sidebar-ring: #ff5b35;
 
-  /* Charts */
-  --chart-1: #00b85f;
+  --chart-1: #ff5b35;
   --chart-2: #1a7be8;
   --chart-3: #00c4a0;
   --chart-4: #f5a623;
   --chart-5: #9b59b6;
 
-  /* CodeWatch design tokens */
-  --cw-green: #00b85f;
+  --cw-coral: #ff5b35;
   --cw-blue: #1a7be8;
-  --cw-green-glow: rgba(0, 184, 95, 0.20);
+  --cw-coral-glow: rgba(255, 91, 53, 0.22);
   --cw-blue-glow: rgba(26, 123, 232, 0.22);
-  /* Keep --cw-coral pointing to green so var(--cw-coral) usages still work */
-  --cw-coral: #00b85f;
-  --cw-coral-glow: rgba(0, 184, 95, 0.20);
   --cw-surface: #ffffff;
-  --cw-surface-elevated: #f7f7fa;
-  --cw-card-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+  --cw-surface-elevated: #f8faff;
+  --cw-card-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
 @layer base {
@@ -121,13 +113,11 @@
   }
 }
 
-/* Ticker scroll */
 @keyframes ticker {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
 
-/* Terminal cursor blink */
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
@@ -136,9 +126,8 @@
   animation: blink 1s step-end infinite;
 }
 
-/* Glow utilities */
-.glow-green {
-  box-shadow: 0 0 32px rgba(0, 184, 95, 0.25), 0 0 64px rgba(0, 184, 95, 0.10);
+.glow-coral {
+  box-shadow: 0 0 32px rgba(255, 91, 53, 0.3), 0 0 64px rgba(255, 91, 53, 0.12);
 }
 .glow-blue {
   box-shadow: 0 0 32px rgba(26, 123, 232, 0.25), 0 0 64px rgba(26, 123, 232, 0.10);

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 const LINKS = {
   Product: [
@@ -25,13 +25,13 @@ const LINKS = {
 export default function Footer() {
   return (
     <footer className="border-t border-[#e2e2ee] bg-[var(--cw-surface)]">
-      <div className="max-w-[1200px] mx-auto px-6 pt-16 pb-10">
+      <div className="max-w-[1100px] mx-auto px-6 pt-16 pb-10">
         {/* Main grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 mb-4">
-              <div className="w-7 h-7 rounded-lg bg-[#00b85f] flex items-center justify-center text-white text-xs font-bold select-none">
+              <div className="w-7 h-7 rounded-lg bg-[#ff5b35] flex items-center justify-center text-white text-xs font-bold select-none">
                 ◈
               </div>
               <span className="font-heading text-xl tracking-[.08em] text-foreground">CODEWATCH</span>

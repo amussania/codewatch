@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 const SPECIALIST_SCORES = [
-  { name: "Security", score: 31, color: "#00b85f" },
+  { name: "Security", score: 31, color: "#ff5b35" },
   { name: "Reliability", score: 58, color: "#4da3ff" },
   { name: "Business Logic", score: 22, color: "#00c4a0" },
   { name: "Performance", score: 67, color: "#fbbf24" },
@@ -12,8 +12,8 @@ const SPECIALIST_SCORES = [
 ];
 
 const ISSUES = [
-  { dot: "#00b85f", label: "SQL injection in query builder", severity: "CRITICAL" },
-  { dot: "#00b85f", label: "Hardcoded API key in source", severity: "CRITICAL" },
+  { dot: "#ff5b35", label: "SQL injection in query builder", severity: "CRITICAL" },
+  { dot: "#ff5b35", label: "Hardcoded API key in source", severity: "CRITICAL" },
   { dot: "#fbbf24", label: "No timeout on external fetch", severity: "HIGH" },
   { dot: "#00c4a0", label: "GST rounding incorrect (18% rule)", severity: "LOGIC" },
 ];
@@ -50,7 +50,7 @@ export default function HeroVisual() {
       className="relative select-none"
     >
       {/* Ambient glows — visible on white bg */}
-      <div className="absolute -inset-10 rounded-full bg-[#00b85f] opacity-[0.12] blur-3xl pointer-events-none" />
+      <div className="absolute -inset-10 rounded-full bg-[#ff5b35] opacity-[0.12] blur-3xl pointer-events-none" />
       <div className="absolute -inset-10 rounded-full bg-[#1a7be8] opacity-[0.08] blur-3xl pointer-events-none translate-x-10 translate-y-4" />
 
       {/* Floating chips */}
@@ -94,7 +94,7 @@ export default function HeroVisual() {
                 <span className="text-[11px] text-muted-foreground font-mono">production-clearance</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="text-[10px] font-bold text-[#00b85f] bg-[#00b85f]/10 border border-[#00b85f]/20 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-bold text-[#ff5b35] bg-[#ff5b35]/10 border border-[#ff5b35]/20 px-2 py-0.5 rounded">
                   HIGH RISK
                 </span>
               </div>
@@ -108,7 +108,7 @@ export default function HeroVisual() {
                   <motion.circle
                     cx="32" cy="32" r="26"
                     fill="none"
-                    stroke="#00b85f"
+                    stroke="#ff5b35"
                     strokeWidth="5"
                     strokeLinecap="round"
                     strokeDasharray={`${2 * Math.PI * 26}`}
@@ -117,7 +117,7 @@ export default function HeroVisual() {
                     transition={{ duration: 1.4, delay: 0.8, ease: "easeOut" }}
                     transform="rotate(-90 32 32)"
                   />
-                  <text x="32" y="36" textAnchor="middle" fill="#00b85f" fontSize="14" fontWeight="700" fontFamily="monospace">
+                  <text x="32" y="36" textAnchor="middle" fill="#ff5b35" fontSize="14" fontWeight="700" fontFamily="monospace">
                     42
                   </text>
                 </svg>
@@ -159,7 +159,7 @@ export default function HeroVisual() {
                     className="w-1.5 h-1.5 rounded-full shrink-0"
                     style={{ backgroundColor: issue.dot, boxShadow: `0 0 5px ${issue.dot}88` }}
                   />
-                  <span className="text-[11px] text-[#4a4a6a] flex-1 truncate">{issue.label}</span>
+                  <span className="text-[11px] text-[#3d4f6b] flex-1 truncate">{issue.label}</span>
                   <span
                     className="text-[9px] font-bold shrink-0 px-1.5 py-0.5 rounded"
                     style={{ color: issue.dot, backgroundColor: `${issue.dot}15` }}
@@ -174,7 +174,7 @@ export default function HeroVisual() {
             <div className="px-4 pb-4 grid grid-cols-3 gap-2">
               {[
                 { label: "AI Origin", value: "82%", color: "#fbbf24" },
-                { label: "Issues Found", value: "10", color: "#00b85f" },
+                { label: "Issues Found", value: "10", color: "#ff5b35" },
                 { label: "Rewrite", value: "Ready", color: "#00c4a0" },
               ].map((m) => (
                 <div key={m.label} className="rounded-lg bg-[#f2f2f8] border border-[#e2e2ee] px-2 py-1.5 text-center">

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { gsap } from "gsap";
@@ -12,7 +12,7 @@ const PILLARS = [
     icon: "🔒",
     title: "Your code never touches our disk",
     desc: "Every review runs in a sandboxed, ephemeral process. When the review ends, the process is destroyed. There is no database write. There is no file system write. Zero persistence by design.",
-    color: "#00b85f",
+    color: "#ff5b35",
   },
   {
     icon: "🔑",
@@ -64,20 +64,19 @@ export default function SecuritySection() {
   );
 
   return (
-    <section ref={sectionRef} id="security" className="py-[8.75rem] max-w-[1200px] mx-auto px-6">
+    <section ref={sectionRef} id="security" className="py-[100px] max-w-[1100px] mx-auto px-6">
       {/* Header */}
       <div className="text-center mb-16">
-        <div className="flex items-center justify-center gap-2.5">
-          <span className="block w-5 h-px bg-[#00b85f]" />
-          <span className="text-[#00b85f] text-[10px] font-medium tracking-[.2em] uppercase">Security</span>
-          <span className="block w-5 h-px bg-[#00b85f]" />
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <span className="block w-6 h-px bg-[#ff5b35]" />
+          <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">Security</span>
         </div>
         <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
           Your code is never stored.
           <br />
-          <span className="text-[#00b85f]">By design.</span>
+          <span className="text-[#ff5b35]">By design.</span>
         </h2>
-        <p className="font-serif italic font-light text-[#7070a0] text-[17px] mt-4 max-w-lg mx-auto leading-relaxed">
+        <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-4 max-w-lg mx-auto leading-relaxed">
           We built CODEWATCH for teams reviewing proprietary, production code.
           Security is not a feature. It is the architecture.
         </p>
@@ -135,7 +134,7 @@ export default function SecuritySection() {
             ))}
           </div>
 
-          <div className="mt-8 rounded-xl bg-[#00b85f]/[0.06] border border-[#00b85f]/15 p-4 text-center">
+          <div className="mt-8 rounded-xl bg-[#ff5b35]/[0.06] border border-[#ff5b35]/15 p-4 text-center">
             <p className="text-xs text-muted-foreground leading-relaxed">
               <span className="text-foreground/80 font-medium">Never used for AI training.</span>{" "}
               Model-level opt-outs are enforced at the API contract level with every provider we use.

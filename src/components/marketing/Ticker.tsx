@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 const ITEMS = [
   "Security Specialist",
@@ -38,8 +38,8 @@ export default function Ticker() {
       >
         {doubled.map((item, i) => (
           <span key={i} className="flex items-center gap-2.5 whitespace-nowrap">
-            <span className="text-[#00b85f] text-[5px]" style={{ opacity: 0.4 }}>◆</span>
-            <span className="text-[11px] font-semibold tracking-[0.08em] uppercase text-[#7070a0]">
+            <span className="text-[#ff5b35] text-[5px]" style={{ opacity: 0.4 }}>◆</span>
+            <span className="text-[11px] font-semibold tracking-[0.08em] uppercase text-[#8896ab]">
               {item}
             </span>
           </span>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 import { motion, useMotionValue, useAnimation, type PanInfo } from "framer-motion";
@@ -10,7 +10,7 @@ const TESTIMONIALS = [
     role: "Senior Engineer",
     company: "Fintech startup",
     avatar: "RM",
-    color: "#00b85f",
+    color: "#ff5b35",
     score: { before: 58, after: 91 },
   },
   {
@@ -71,28 +71,27 @@ export default function Testimonials() {
   }
 
   return (
-    <section className="py-[8.75rem] overflow-hidden bg-[#f7f7fa]" id="testimonials">
-      <div className="max-w-[1200px] mx-auto px-6">
+    <section className="py-[100px] overflow-hidden bg-[#f7f7fa]" id="testimonials">
+      <div className="max-w-[1100px] mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-14">
-          <div className="flex items-center justify-center gap-2.5">
-          <span className="block w-5 h-px bg-[#00b85f]" />
-          <span className="text-[#00b85f] text-[10px] font-medium tracking-[.2em] uppercase">Testimonials</span>
-          <span className="block w-5 h-px bg-[#00b85f]" />
+          <div className="flex items-center justify-center gap-2 mb-3">
+          <span className="block w-6 h-px bg-[#ff5b35]" />
+          <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">Testimonials</span>
         </div>
           <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
             What the market
             <br />
-            <span className="text-[#00b85f]">actually needed.</span>
+            <span className="text-[#ff5b35]">actually needed.</span>
           </h2>
-          <p className="font-serif italic font-light text-[#7070a0] text-[17px] mt-4 max-w-sm mx-auto">
+          <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-4 max-w-sm mx-auto">
             Developers, founders, and agencies who review code for a living.
           </p>
         </div>
       </div>
 
       {/* Drag carousel — extends past container edges */}
-      <div className="max-w-[1200px] mx-auto px-6 overflow-visible">
+      <div className="max-w-[1100px] mx-auto px-6 overflow-visible">
         <div className="overflow-hidden -mx-6 px-6">
           <motion.div
             animate={controls}
@@ -131,7 +130,7 @@ export default function Testimonials() {
                   </div>
                   <div className="flex-1 h-px bg-[#ededf5] relative">
                     <div
-                      className="absolute top-1/2 -translate-y-1/2 right-0 text-[#00b85f] text-xs font-bold"
+                      className="absolute top-1/2 -translate-y-1/2 right-0 text-[#ff5b35] text-xs font-bold"
                       style={{ color: t.color }}
                     >
                       +{t.score.after - t.score.before}
@@ -174,7 +173,7 @@ export default function Testimonials() {
             >
               <motion.div
                 animate={{ width: i === currentIdx ? 20 : 8, opacity: i === currentIdx ? 1 : 0.35 }}
-                className="h-1.5 rounded-full bg-[#00b85f]"
+                className="h-1.5 rounded-full bg-[#ff5b35]"
               />
             </button>
           ))}
