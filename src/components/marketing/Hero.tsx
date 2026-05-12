@@ -217,7 +217,7 @@ function CodeReviewPanel({ reduced }: { reduced: boolean }) {
 
   return (
     <div
-      className="w-full rounded-2xl overflow-hidden"
+      className="w-full rounded-2xl overflow-hidden flex flex-col h-full"
       style={{
         background: "#1A1714",
         border: "1px solid rgba(255,255,255,0.07)",
@@ -227,7 +227,7 @@ function CodeReviewPanel({ reduced }: { reduced: boolean }) {
     >
       {/* Window chrome */}
       <div
-        className="flex items-center gap-2 px-4 py-3"
+        className="shrink-0 flex items-center gap-2 px-4 py-3"
         style={{
           borderBottom: "1px solid rgba(255,255,255,0.06)",
           background: "rgba(255,255,255,0.025)",
@@ -252,8 +252,8 @@ function CodeReviewPanel({ reduced }: { reduced: boolean }) {
         </span>
       </div>
 
-      {/* Code */}
-      <div className="py-2" style={{ fontSize: "12.5px", lineHeight: "1.65" }}>
+      {/* Code — flex-1 so it fills remaining height; overflow-hidden clips lines at the boundary */}
+      <div className="flex-1 overflow-hidden py-2" style={{ fontSize: "12.5px", lineHeight: "1.65" }}>
         {CODE.map(({ n, t }) => {
           const lit = highlightedLines.has(n);
           return (
@@ -289,7 +289,7 @@ function CodeReviewPanel({ reduced }: { reduced: boolean }) {
       </div>
 
       {/* Findings panel */}
-      <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "14px 16px 16px" }}>
+      <div className="shrink-0" style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "14px 16px 16px" }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={activeIdx}
@@ -342,7 +342,7 @@ function CodeReviewPanel({ reduced }: { reduced: boolean }) {
 
       {/* Summary footer */}
       <div
-        className="flex items-center justify-between px-4 py-2.5"
+        className="shrink-0 flex items-center justify-between px-4 py-2.5"
         style={{ borderTop: "1px solid rgba(255,255,255,0.05)", background: "rgba(0,0,0,0.14)" }}
       >
         <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.22)" }}>
@@ -500,7 +500,7 @@ export default function Hero() {
 
         {/* ── Right: live code review panel ── */}
         <motion.div
-          className="hidden md:block w-full"
+          className="hidden md:flex flex-col self-stretch min-h-0 w-full"
           initial={reduced ? false : { opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={reduced ? { duration: 0 } : { duration: 0.9, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
