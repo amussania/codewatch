@@ -53,7 +53,7 @@ const SPECIALISTS = [
 export default function Specialists() {
   return (
     <section id="features" className="py-[100px]">
-      <div className="max-w-[1100px] mx-auto px-6">
+      <div className="max-w-[1100px] mx-auto px-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 32 }}
@@ -77,8 +77,8 @@ export default function Specialists() {
           </p>
         </motion.div>
 
-        {/* 5-column 1px border grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-px bg-[#e2e2ee] border border-[#e2e2ee] rounded-xl overflow-hidden">
+        {/* 5-column grid — individual bordered cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {SPECIALISTS.map((s, i) => (
             <motion.div
               key={s.name}
@@ -86,7 +86,7 @@ export default function Specialists() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5, delay: i * 0.08, ease: "easeOut" }}
-              className="bg-white p-5 flex flex-col gap-3"
+              className="bg-white p-7 flex flex-col gap-3 rounded-xl border border-[#e2e2ee] transition-all duration-[250ms] ease-[ease] hover:border-[#ff5b35] hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(255,91,53,0.08)]"
             >
               <div className="flex items-start justify-between">
                 <div
