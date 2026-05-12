@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const SPECIALISTS = [
   {
@@ -8,7 +9,6 @@ const SPECIALISTS = [
     name: "Security Specialist",
     color: "#ff5b35",
     badge: "ALWAYS ON",
-    tags: ["OWASP Top 10", "Auth flows", "Injection", "Secrets", "Timing attacks"],
     desc: "OWASP Top 10, auth flows, injection, timing attacks, exposed secrets, insecure patterns, environment variable leaks. Runs on every single review.",
     example: { label: "Recent catch", text: "SQL injection vector in dynamic query builder — passed every existing test" },
   },
@@ -17,7 +17,6 @@ const SPECIALISTS = [
     name: "Reliability Engineer",
     color: "#4da3ff",
     badge: "ALWAYS ON",
-    tags: ["Null guards", "Timeouts", "Error propagation", "Input validation"],
     desc: "Null guards, timeout enforcement, error propagation, retry logic, circuit breakers, input validation at every entry point. The edge cases that fail at 2AM.",
     example: { label: "Recent catch", text: "No timeout on external API call — would have hung indefinitely under load" },
   },
@@ -26,7 +25,6 @@ const SPECIALISTS = [
     name: "Business Logic Reviewer",
     color: "#00c4a0",
     badge: "ALWAYS ON",
-    tags: ["Your rules", "Pricing logic", "Permissions", "State machines"],
     desc: "Validates code against your described rules. Price calculations, fee structures, user permissions, state transitions. No other tool does this.",
     example: { label: "Recent catch", text: "GST rounding incorrect for Indian customer — was under-charging by ₹2 per transaction" },
   },
@@ -35,7 +33,6 @@ const SPECIALISTS = [
     name: "Performance Engineer",
     color: "#fbbf24",
     badge: "OPTIONAL",
-    tags: ["N+1 queries", "O(n²) patterns", "Memory leaks", "Async blocking"],
     desc: "N+1 query detection, O(n²) pattern recognition, memory leak identification, async blocking detection, database index recommendations.",
     example: { label: "Recent catch", text: "O(n²) nested loop in paginated API endpoint serving 50k requests/min" },
   },
@@ -44,13 +41,15 @@ const SPECIALISTS = [
     name: "Quality Gatekeeper",
     color: "#c4b5fd",
     badge: "OPTIONAL",
-    tags: ["Complexity", "Naming", "Dead code", "Test gaps"],
     desc: "Cyclomatic complexity, naming conventions, dead code elimination, test coverage gaps, function length thresholds. Enforces consistency at scale.",
     example: { label: "Recent catch", text: "Cyclomatic complexity of 31 in payment middleware — refactored to state machine" },
   },
 ];
 
 export default function Specialists() {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const active = SPECIALISTS[activeIdx];
+
   return (
     <section id="features" className="py-[140px]">
       <div className="max-w-[1120px] mx-auto px-6 lg:px-12">
@@ -60,7 +59,7 @@ export default function Specialists() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="block w-6 h-px bg-[#ff5b35]" />
@@ -77,54 +76,99 @@ export default function Specialists() {
           </p>
         </motion.div>
 
-        {/* 5-column grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 items-stretch">
-          {SPECIALISTS.map((s, i) => (
-            <motion.div
-              key={s.name}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.7, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-              whileHover={{ y: -4, boxShadow: "0 16px 48px rgba(0,0,0,0.08)" }}
-              className="bg-white p-6 flex flex-col rounded-2xl border border-[#e8e8e2] hover:border-[#d0d0c8] transition-colors duration-300 h-full"
-            >
-              {/* Number + badge row */}
-              <div className="flex items-start justify-between mb-3">
-                <span
-                  className="text-[11px] font-bold tracking-[0.06em] tabular-nums"
-                  style={{ color: s.color }}
-                >
+        {/* Split layout */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="flex flex-col lg:flex-row rounded-[20px] border border-[#e8e8e2] bg-white overflow-hidden"
+        >
+          {/* ── Left: specialist list ── */}
+          <div className="lg:w-[40%] border-b lg:border-b-0 lg:border-r border-[#e8e8e2] flex flex-col">
+            {SPECIALISTS.map((s, i) => (
+              <button
+                key={s.name}
+                onClick={() => setActiveIdx(i)}
+                style={{
+                  borderLeft: i === activeIdx ? "3px solid #ff5b35" : "3px solid transparent",
+                  backgroundColor: i === activeIdx ? "rgba(255,91,53,0.04)" : undefined,
+                  transition: "background-color 0.2s ease, border-color 0.2s ease",
+                }}
+                className={`flex items-center gap-4 px-6 py-4 text-left w-full group ${
+                  i !== activeIdx ? "hover:bg-[#faf9f7]" : ""
+                } ${i < SPECIALISTS.length - 1 ? "border-b border-[#e8e8e2]" : ""}`}
+              >
+                <span className="text-[11px] text-[#999990] font-medium tabular-nums shrink-0 w-6">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span
-                  className="text-[8px] font-bold tracking-[0.06em] px-1.5 py-0.5 rounded"
-                  style={{ backgroundColor: `${s.color}18`, color: s.color }}
-                >
-                  {s.badge}
-                </span>
-              </div>
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span className="text-base shrink-0">{s.icon}</span>
+                  <span
+                    className="text-sm font-semibold leading-tight"
+                    style={{
+                      color: i === activeIdx ? "#ff5b35" : "#0d0d0d",
+                      transition: "color 0.2s ease",
+                    }}
+                  >
+                    {s.name}
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
 
-              {/* Icon */}
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0 mb-3"
-                style={{ backgroundColor: `${s.color}12`, border: `1px solid ${s.color}28` }}
+          {/* ── Right: detail panel ── */}
+          <div className="flex-1 p-8 lg:p-10 min-h-[320px] flex flex-col justify-between overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeIdx}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                className="flex flex-col gap-0 h-full"
               >
-                {s.icon}
-              </div>
+                {/* Name + badge */}
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <h3
+                    className="font-heading text-[clamp(28px,3vw,40px)] leading-tight tracking-[-0.01em]"
+                    style={{ color: active.color }}
+                  >
+                    {active.name}
+                  </h3>
+                  <span
+                    className="shrink-0 mt-1 text-[9px] font-bold tracking-[0.08em] px-2.5 py-1 rounded-full"
+                    style={{ backgroundColor: `${active.color}14`, color: active.color, border: `1px solid ${active.color}28` }}
+                  >
+                    {active.badge}
+                  </span>
+                </div>
 
-              <h3 className="font-semibold text-sm text-[#0d0d0d] leading-tight mb-2">{s.name}</h3>
-              <p className="text-[13px] text-[#555550] leading-[1.65] flex-1">{s.desc}</p>
-
-              <div className="rounded-xl bg-[#f5f4f0] border border-[#e8e8e2] p-3 mt-4">
-                <p className="text-[9px] uppercase tracking-wider font-semibold mb-0.5" style={{ color: s.color }}>
-                  {s.example.label}
+                {/* Description */}
+                <p className="text-[15px] text-[#555550] leading-[1.75] mb-6 flex-1">
+                  {active.desc}
                 </p>
-                <p className="text-[11px] text-[#555550] leading-snug">{s.example.text}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+
+                {/* Recent catch */}
+                <div
+                  className="rounded-xl p-4"
+                  style={{ backgroundColor: `${active.color}08`, border: `1px solid ${active.color}20` }}
+                >
+                  <p
+                    className="text-[9px] uppercase tracking-widest font-semibold mb-1.5"
+                    style={{ color: active.color }}
+                  >
+                    {active.example.label}
+                  </p>
+                  <p className="text-[13px] text-[#555550] leading-snug">
+                    {active.example.text}
+                  </p>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
