@@ -36,8 +36,8 @@ const SPECIALISTS: Specialist[] = [
     name: "Reliability Engineer",
     accent: "#2060A0",
     findings: [
-      { line: 5, severity: "HIGH",   text: "No error handling on db.findById()" },
-      { line: 7, severity: "MEDIUM", text: "Missing rollback on stripe failure" },
+      { line: 5,  severity: "HIGH",   text: "No error handling on db.findById()" },
+      { line: 13, severity: "MEDIUM", text: "Missing rollback on stripe failure" },
     ],
   },
   {
@@ -46,7 +46,7 @@ const SPECIALISTS: Specialist[] = [
     accent: "#B07A20",
     findings: [
       { line: 2, severity: "MEDIUM", text: "Zero/negative amount passes unchecked" },
-      { line: 8, severity: "HIGH",   text: "Currency hardcoded — multi-region break" },
+      { line: 9, severity: "HIGH",   text: "Currency hardcoded — multi-region break" },
     ],
   },
 ];
@@ -64,10 +64,14 @@ const CODE: { n: number; t: string }[] = [
   { n: 4,  t: ") {" },
   { n: 5,  t: "  const user = await db.users" },
   { n: 6,  t: "    .findById(userId);" },
-  { n: 7,  t: "  await stripe.charge({" },
-  { n: 8,  t: "    amount, currency: 'usd'" },
-  { n: 9,  t: "  }, user.stripeId);" },
-  { n: 10, t: "}" },
+  { n: 7,  t: "  const charge = {" },
+  { n: 8,  t: "    amount: amount," },
+  { n: 9,  t: "    currency: 'usd'," },
+  { n: 10, t: "    customer: user.stripeId," },
+  { n: 11, t: "    description: 'Payment'" },
+  { n: 12, t: "  };" },
+  { n: 13, t: "  await stripe.charge(charge);" },
+  { n: 14, t: "}" },
 ];
 
 // ─── Dashed vertical lines background ─────────────────────────────────────
@@ -255,7 +259,7 @@ function CodeReviewPanel({ reduced }: { reduced: boolean }) {
           return (
             <div
               key={n}
-              className="flex items-stretch px-4 py-px"
+              className="flex items-stretch px-4 py-0.5"
               style={{
                 background: lit ? "rgba(255,255,255,0.045)" : "transparent",
                 borderLeft: lit ? `2px solid ${spec.accent}` : "2px solid transparent",
@@ -399,7 +403,7 @@ export default function Hero() {
 
   return (
     <section
-      className="relative min-h-[100svh] overflow-hidden pt-16"
+      className="relative min-h-[100svh] overflow-hidden"
       style={{ background: "var(--cw-bg-primary)" }}
     >
       <DashedLines />
@@ -414,11 +418,11 @@ export default function Hero() {
         }}
       />
 
-      {/* Two-column layout */}
-      <div className="relative z-10 max-w-[1120px] mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center min-h-[calc(100svh-4rem)] gap-12 lg:gap-16 py-20 lg:py-0">
+      {/* Two-column layout — CSS grid for true 50/50 split */}
+      <div className="relative z-10 max-w-[1120px] mx-auto px-6 lg:px-12 flex flex-col lg:grid lg:grid-cols-2 items-start min-h-[100svh] gap-12 lg:gap-16 pt-[calc(4rem+80px)] pb-16 lg:pt-[calc(4rem+96px)] lg:pb-20">
 
         {/* ── Left: text ── */}
-        <div className="flex-1 flex flex-col items-center text-center lg:items-start lg:text-left w-full">
+        <div className="flex flex-col items-center text-center lg:items-start lg:text-left w-full">
 
           {/* Label pill */}
           <motion.div
@@ -443,7 +447,7 @@ export default function Hero() {
           {/* Headline */}
           <h1
             className="font-heading italic leading-[1.08] tracking-[-0.03em] mb-7"
-            style={{ fontSize: "var(--type-hero)", color: "var(--cw-ink-primary)" }}
+            style={{ fontSize: "clamp(36px, 4vw, 56px)", color: "var(--cw-ink-primary)" }}
           >
             {HEADLINE_WORDS.map((line, li) => (
               <div key={li} className="flex flex-wrap justify-center lg:justify-start gap-x-[0.22em]">
@@ -496,7 +500,7 @@ export default function Hero() {
 
         {/* ── Right: live code review panel ── */}
         <motion.div
-          className="hidden md:block w-full lg:w-[460px] xl:w-[500px] shrink-0"
+          className="hidden md:block w-full"
           initial={reduced ? false : { opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={reduced ? { duration: 0 } : { duration: 0.9, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
