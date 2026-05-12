@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "@/components/shared/Logo";
 
 const LINKS = {
   Product: [
@@ -30,12 +31,9 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="flex items-center gap-2.5 mb-4">
-              <div className="w-7 h-7 rounded-lg bg-[#ff5b35] flex items-center justify-center text-white text-xs font-bold select-none">
-                ◈
-              </div>
-              <span className="font-heading text-xl tracking-[.08em] text-[#0d0d0d]">CODEWATCH</span>
-            </Link>
+            <div className="mb-4">
+              <Logo markSize={26} textSize={17} />
+            </div>
             <p className="text-sm text-[#999990] leading-[1.7] max-w-[220px]">
               Multi-specialist AI code review with business logic awareness. Built for the era of AI-generated code.
             </p>

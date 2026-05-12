@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence, useSpring } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { LogoContent } from "@/components/shared/Logo";
 
 const NAV_LINKS = [
   { label: "How It Works", href: "#how-it-works" },
@@ -38,7 +39,6 @@ function HamburgerIcon({ open }: { open: boolean }) {
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const logoRotate = useSpring(0, { stiffness: 400, damping: 20 });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -60,17 +60,7 @@ export default function Navbar() {
       >
         <nav className="max-w-[1120px] mx-auto px-6 lg:px-12 h-16 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 shrink-0">
-            <motion.div
-              style={{ rotate: logoRotate }}
-              onHoverStart={() => logoRotate.set(180)}
-              onHoverEnd={() => logoRotate.set(0)}
-              className="w-7 h-7 rounded-lg bg-[#ff5b35] flex items-center justify-center text-white text-xs font-bold select-none"
-            >
-              ◈
-            </motion.div>
-            <span className="font-heading text-xl tracking-[.08em] text-[#0d0d0d]">CODEWATCH</span>
-          </Link>
+          <LogoContent markSize={28} textSize={19} />
 
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-8">
@@ -140,16 +130,7 @@ export default function Navbar() {
               className="fixed top-0 right-0 bottom-0 z-[60] w-72 flex flex-col bg-white border-l border-[#e8e8e2] md:hidden"
             >
               <div className="flex items-center justify-between px-5 h-16 border-b border-[#e8e8e2] shrink-0">
-                <Link
-                  href="/"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 font-heading text-xl tracking-[.08em] text-[#0d0d0d]"
-                >
-                  <span className="w-6 h-6 rounded-lg bg-[#ff5b35] flex items-center justify-center text-[10px] text-white font-bold">
-                    ◈
-                  </span>
-                  CODEWATCH
-                </Link>
+                <LogoContent markSize={24} textSize={17} onNavigate={() => setMenuOpen(false)} />
                 <button
                   onClick={() => setMenuOpen(false)}
                   aria-label="Close menu"
