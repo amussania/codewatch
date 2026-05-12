@@ -54,7 +54,7 @@ const TESTIMONIALS = [
 function Card({ t }: { t: typeof TESTIMONIALS[0] }) {
   return (
     <div
-      style={{ width: 420, minWidth: 420, flexShrink: 0 }}
+      style={{ width: 400, minWidth: 400, flexShrink: 0 }}
       className="rounded-2xl border border-[#e8e8e2] bg-white p-8 flex flex-col gap-5 hover:border-[#d0d0c8] transition-colors duration-300"
     >
       <div className="flex gap-0.5">
@@ -136,7 +136,7 @@ export default function Testimonials() {
       <div className="overflow-hidden">
         <div
           ref={trackRef}
-          className="flex gap-5 pl-6"
+          className="flex gap-6 pl-6"
           style={{ width: "fit-content", animation: "ticker 40s linear infinite" }}
           onMouseEnter={pause}
           onMouseLeave={resume}

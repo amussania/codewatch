@@ -58,7 +58,7 @@ export default function HowItWorks() {
         </p>
       </motion.div>
 
-      {/* Steps — 4-column grid */}
+      {/* Steps */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {STEPS.map((step, i) => (
           <motion.div
@@ -69,20 +69,27 @@ export default function HowItWorks() {
             transition={{ duration: 0.7, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
             whileHover={{ y: -4, boxShadow: "0 16px 48px rgba(0,0,0,0.08)" }}
             className="bg-white rounded-2xl border border-[#e8e8e2] p-8 flex flex-col gap-4 relative overflow-hidden hover:border-[#d0d0c8] transition-colors duration-300"
+            style={{ borderLeft: "3px solid #ff5b35" }}
           >
-            {/* Ghost step number */}
+            {/* Ghost step number — behind everything */}
             <span
               aria-hidden
-              className="absolute top-4 right-5 font-heading leading-none select-none pointer-events-none text-[#f0efe9]"
-              style={{ fontSize: "88px", lineHeight: 1 }}
+              className="absolute bottom-3 right-4 font-heading select-none pointer-events-none"
+              style={{
+                fontSize: "120px",
+                lineHeight: 1,
+                color: "#f0ede8",
+                fontWeight: 800,
+                zIndex: 0,
+              }}
             >
               {step.num}
             </span>
 
-            <div className="text-2xl relative z-10">{step.icon}</div>
-            <h3 className="font-semibold text-base text-[#0d0d0d] relative z-10">{step.title}</h3>
-            <p className="text-sm text-[#555550] leading-[1.7] flex-1">{step.desc}</p>
-            <p className="text-[11px] text-[#999990] border-l-2 border-[#ff5b35]/30 pl-3 leading-snug">
+            <div className="relative z-10 text-2xl">{step.icon}</div>
+            <h3 className="relative z-10 font-semibold text-base text-[#0d0d0d]">{step.title}</h3>
+            <p className="relative z-10 text-sm text-[#555550] leading-[1.7] flex-1">{step.desc}</p>
+            <p className="relative z-10 text-[11px] text-[#999990] border-l-2 border-[#ff5b35]/30 pl-3 leading-snug">
               {step.detail}
             </p>
           </motion.div>

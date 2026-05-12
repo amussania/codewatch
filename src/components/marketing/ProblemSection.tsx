@@ -11,6 +11,7 @@ const PROBLEMS = [
     title: "Security Gaps Nobody Catches",
     desc: "Every other tool reviews syntax. AI-generated code has 2.74× more security vulnerabilities than human-written code. They all look syntactically correct. Most tools will pass them.",
     color: "#ff5b35",
+    topColor: "#ff5b35",
   },
   {
     icon: "💸",
@@ -19,6 +20,7 @@ const PROBLEMS = [
     title: "Silent Business Logic Errors",
     desc: "Your tool reviews syntax. Not your pricing logic. Not your GST rules. Not your discount calculation. The code works. The business rule is wrong. Nobody finds out until customers are undercharged.",
     color: "#f59e0b",
+    topColor: "#4d9fff",
   },
   {
     icon: "⚡",
@@ -27,6 +29,7 @@ const PROBLEMS = [
     title: "Fails at 2AM on the Edge Case",
     desc: "AI-generated code handles the happy path perfectly. It fails on the edge case at 2AM when the payment gateway times out and there is no retry logic and no fallback and no error logging.",
     color: "#1a7be8",
+    topColor: "#00b85f",
   },
 ];
 
@@ -114,7 +117,8 @@ export default function ProblemSection() {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.7, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
               whileHover={{ y: -4, boxShadow: "0 16px 48px rgba(0,0,0,0.08)" }}
-              className="bg-white p-8 rounded-2xl border border-[#e8e8e2] flex flex-col gap-4 hover:border-[#d0d0c8] transition-colors duration-300"
+              className="bg-white p-8 rounded-2xl border border-[#e8e8e2] flex flex-col gap-4 hover:border-[#d0d0c8] transition-colors duration-300 overflow-hidden"
+              style={{ borderTop: `3px solid ${p.topColor}` }}
             >
               <div className="text-2xl">{p.icon}</div>
               <div>

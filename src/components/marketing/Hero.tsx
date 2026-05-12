@@ -230,7 +230,7 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative z-10 w-full max-w-[1120px] mx-auto px-6 lg:px-12 py-28">
+      <div className="relative z-10 w-full max-w-[1120px] mx-auto px-6 lg:px-12 pt-[160px] pb-[120px]">
         {/* Eyebrow */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -246,8 +246,8 @@ export default function Hero() {
 
         {/* Headline with scroll-based colour reveal */}
         <h1
-          className="font-heading leading-[1.15] tracking-[-0.02em] mb-8"
-          style={{ fontSize: "clamp(56px, 8vw, 96px)" }}
+          className="font-heading leading-[1.15] tracking-[-0.02em] mb-12"
+          style={{ fontSize: "clamp(60px, 9vw, 110px)" }}
         >
           <div>
             <WordReveal words={["The", "Senior", "Engineer"]} delay={0.08} scrollColor={headlineColor} />

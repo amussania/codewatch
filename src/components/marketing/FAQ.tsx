@@ -60,13 +60,22 @@ function FAQItem({ faq, isOpen, onToggle, delay }: {
         <span className="text-sm font-medium leading-snug pr-2 text-[#0d0d0d] group-hover:text-[#ff5b35] transition-colors duration-200">
           {faq.q}
         </span>
-        <motion.div
-          animate={{ rotate: isOpen ? 45 : 0 }}
-          transition={{ type: "spring", stiffness: 420, damping: 26 }}
-          className="shrink-0 mt-0.5 w-5 h-5 rounded-full border border-[#e8e8e2] flex items-center justify-center text-[#999990] group-hover:border-[#ff5b35]/40 group-hover:text-[#ff5b35] transition-colors"
+
+        {/* Icon: coral minus when open, dark plus when closed */}
+        <div
+          className="shrink-0 mt-0.5 w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-200"
+          style={{
+            borderColor: isOpen ? "#ff5b35" : "#e8e8e2",
+            backgroundColor: isOpen ? "rgba(255,91,53,0.06)" : "transparent",
+          }}
         >
-          <span className="text-xs font-bold leading-none">+</span>
-        </motion.div>
+          <span
+            className="text-sm font-bold leading-none select-none"
+            style={{ color: isOpen ? "#ff5b35" : "#555550" }}
+          >
+            {isOpen ? "−" : "+"}
+          </span>
+        </div>
       </button>
 
       <AnimatePresence initial={false}>
@@ -76,10 +85,10 @@ function FAQItem({ faq, isOpen, onToggle, delay }: {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: 0.32, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="overflow-hidden"
           >
-            <p className="text-sm text-[#555550] leading-[1.7] pb-5 max-w-2xl">
+            <p className="text-sm text-[#555550] leading-[1.75] pb-5 max-w-2xl">
               {faq.a}
             </p>
           </motion.div>

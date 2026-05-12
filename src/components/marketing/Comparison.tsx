@@ -19,9 +19,9 @@ const ROWS: { label: string; sub?: string; cw: CellVal; cr: CellVal; gr: CellVal
 const COMPETITORS = ["CodeRabbit", "Greptile", "Copilot", "Codacy"];
 
 function CellContent({ val, isCW }: { val: CellVal; isCW?: boolean }) {
-  if (val === true)      return <span className="text-[#ff5b35] font-bold text-base leading-none">✓</span>;
-  if (val === false)     return <span className="text-[#d0d0c8] text-base leading-none">✗</span>;
-  if (val === "partial") return <span className="text-amber-400 text-base leading-none">◉</span>;
+  if (val === true)      return <span className="text-[#ff5b35] font-black text-xl leading-none">✓</span>;
+  if (val === false)     return <span className="text-[#cccccc] text-xl leading-none font-bold">✗</span>;
+  if (val === "partial") return <span className="text-amber-400 text-lg leading-none">◉</span>;
   if (isCW)             return <span className="text-[#ff5b35] font-semibold text-sm">{val}</span>;
   return <span className="text-[#999990] text-sm">{val}</span>;
 }
@@ -60,19 +60,19 @@ export default function Comparison() {
           className="rounded-2xl border border-[#e8e8e2] overflow-hidden bg-white"
         >
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-sm min-w-[640px]">
+            <table className="w-full border-collapse min-w-[680px]">
               <thead>
                 <tr className="border-b border-[#e8e8e2] bg-[#f5f4f0]">
-                  <th className="text-left px-5 py-4 text-[11px] font-semibold text-[#999990] uppercase tracking-widest w-[240px]">
+                  <th className="sticky left-0 z-10 bg-[#f5f4f0] text-left px-6 py-4 text-[11px] font-semibold text-[#999990] uppercase tracking-widest w-[240px]">
                     Feature
                   </th>
-                  <th className="px-5 py-4 text-center text-[11px] font-semibold text-[#ff5b35] uppercase tracking-widest">
+                  <th className="px-6 py-4 text-center text-[11px] font-semibold text-[#ff5b35] uppercase tracking-widest whitespace-nowrap">
                     CODEWATCH
                   </th>
                   {COMPETITORS.map((c) => (
                     <th
                       key={c}
-                      className="px-5 py-4 text-center text-[11px] font-semibold text-[#999990] uppercase tracking-widest"
+                      className="px-6 py-4 text-center text-[11px] font-semibold text-[#999990] uppercase tracking-widest whitespace-nowrap"
                     >
                       {c}
                     </th>
@@ -87,9 +87,13 @@ export default function Comparison() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: "-20px" }}
                     transition={{ duration: 0.38, delay: i * 0.05, ease: "easeOut" }}
-                    className="border-b border-[#e8e8e2] last:border-0 hover:bg-[#f5f4f0] transition-colors"
+                    className="border-b border-[#e8e8e2] last:border-0"
+                    style={{ backgroundColor: i % 2 === 1 ? "#faf9f6" : "#ffffff" }}
                   >
-                    <td className="px-5 py-4 text-[#0d0d0d]/80">
+                    <td
+                      className="sticky left-0 z-10 px-6 py-4 text-[#0d0d0d]/80 text-sm"
+                      style={{ backgroundColor: i % 2 === 1 ? "#faf9f6" : "#ffffff" }}
+                    >
                       {row.label}
                       {row.sub && (
                         <span className="ml-2 inline-block text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#ff5b35]/10 text-[#ff5b35] border border-[#ff5b35]/20 tracking-wider align-middle">
@@ -97,13 +101,13 @@ export default function Comparison() {
                         </span>
                       )}
                     </td>
-                    <td className="px-5 py-4 text-center bg-[#ff5b35]/[0.025]">
+                    <td className="px-6 py-4 text-center bg-[#ff5b35]/[0.025]" style={{ height: 60 }}>
                       <CellContent val={row.cw} isCW />
                     </td>
-                    <td className="px-5 py-4 text-center"><CellContent val={row.cr} /></td>
-                    <td className="px-5 py-4 text-center"><CellContent val={row.gr} /></td>
-                    <td className="px-5 py-4 text-center"><CellContent val={row.cp} /></td>
-                    <td className="px-5 py-4 text-center"><CellContent val={row.cd} /></td>
+                    <td className="px-6 py-4 text-center"><CellContent val={row.cr} /></td>
+                    <td className="px-6 py-4 text-center"><CellContent val={row.gr} /></td>
+                    <td className="px-6 py-4 text-center"><CellContent val={row.cp} /></td>
+                    <td className="px-6 py-4 text-center"><CellContent val={row.cd} /></td>
                   </motion.tr>
                 ))}
               </tbody>
