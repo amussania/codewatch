@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Hero from "@/components/marketing/Hero";
 import Ticker from "@/components/marketing/Ticker";
 import ProblemSection from "@/components/marketing/ProblemSection";
+import ProductDemo from "@/components/marketing/ProductDemo";
 import HowItWorks from "@/components/marketing/HowItWorks";
 import Specialists from "@/components/marketing/Specialists";
 import UniqueFeatures from "@/components/marketing/UniqueFeatures";
@@ -39,6 +40,8 @@ export default function LandingPage() {
       <AnimatedSection className="contents">
         <ProblemSection />
       </AnimatedSection>
+
+      <ProductDemo />
 
       <HowItWorks />
 
