@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+// ─── Data ─────────────────────────────────────────────────────────────────────
+
 const FEATURES = [
   {
     pill: "UNIQUE",
@@ -36,11 +38,40 @@ const FEATURES = [
   },
 ];
 
+// ─── Chevron ──────────────────────────────────────────────────────────────────
+
+function Chevron({ open }: { open: boolean }) {
+  return (
+    <motion.svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden
+      animate={{ rotate: open ? 180 : 0 }}
+      transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+      style={{ flexShrink: 0 }}
+    >
+      <path
+        d="M3 6L8 11L13 6"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </motion.svg>
+  );
+}
+
+// ─── Section ──────────────────────────────────────────────────────────────────
+
 export default function UniqueFeatures() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   return (
     <section className="py-[140px] max-w-[1120px] mx-auto px-6 lg:px-12">
+
+      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -49,77 +80,132 @@ export default function UniqueFeatures() {
         className="text-center mb-16"
       >
         <div className="flex items-center justify-center gap-2 mb-3">
-          <span className="block w-6 h-px bg-[#ff5b35]" />
-          <span className="text-[#ff5b35] text-[11px] tracking-[.2em] uppercase font-medium">What Nobody Else Does</span>
+          <span style={{ display: "block", width: 24, height: 1, background: "var(--cw-ember)" }} />
+          <span
+            style={{
+              color: "var(--cw-ember)",
+              fontSize: 11,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              fontWeight: 600,
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            What Nobody Else Does
+          </span>
         </div>
-        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[1.15] tracking-[-0.02em] mt-3">
+        <h2
+          className="font-heading italic"
+          style={{
+            fontSize: "clamp(38px, 5vw, 64px)",
+            lineHeight: 1.15,
+            color: "var(--cw-ink-primary)",
+            margin: "12px 0 0",
+          }}
+        >
           The gaps every
           <br />
-          <span className="text-[#ff5b35]">competitor leaves open.</span>
+          <span style={{ color: "var(--cw-ember)" }}>competitor leaves open.</span>
         </h2>
-        <p className="text-[17px] text-[#999990] mt-5 max-w-lg mx-auto leading-[1.7]">
+        <p
+          style={{
+            fontSize: 17,
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 400,
+            color: "var(--cw-ink-secondary)",
+            marginTop: 20,
+            maxWidth: 480,
+            marginLeft: "auto",
+            marginRight: "auto",
+            lineHeight: 1.7,
+          }}
+        >
           Every competitor catches syntax errors and common patterns. These capabilities exist nowhere else in the market.
         </p>
       </motion.div>
 
+      {/* Accordion */}
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
         transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="rounded-2xl border border-[#e8e8e2] bg-white overflow-hidden"
+        style={{
+          borderRadius: 12,
+          border: "0.5px solid var(--cw-bg-secondary)",
+          overflow: "hidden",
+        }}
       >
         {FEATURES.map((f, i) => {
           const isOpen = openIdx === i;
           return (
             <div
               key={i}
-              className={`border-l-[3px] transition-colors duration-300 ${
-                i < FEATURES.length - 1 ? "border-b border-[#e8e8e2]" : ""
-              }`}
+              className={i < FEATURES.length - 1 ? "border-b" : ""}
               style={{
-                borderLeftColor: isOpen ? "#ff5b35" : "transparent",
-                backgroundColor: isOpen ? "#fdf9f7" : undefined,
+                borderColor: "var(--cw-bg-secondary)",
+                borderLeft: `3px solid ${isOpen ? "var(--cw-ember)" : "transparent"}`,
+                backgroundColor: isOpen ? "var(--cw-bg-surface)" : "var(--cw-bg-primary)",
+                transition: "background-color 200ms ease, border-color 200ms ease",
               }}
             >
               {/* Header row */}
               <button
                 onClick={() => setOpenIdx(isOpen ? null : i)}
                 aria-expanded={isOpen}
-                className={`w-full flex items-center gap-4 px-6 py-6 text-left transition-colors duration-200 ${
-                  !isOpen ? "hover:bg-[#faf9f6]" : ""
-                }`}
-                style={{ cursor: "pointer" }}
+                className="w-full flex items-center gap-4 px-6 py-6 text-left"
+                style={{
+                  cursor: "pointer",
+                  color: isOpen ? "var(--cw-ember)" : "var(--cw-ink-tertiary)",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isOpen) {
+                    (e.currentTarget as HTMLButtonElement).parentElement!.style.backgroundColor =
+                      "var(--cw-bg-secondary)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isOpen) {
+                    (e.currentTarget as HTMLButtonElement).parentElement!.style.backgroundColor =
+                      "var(--cw-bg-primary)";
+                  }
+                }}
               >
                 {/* Left: pill + name */}
                 <div className="flex flex-col gap-2 flex-1 min-w-0">
                   <span
-                    className="font-sans text-[10px] uppercase tracking-[0.08em] px-2.5 py-0.5 rounded-full w-fit"
                     style={{
-                      backgroundColor: "rgba(255,91,53,0.08)",
-                      color: "#ff5b35",
-                      border: "1px solid rgba(255,91,53,0.15)",
+                      display: "inline-block",
+                      width: "fit-content",
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 10,
+                      fontWeight: 600,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.08em",
+                      padding: "3px 8px",
+                      borderRadius: 4,
+                      background: "var(--cw-ember-light)",
+                      color: "var(--cw-ember)",
                     }}
                   >
                     {f.pill}
                   </span>
                   <span
-                    className="text-[18px] font-bold leading-tight"
-                    style={{ color: isOpen ? "#ff5b35" : "#0d0d0d" }}
+                    style={{
+                      fontSize: 17,
+                      fontWeight: 600,
+                      fontFamily: "'DM Sans', sans-serif",
+                      color: isOpen ? "var(--cw-ember)" : "var(--cw-ink-primary)",
+                      transition: "color 200ms ease",
+                      lineHeight: 1.3,
+                    }}
                   >
                     {f.name}
                   </span>
                 </div>
 
-                {/* Right: rotating plus icon */}
-                <motion.span
-                  animate={{ rotate: isOpen ? 45 : 0 }}
-                  transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  className="shrink-0 w-7 h-7 rounded-full border border-[#e8e8e2] flex items-center justify-center text-[18px] font-light leading-none select-none"
-                  style={{ color: isOpen ? "#ff5b35" : "#999990" }}
-                >
-                  +
-                </motion.span>
+                {/* Right: chevron */}
+                <Chevron open={isOpen} />
               </button>
 
               {/* Expandable content */}
@@ -133,10 +219,34 @@ export default function UniqueFeatures() {
                     transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
                     className="overflow-hidden"
                   >
-                    <div className="px-6 pb-6 pt-0">
-                      <p className="text-[15px] text-[#555550] leading-[1.7] mb-4">{f.body}</p>
-                      <blockquote className="pl-4 border-l-[3px] border-[#ff5b35]">
-                        <p className="font-serif italic text-[15px] text-[#888880] leading-[1.7]">
+                    <div className="px-6 pb-7 pt-0">
+                      <p
+                        style={{
+                          fontSize: 15,
+                          fontFamily: "'DM Sans', sans-serif",
+                          fontWeight: 400,
+                          color: "var(--cw-ink-secondary)",
+                          lineHeight: 1.7,
+                          marginBottom: 16,
+                        }}
+                      >
+                        {f.body}
+                      </p>
+                      <blockquote
+                        style={{
+                          paddingLeft: 16,
+                          borderLeft: "3px solid var(--cw-ember)",
+                          margin: 0,
+                        }}
+                      >
+                        <p
+                          className="font-heading italic"
+                          style={{
+                            fontSize: 16,
+                            color: "var(--cw-ink-secondary)",
+                            lineHeight: 1.6,
+                          }}
+                        >
                           {f.quote}
                         </p>
                       </blockquote>
@@ -148,6 +258,7 @@ export default function UniqueFeatures() {
           );
         })}
       </motion.div>
+
     </section>
   );
 }

@@ -4,73 +4,105 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
-// ─── Types ──────────────────────────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 type Billing = "monthly" | "annual";
 
 interface Plan {
   id: string;
   name: string;
-  tagline: string;
   monthlyPrice: number | null;
+  reviews: string;
+  desc: string;
   features: string[];
+  cta: string;
   href: string;
   featured: boolean;
 }
 
-// ─── Data ────────────────────────────────────────────────────────────────────────
+// ─── Data ─────────────────────────────────────────────────────────────────────
 
 const PLANS: Plan[] = [
   {
-    id: "starter",
-    name: "Starter",
-    tagline: "Solo builders, open source",
-    monthlyPrice: null,
+    id: "solo",
+    name: "Solo",
+    monthlyPrice: 12,
+    reviews: "100 reviews / mo",
+    desc: "For developers who want expert-level review without the enterprise overhead.",
     features: [
-      "10 free reviews",
-      "All 5 specialist reviewers",
-      "Severity report (Critical → Low)",
-      "PDF & Markdown export",
-      "No credit card required",
+      "All 5 specialists",
+      "Business Logic Context",
+      "AI Origin Probability",
+      "Zero code retention",
+      "30+ languages",
     ],
+    cta: "Get started",
     href: "/signup",
     featured: false,
   },
   {
     id: "pro",
     name: "Pro",
-    tagline: "Founders, freelancers, small teams",
-    monthlyPrice: 29,
+    monthlyPrice: 30,
+    reviews: "350 reviews / mo",
+    desc: "For developers who need the full toolkit, including rewrites and white-label output.",
     features: [
-      "200 reviews / month",
-      "All 5 specialist reviewers",
-      "Business Logic Context",
-      "AI Origin Detection",
+      "Everything in Solo",
+      "Fail-Safe Rewrite included",
       "Humanisation Layer",
+      "White-label reports",
       "Priority review queue",
+      "Credit rollover (up to 200)",
     ],
+    cta: "Get started",
     href: "/signup?plan=pro",
+    featured: false,
+  },
+  {
+    id: "studio",
+    name: "Studio",
+    monthlyPrice: 72,
+    reviews: "1,000 reviews / mo",
+    desc: "For small teams and freelancers reviewing client code at volume.",
+    features: [
+      "Everything in Pro",
+      "3 user seats included",
+      "Team review history",
+      "White-label client reports",
+      "Webhook integrations",
+    ],
+    cta: "Get started",
+    href: "/signup?plan=studio",
     featured: true,
   },
   {
-    id: "scale",
-    name: "Scale",
-    tagline: "Agencies, larger codebases",
-    monthlyPrice: 99,
+    id: "agency",
+    name: "Agency",
+    monthlyPrice: 155,
+    reviews: "3,000 reviews / mo",
+    desc: "For agencies running code review as a client-facing service.",
     features: [
-      "1,000 reviews / month",
-      "Everything in Pro",
-      "5 team seats included",
-      "White-label reports",
+      "Everything in Studio",
+      "Unlimited user seats",
       "Custom business logic templates",
-      "Webhook integrations",
+      "Priority support + SLA",
+      "Reseller billing support",
     ],
-    href: "/signup?plan=scale",
+    cta: "Get started",
+    href: "/signup?plan=agency",
     featured: false,
   },
 ];
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────────
+const CREDIT_TABLE = [
+  { range: "< 100 lines",        credits: "1 credit" },
+  { range: "100 – 300 lines",    credits: "2 credits" },
+  { range: "300 – 600 lines",    credits: "4 credits" },
+  { range: "600 – 1,500 lines",  credits: "8 credits" },
+  { range: "Production Clearance", credits: "12 credits" },
+];
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getDisplayPrice(
   monthlyPrice: number | null,
@@ -82,7 +114,7 @@ function getDisplayPrice(
   return { main: `$${discounted}`, sub: "per month, billed annually" };
 }
 
-// ─── Toggle ───────────────────────────────────────────────────────────────────────
+// ─── Toggle ───────────────────────────────────────────────────────────────────
 
 function BillingToggle({
   billing,
@@ -111,7 +143,6 @@ function BillingToggle({
         Monthly
       </button>
 
-      {/* Pill toggle */}
       <button
         onClick={() => onChange(annual ? "monthly" : "annual")}
         aria-label="Toggle billing period"
@@ -181,7 +212,30 @@ function BillingToggle({
   );
 }
 
-// ─── Card ─────────────────────────────────────────────────────────────────────────
+// ─── Checkmark ────────────────────────────────────────────────────────────────
+
+function FeatureCheck() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      aria-hidden
+      style={{ flexShrink: 0, marginTop: 2 }}
+    >
+      <path
+        d="M2.5 7L5.5 10L11.5 4"
+        stroke="var(--cw-signal-pass)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+// ─── Plan card ────────────────────────────────────────────────────────────────
 
 function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
   const { main, sub } = getDisplayPrice(plan.monthlyPrice, billing);
@@ -194,24 +248,24 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
         border: plan.featured
           ? "1.5px solid var(--cw-ember)"
           : "0.5px solid var(--cw-bg-secondary)",
-        padding: "28px 24px",
+        padding: "24px 20px",
         transform: plan.featured ? "translateY(-8px)" : "none",
         display: "flex",
         flexDirection: "column",
-        gap: 22,
+        gap: 20,
       }}
     >
-      {/* Tier name + tagline */}
+      {/* Tier name + desc */}
       <div>
         <p
           style={{
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: 600,
             fontFamily: "'DM Sans', sans-serif",
             textTransform: "uppercase",
-            letterSpacing: "0.06em",
-            color: "var(--cw-ink-primary)",
-            margin: "0 0 4px",
+            letterSpacing: "0.08em",
+            color: "var(--cw-ink-tertiary)",
+            margin: "0 0 6px",
           }}
         >
           {plan.name}
@@ -222,14 +276,15 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
             fontFamily: "'DM Sans', sans-serif",
             color: "var(--cw-ink-tertiary)",
             margin: 0,
+            lineHeight: 1.5,
           }}
         >
-          {plan.tagline}
+          {plan.desc}
         </p>
       </div>
 
       {/* Price — fixed min-height prevents layout jump on toggle */}
-      <div style={{ minHeight: 68 }}>
+      <div style={{ minHeight: 64 }}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={`${plan.id}-${billing}`}
@@ -241,18 +296,28 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
             <p
               className="font-heading italic"
               style={{
-                fontSize: "clamp(38px, 3.2vw, 50px)",
+                fontSize: "clamp(34px, 2.8vw, 44px)",
                 lineHeight: 1,
                 color: "var(--cw-ink-primary)",
-                margin: "0 0 6px",
+                margin: "0 0 4px",
               }}
             >
               {main}
             </p>
+            <p
+              style={{
+                fontSize: 11,
+                fontFamily: "'DM Sans', sans-serif",
+                color: "var(--cw-ink-tertiary)",
+                margin: "0 0 2px",
+              }}
+            >
+              {plan.reviews}
+            </p>
             {sub && (
               <p
                 style={{
-                  fontSize: 12,
+                  fontSize: 11,
                   fontFamily: "'DM Sans', sans-serif",
                   color: "var(--cw-ink-tertiary)",
                   margin: 0,
@@ -276,35 +341,20 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
           padding: 0,
           display: "flex",
           flexDirection: "column",
-          gap: 11,
+          gap: 9,
           flex: 1,
         }}
       >
         {plan.features.map((f) => (
-          <li key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              aria-hidden
-              style={{ flexShrink: 0, marginTop: 2 }}
-            >
-              <path
-                d="M2.5 7L5.5 10L11.5 4"
-                stroke="var(--cw-signal-pass)"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+          <li key={f} style={{ display: "flex", alignItems: "flex-start", gap: 9 }}>
+            <FeatureCheck />
             <span
               style={{
                 fontSize: 14,
                 fontFamily: "'DM Sans', sans-serif",
                 fontWeight: 400,
                 color: "var(--cw-ink-secondary)",
-                lineHeight: 1.5,
+                lineHeight: 1.45,
               }}
             >
               {f}
@@ -341,7 +391,7 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
             alignItems: "center",
             justifyContent: "center",
             width: "100%",
-            height: 42,
+            height: 40,
             borderRadius: 6,
             fontSize: 14,
             fontWeight: 600,
@@ -362,14 +412,14 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
                 }),
           }}
         >
-          Get started
+          {plan.cta}
         </button>
       </Link>
     </div>
   );
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────────
+// ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function Pricing() {
   const [billing, setBilling] = useState<Billing>("monthly");
@@ -382,7 +432,7 @@ export default function Pricing() {
       <div className="max-w-[1120px] mx-auto px-6 lg:px-12">
 
         {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: 56 }}>
+        <div style={{ textAlign: "center", marginBottom: 52 }}>
           <p
             style={{
               fontSize: 11,
@@ -402,38 +452,201 @@ export default function Pricing() {
               fontSize: "clamp(32px, 3.5vw, 48px)",
               lineHeight: 1.1,
               color: "var(--cw-ink-primary)",
-              margin: "0 0 40px",
+              margin: "0 0 8px",
             }}
           >
-            Simple, honest pricing.
+            Pay for what you review.
           </h2>
+          <p
+            style={{
+              fontSize: 15,
+              fontFamily: "'DM Sans', sans-serif",
+              color: "var(--cw-ink-secondary)",
+              margin: "0 0 36px",
+              lineHeight: 1.6,
+            }}
+          >
+            Credit-based. No seat taxes. No lock-in.
+          </p>
 
           <BillingToggle billing={billing} onChange={setBilling} />
         </div>
 
-        {/* Cards */}
+        {/* Plan cards */}
         <div
-          className="grid grid-cols-1 md:grid-cols-3"
-          style={{ gap: 20, alignItems: "start" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+          style={{ gap: 16, alignItems: "start", marginBottom: 24 }}
         >
           {PLANS.map((plan) => (
             <PlanCard key={plan.id} plan={plan} billing={billing} />
           ))}
         </div>
 
+        {/* Credit system + top-up */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="grid md:grid-cols-2"
+          style={{ gap: 16, marginBottom: 24 }}
+        >
+          {/* Credit usage table */}
+          <div
+            style={{
+              borderRadius: 12,
+              border: "0.5px solid var(--cw-bg-primary)",
+              background: "var(--cw-bg-surface)",
+              padding: "22px 24px",
+            }}
+          >
+            <p
+              style={{
+                fontSize: 11,
+                fontWeight: 600,
+                fontFamily: "'DM Sans', sans-serif",
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+                color: "var(--cw-ink-tertiary)",
+                marginBottom: 16,
+              }}
+            >
+              Credit Usage
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {CREDIT_TABLE.map((row) => (
+                <div
+                  key={row.range}
+                  style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                >
+                  <span
+                    style={{
+                      fontSize: 14,
+                      fontFamily: "'DM Sans', sans-serif",
+                      color: "var(--cw-ink-secondary)",
+                    }}
+                  >
+                    {row.range}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 14,
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontWeight: 500,
+                      color: "var(--cw-ink-primary)",
+                    }}
+                  >
+                    {row.credits}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Top-up */}
+          <div
+            style={{
+              borderRadius: 12,
+              border: "0.5px solid var(--cw-bg-primary)",
+              background: "var(--cw-bg-surface)",
+              padding: "22px 24px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <div>
+              <p
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  fontFamily: "'DM Sans', sans-serif",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  color: "var(--cw-ink-tertiary)",
+                  marginBottom: 12,
+                }}
+              >
+                Top-up Credits
+              </p>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 10 }}>
+                <span
+                  className="font-heading italic"
+                  style={{ fontSize: 44, lineHeight: 1, color: "var(--cw-ink-primary)" }}
+                >
+                  $2.99
+                </span>
+                <span
+                  style={{
+                    fontSize: 13,
+                    fontFamily: "'DM Sans', sans-serif",
+                    color: "var(--cw-ink-tertiary)",
+                  }}
+                >
+                  / 25 reviews
+                </span>
+              </div>
+              <p
+                style={{
+                  fontSize: 14,
+                  fontFamily: "'DM Sans', sans-serif",
+                  color: "var(--cw-ink-secondary)",
+                  lineHeight: 1.7,
+                }}
+              >
+                Buy additional credits any time. No subscription required. Credits never expire.
+              </p>
+            </div>
+            <div style={{ marginTop: 24 }}>
+              <Link href="/signup" style={{ display: "block" }}>
+                <button
+                  onMouseEnter={(e) => {
+                    const btn = e.currentTarget as HTMLButtonElement;
+                    btn.style.background = "var(--cw-bg-primary)";
+                    btn.style.borderColor = "rgba(26,23,20,0.4)";
+                  }}
+                  onMouseLeave={(e) => {
+                    const btn = e.currentTarget as HTMLButtonElement;
+                    btn.style.background = "transparent";
+                    btn.style.borderColor = "rgba(26,23,20,0.2)";
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                    height: 40,
+                    borderRadius: 6,
+                    fontSize: 14,
+                    fontWeight: 600,
+                    fontFamily: "'DM Sans', sans-serif",
+                    cursor: "pointer",
+                    background: "transparent",
+                    color: "var(--cw-ink-primary)",
+                    border: "1px solid rgba(26,23,20,0.2)",
+                    transition: "background 200ms ease, border-color 200ms ease",
+                  }}
+                >
+                  Top up credits
+                </button>
+              </Link>
+            </div>
+          </div>
+        </motion.div>
+
         {/* Footer note */}
         <p
           style={{
             textAlign: "center",
-            marginTop: 44,
             fontSize: 13,
             fontFamily: "'DM Sans', sans-serif",
             color: "var(--cw-ink-tertiary)",
           }}
         >
-          All plans include zero code retention and all five specialist reviewers.
-          No credit card required to start.
+          All plans include zero code retention, row-level tenant isolation, and all five specialists.
+          Local taxes (GST, VAT) calculated at checkout where applicable.
         </p>
+
       </div>
     </section>
   );

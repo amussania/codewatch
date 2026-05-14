@@ -4,7 +4,15 @@ import { motion } from "framer-motion";
 
 type CellVal = true | false | "partial" | string;
 
-const ROWS: { label: string; sub?: string; cw: CellVal; cr: CellVal; gr: CellVal; cp: CellVal; cd: CellVal }[] = [
+const ROWS: {
+  label: string;
+  sub?: string;
+  cw: CellVal;
+  cr: CellVal;
+  gr: CellVal;
+  cp: CellVal;
+  cd: CellVal;
+}[] = [
   { label: "Business Logic Context",   sub: "YOUR RULES",  cw: true,             cr: false,      gr: false,      cp: false,      cd: false },
   { label: "Fail-Safe Rewrite",        sub: "FIXED CODE",  cw: true,             cr: false,      gr: false,      cp: false,      cd: false },
   { label: "Humanisation Layer",       sub: "EXCLUSIVE",   cw: true,             cr: false,      gr: false,      cp: false,      cd: false },
@@ -18,33 +26,71 @@ const ROWS: { label: string; sub?: string; cw: CellVal; cr: CellVal; gr: CellVal
 
 const COMPETITORS = ["CodeRabbit", "Greptile", "Copilot", "Codacy"];
 
+// ─── Cell marks ───────────────────────────────────────────────────────────────
+
 function CheckMark() {
   return (
-    <div
-      className="w-6 h-6 rounded-full flex items-center justify-center mx-auto"
-      style={{ backgroundColor: "#ff5b35" }}
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      aria-hidden
+      style={{ display: "block", margin: "0 auto" }}
     >
-      <span className="text-white text-[11px] font-bold leading-none">✓</span>
-    </div>
+      <path
+        d="M3 9L7 13L15 5"
+        stroke="var(--cw-signal-pass)"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
 function CrossMark() {
   return (
-    <div
-      className="w-6 h-6 rounded-full flex items-center justify-center mx-auto"
-      style={{ backgroundColor: "#e0e0e0" }}
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      aria-hidden
+      style={{ display: "block", margin: "0 auto" }}
     >
-      <span className="text-[#999999] text-[11px] font-bold leading-none">✕</span>
-    </div>
+      <path
+        d="M5 5L13 13M13 5L5 13"
+        stroke="var(--cw-ink-tertiary)"
+        strokeOpacity={0.4}
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }
 
 function PartialMark() {
   return (
-    <div className="w-6 h-6 rounded-full border-2 border-amber-400 flex items-center justify-center mx-auto bg-amber-50">
-      <div className="w-2 h-2 rounded-full bg-amber-400" />
-    </div>
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      aria-hidden
+      style={{ display: "block", margin: "0 auto" }}
+    >
+      <line
+        x1="5"
+        y1="9"
+        x2="13"
+        y2="9"
+        stroke="var(--cw-signal-warn)"
+        strokeOpacity={0.7}
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }
 
@@ -52,14 +98,41 @@ function CellContent({ val, isCW }: { val: CellVal; isCW?: boolean }) {
   if (val === true)      return <CheckMark />;
   if (val === false)     return <CrossMark />;
   if (val === "partial") return <PartialMark />;
-  if (isCW)             return <span className="font-sans text-[12px] font-semibold text-[#ff5b35]">{val}</span>;
-  return <span className="font-sans text-[12px] text-[#999990]">{val}</span>;
+  if (isCW) {
+    return (
+      <span
+        style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 12,
+          fontWeight: 600,
+          color: "var(--cw-ember)",
+        }}
+      >
+        {val}
+      </span>
+    );
+  }
+  return (
+    <span
+      style={{
+        fontFamily: "'DM Sans', sans-serif",
+        fontSize: 12,
+        color: "var(--cw-ink-tertiary)",
+      }}
+    >
+      {val}
+    </span>
+  );
 }
+
+// ─── Section ──────────────────────────────────────────────────────────────────
 
 export default function Comparison() {
   return (
     <section className="py-[140px]">
       <div className="max-w-[1120px] mx-auto px-6 lg:px-12">
+
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -68,44 +141,127 @@ export default function Comparison() {
           className="text-center mb-16"
         >
           <div className="flex items-center justify-center gap-2 mb-3">
-            <span className="block w-6 h-px bg-[#ff5b35]" />
-            <span className="text-[#ff5b35] text-[11px] tracking-[.2em] uppercase font-medium">Comparison</span>
+            <span style={{ display: "block", width: 24, height: 1, background: "var(--cw-ember)" }} />
+            <span
+              style={{
+                color: "var(--cw-ember)",
+                fontSize: 11,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                fontWeight: 600,
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              Comparison
+            </span>
           </div>
-          <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[1.15] tracking-[-0.02em] mt-3">
+          <h2
+            className="font-heading italic"
+            style={{
+              fontSize: "clamp(38px, 5vw, 64px)",
+              lineHeight: 1.15,
+              color: "var(--cw-ink-primary)",
+              margin: "12px 0 0",
+            }}
+          >
             How we stack up
             <br />
-            <span className="text-[#ff5b35]">against the market.</span>
+            <span style={{ color: "var(--cw-ember)" }}>against the market.</span>
           </h2>
-          <p className="text-[17px] text-[#999990] mt-5 max-w-lg mx-auto leading-[1.7]">
+          <p
+            style={{
+              fontSize: 17,
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 400,
+              color: "var(--cw-ink-secondary)",
+              marginTop: 20,
+              maxWidth: 480,
+              marginLeft: "auto",
+              marginRight: "auto",
+              lineHeight: 1.7,
+            }}
+          >
             Every competitor does code review. Not one of them does what the market actually needs in 2026.
           </p>
         </motion.div>
 
+        {/* Table */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="rounded-2xl border border-[#e8e8e2] overflow-hidden bg-white"
+          style={{
+            borderRadius: 12,
+            border: "0.5px solid var(--cw-bg-secondary)",
+            overflow: "hidden",
+            background: "var(--cw-bg-surface)",
+          }}
         >
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse min-w-[680px]">
+            <table
+              className="w-full border-collapse"
+              style={{ minWidth: 680 }}
+            >
               <thead>
-                <tr className="border-b border-[#e8e8e2]">
-                  <th className="sticky left-0 z-10 bg-[#f5f4f0] text-left px-6 py-4 font-sans text-[11px] font-semibold text-[#999990] uppercase tracking-[0.1em] w-[220px]">
-                    Feature
+                <tr style={{ borderBottom: "0.5px solid var(--cw-bg-secondary)" }}>
+                  {/* Feature column header */}
+                  <th
+                    className="sticky left-0 z-10 text-left px-6 py-4 w-[220px]"
+                    style={{ background: "var(--cw-bg-surface)" }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 11,
+                        fontWeight: 600,
+                        color: "var(--cw-ink-tertiary)",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.1em",
+                      }}
+                    >
+                      Feature
+                    </span>
                   </th>
-                  <th className="px-6 py-4 text-center" style={{ backgroundColor: "#ff5b35" }}>
-                    <span className="font-sans text-[11px] font-semibold text-white uppercase tracking-[0.1em] whitespace-nowrap">
+                  {/* CodeWatch header */}
+                  <th
+                    className="px-6 py-4 text-center"
+                    style={{ background: "var(--cw-ember-light)" }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 11,
+                        fontWeight: 600,
+                        color: "var(--cw-ember)",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.1em",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
                       CODEWATCH
                     </span>
                   </th>
+                  {/* Competitor headers */}
                   {COMPETITORS.map((c) => (
                     <th
                       key={c}
-                      className="bg-[#f5f4f0] px-6 py-4 text-center font-sans text-[11px] font-semibold text-[#999990] uppercase tracking-[0.1em] whitespace-nowrap"
+                      className="px-6 py-4 text-center"
+                      style={{ background: "var(--cw-bg-surface)" }}
                     >
-                      {c}
+                      <span
+                        style={{
+                          fontFamily: "'DM Sans', sans-serif",
+                          fontSize: 11,
+                          fontWeight: 600,
+                          color: "var(--cw-ink-tertiary)",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.1em",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {c}
+                      </span>
                     </th>
                   ))}
                 </tr>
@@ -114,22 +270,57 @@ export default function Comparison() {
                 {ROWS.map((row, i) => (
                   <tr
                     key={i}
-                    className={`group border-b border-[#f0ede8] last:border-0 hover:bg-[#f5f4f0] cursor-default transition-colors duration-150 ${
-                      i % 2 === 1 ? "bg-[#fafaf8]" : "bg-white"
-                    }`}
-                    style={{ height: 56 }}
+                    className="group cursor-default"
+                    style={{
+                      borderBottom: i < ROWS.length - 1 ? "0.5px solid var(--cw-bg-secondary)" : undefined,
+                      background: i % 2 === 1 ? "var(--cw-bg-primary)" : "var(--cw-bg-surface)",
+                      height: 56,
+                    }}
                   >
-                    <td className="sticky left-0 z-10 bg-inherit group-hover:bg-[#f5f4f0] px-6 py-4 text-[14px] font-semibold text-[#0d0d0d] w-[220px] transition-colors duration-150">
-                      {row.label}
+                    {/* Feature name */}
+                    <td
+                      className="sticky left-0 z-10 px-6 py-4 w-[220px]"
+                      style={{ background: "inherit" }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "'DM Sans', sans-serif",
+                          fontSize: 14,
+                          fontWeight: 400,
+                          color: "var(--cw-ink-primary)",
+                        }}
+                      >
+                        {row.label}
+                      </span>
                       {row.sub && (
-                        <span className="ml-2 inline-block font-sans text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#ff5b35]/10 text-[#ff5b35] border border-[#ff5b35]/20 tracking-wider align-middle">
+                        <span
+                          style={{
+                            marginLeft: 8,
+                            display: "inline-block",
+                            fontFamily: "'DM Sans', sans-serif",
+                            fontSize: 9,
+                            fontWeight: 600,
+                            padding: "2px 6px",
+                            borderRadius: 4,
+                            background: "var(--cw-ember-light)",
+                            color: "var(--cw-ember)",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.06em",
+                            verticalAlign: "middle",
+                          }}
+                        >
                           {row.sub}
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-center bg-[#ff5b35]/[0.025] group-hover:bg-[#ff5b35]/[0.04] transition-colors duration-150">
+                    {/* CodeWatch cell */}
+                    <td
+                      className="px-6 py-4 text-center"
+                      style={{ background: "rgba(200,68,10,0.025)" }}
+                    >
                       <CellContent val={row.cw} isCW />
                     </td>
+                    {/* Competitor cells */}
                     <td className="px-6 py-4 text-center"><CellContent val={row.cr} /></td>
                     <td className="px-6 py-4 text-center"><CellContent val={row.gr} /></td>
                     <td className="px-6 py-4 text-center"><CellContent val={row.cp} /></td>
@@ -140,6 +331,7 @@ export default function Comparison() {
             </table>
           </div>
         </motion.div>
+
       </div>
     </section>
   );
