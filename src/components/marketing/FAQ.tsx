@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
 
 const FAQS = [
   {
@@ -38,44 +40,112 @@ const FAQS = [
   },
 ];
 
-function FAQItem({ faq, isOpen, onToggle, delay }: {
-  faq: typeof FAQS[0];
+// ─── Injected styles ──────────────────────────────────────────────────────────
+
+const FAQ_STYLES = `
+  .cw-faq-email {
+    position: relative;
+    color: var(--cw-ember);
+    text-decoration: none;
+    display: inline-block;
+  }
+  .cw-faq-email::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--cw-ember);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .cw-faq-email:hover::after {
+    transform: scaleX(1);
+  }
+`;
+
+// ─── FAQ item ─────────────────────────────────────────────────────────────────
+
+function FAQItem({
+  faq,
+  isOpen,
+  onToggle,
+  delay,
+}: {
+  faq: (typeof FAQS)[0];
   isOpen: boolean;
   onToggle: () => void;
   delay: number;
 }) {
+  const reduced = useReducedMotion();
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduced ? false : { opacity: 0, y: 12 }}
+      whileInView={reduced ? {} : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.7, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="border-b border-[#e8e8e2] last:border-0"
+      transition={{
+        duration: 0.5,
+        delay: reduced ? 0 : delay,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      }}
+      style={{
+        borderBottom: "0.5px solid rgba(26,23,20,0.1)",
+        boxShadow: isOpen ? "inset 3px 0 0 var(--cw-ember)" : "inset 3px 0 0 transparent",
+        transition: "box-shadow 200ms ease",
+      }}
     >
       <button
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="w-full flex items-start justify-between gap-4 py-5 text-left group"
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 20,
+          padding: "28px 0",
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          textAlign: "left",
+        }}
       >
-        <span className="text-sm font-medium leading-snug pr-2 text-[#0d0d0d] group-hover:text-[#ff5b35] transition-colors duration-200">
+        {/* Question text */}
+        <span
+          style={{
+            fontSize: 17,
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 500,
+            color: isOpen ? "var(--cw-ember)" : "var(--cw-ink-primary)",
+            lineHeight: 1.4,
+            transition: "color 200ms ease",
+            flex: 1,
+          }}
+        >
           {faq.q}
         </span>
 
-        {/* Icon: coral minus when open, dark plus when closed */}
-        <div
-          className="shrink-0 mt-0.5 w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-200"
+        {/* Dash → diagonal indicator */}
+        <span
+          aria-hidden
           style={{
-            borderColor: isOpen ? "#ff5b35" : "#e8e8e2",
-            backgroundColor: isOpen ? "rgba(255,91,53,0.06)" : "transparent",
+            flexShrink: 0,
+            marginTop: 3,
+            fontSize: 20,
+            fontFamily: "'DM Sans', sans-serif",
+            fontWeight: 300,
+            lineHeight: 1,
+            color: isOpen ? "var(--cw-ember)" : "var(--cw-ink-tertiary)",
+            display: "inline-block",
+            transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
+            transition: "transform 200ms ease, color 200ms ease",
           }}
         >
-          <span
-            className="text-sm font-bold leading-none select-none"
-            style={{ color: isOpen ? "#ff5b35" : "#555550" }}
-          >
-            {isOpen ? "−" : "+"}
-          </span>
-        </div>
+          —
+        </span>
       </button>
 
       <AnimatePresence initial={false}>
@@ -85,10 +155,21 @@ function FAQItem({ faq, isOpen, onToggle, delay }: {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.32, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="overflow-hidden"
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            style={{ overflow: "hidden" }}
           >
-            <p className="text-sm text-[#555550] leading-[1.75] pb-5 max-w-2xl">
+            <p
+              style={{
+                fontSize: 15,
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 400,
+                color: "var(--cw-ink-secondary)",
+                lineHeight: 1.7,
+                margin: 0,
+                padding: "0 0 28px",
+                maxWidth: "72ch",
+              }}
+            >
               {faq.a}
             </p>
           </motion.div>
@@ -98,44 +179,97 @@ function FAQItem({ faq, isOpen, onToggle, delay }: {
   );
 }
 
+// ─── Section ──────────────────────────────────────────────────────────────────
+
 export default function FAQ() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
+  const reduced = useReducedMotion();
 
   return (
-    <section id="faq" className="py-[140px]">
+    <section
+      id="faq"
+      style={{ background: "var(--cw-bg-secondary)", padding: "140px 0" }}
+    >
+      <style>{FAQ_STYLES}</style>
+
       <div className="max-w-3xl mx-auto px-6 lg:px-12">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={reduced ? false : { opacity: 0, y: 32 }}
+          whileInView={reduced ? {} : { opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="text-center mb-14"
+          style={{ textAlign: "center", marginBottom: 56 }}
         >
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <span className="block w-6 h-px bg-[#ff5b35]" />
-            <span className="text-[#ff5b35] text-[11px] tracking-[.2em] uppercase font-medium">FAQ</span>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              marginBottom: 12,
+            }}
+          >
+            <span
+              style={{
+                display: "block",
+                width: 24,
+                height: 1,
+                background: "var(--cw-ember)",
+              }}
+            />
+            <span
+              style={{
+                color: "var(--cw-ember)",
+                fontSize: 11,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                fontWeight: 600,
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              FAQ
+            </span>
           </div>
-          <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[1.15] tracking-[-0.02em] mt-3">
+          <h2
+            className="font-heading italic"
+            style={{
+              fontSize: "clamp(38px, 5vw, 56px)",
+              lineHeight: 1.15,
+              color: "var(--cw-ink-primary)",
+              margin: "0 0 16px",
+            }}
+          >
             Common questions
           </h2>
-          <p className="text-[17px] text-[#999990] mt-4 max-w-sm mx-auto leading-[1.7]">
+          <p
+            style={{
+              fontSize: 17,
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 400,
+              color: "var(--cw-ink-secondary)",
+              lineHeight: 1.7,
+              maxWidth: 360,
+              margin: "0 auto",
+            }}
+          >
             Still have questions?{" "}
-            <a href="mailto:hello@codewatch.dev" className="text-[#ff5b35] hover:underline">
+            <a href="mailto:hello@codewatch.dev" className="cw-faq-email">
               Email us
-            </a>
-            {" "}— we reply the same business day.
+            </a>{" "}
+            — we reply the same business day.
           </p>
         </motion.div>
 
-        <div className="rounded-2xl border border-[#e8e8e2] bg-white px-6">
+        {/* FAQ rows — no card wrapper, sit directly on background */}
+        <div style={{ borderTop: "0.5px solid rgba(26,23,20,0.1)" }}>
           {FAQS.map((faq, i) => (
             <FAQItem
               key={i}
               faq={faq}
               isOpen={openIdx === i}
               onToggle={() => setOpenIdx(openIdx === i ? null : i)}
-              delay={i * 0.06}
+              delay={i * 0.05}
             />
           ))}
         </div>

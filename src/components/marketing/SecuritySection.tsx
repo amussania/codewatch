@@ -1,157 +1,383 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
 
 const PILLARS = [
   {
-    icon: "🔒",
     title: "Code never touches our disk",
     desc: "Ephemeral process, zero writes, destroyed when the review ends.",
-    color: "#ff5b35",
   },
   {
-    icon: "🔑",
     title: "Row-level tenant isolation",
     desc: "Cryptographically isolated per account — no shared surfaces.",
-    color: "#4da3ff",
   },
   {
-    icon: "🗑️",
     title: "Zero data retention by default",
     desc: "Review result returned, then deleted. On every plan.",
-    color: "#00c4a0",
   },
   {
-    icon: "💣",
     title: "Delete everything, anytime",
     desc: "One button wipe. GDPR Article 17 compliant. No waiting period.",
-    color: "#fbbf24",
   },
 ];
 
-const CODE_LINES = [
-  { indent: 0, tokens: [{ t: "const", c: "#4da3ff" }, { t: " result = ", c: "#e8e8e2" }, { t: "await", c: "#c4b5fd" }, { t: " codewatch", c: "#e8e8e2" }] },
-  { indent: 1, tokens: [{ t: ".review", c: "#00c4a0" }, { t: "(", c: "#e8e8e2" }, { t: "{ code, context }", c: "#fbbf24" }, { t: ");", c: "#e8e8e2" }] },
-  { indent: 0, tokens: [] },
-  { indent: 0, tokens: [{ t: "// ephemeral process spawned", c: "#555550" }] },
-  { indent: 0, tokens: [{ t: "// specialists run in parallel", c: "#555550" }] },
-  { indent: 0, tokens: [] },
-  { indent: 0, tokens: [{ t: "return", c: "#4da3ff" }, { t: " result;", c: "#e8e8e2" }] },
-  { indent: 0, tokens: [{ t: "// process destroyed ✓", c: "#00c4a0" }] },
+const CODE_LINES: {
+  n: number;
+  tokens: { t: string; c: string }[];
+  indent: number;
+  annotate?: boolean;
+}[] = [
+  {
+    n: 1,
+    indent: 0,
+    tokens: [
+      { t: "const", c: "#4da3ff" },
+      { t: " result = ", c: "#e8e8e2" },
+      { t: "await", c: "#c4b5fd" },
+      { t: " codewatch", c: "#e8e8e2" },
+    ],
+  },
+  {
+    n: 2,
+    indent: 1,
+    tokens: [
+      { t: ".review", c: "#00c4a0" },
+      { t: "(", c: "#e8e8e2" },
+      { t: "{ code, context }", c: "#fbbf24" },
+      { t: ");", c: "#e8e8e2" },
+    ],
+  },
+  { n: 3, indent: 0, tokens: [] },
+  {
+    n: 4,
+    indent: 0,
+    annotate: true,
+    tokens: [{ t: "// ephemeral process spawned", c: "#555550" }],
+  },
+  {
+    n: 5,
+    indent: 0,
+    tokens: [{ t: "// specialists run in parallel", c: "#555550" }],
+  },
+  { n: 6, indent: 0, tokens: [] },
+  {
+    n: 7,
+    indent: 0,
+    tokens: [
+      { t: "return", c: "#4da3ff" },
+      { t: " result;", c: "#e8e8e2" },
+    ],
+  },
+  {
+    n: 8,
+    indent: 0,
+    tokens: [{ t: "// process destroyed ✓", c: "#00c4a0" }],
+  },
 ];
 
-export default function SecuritySection() {
-  return (
-    <section id="security" className="py-[140px] max-w-[1120px] mx-auto px-6 lg:px-12">
-      <div className="grid lg:grid-cols-2 gap-16 items-start">
+// ─── Section ──────────────────────────────────────────────────────────────────
 
-        {/* ── Left: headline + compact pillars ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          <div className="mb-10">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="block w-6 h-px bg-[#ff5b35]" />
-              <span className="text-[#ff5b35] text-[11px] tracking-[.2em] uppercase font-medium">Security</span>
+export default function SecuritySection() {
+  const reduced = useReducedMotion();
+
+  return (
+    <section
+      id="security"
+      style={{ background: "var(--cw-bg-primary)", padding: "140px 0" }}
+    >
+      <div className="max-w-[1120px] mx-auto px-6 lg:px-12">
+        <div className="grid lg:grid-cols-2 gap-16 items-start">
+
+          {/* ── Left: headline + editorial pillar list ── */}
+          <motion.div
+            initial={reduced ? false : { opacity: 0, y: 32 }}
+            whileInView={reduced ? {} : { opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
+            {/* Section label */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                marginBottom: 12,
+              }}
+            >
+              <span
+                style={{
+                  display: "block",
+                  width: 24,
+                  height: 1,
+                  background: "var(--cw-ember)",
+                }}
+              />
+              <span
+                style={{
+                  color: "var(--cw-ember)",
+                  fontSize: 11,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  fontWeight: 600,
+                  fontFamily: "'DM Sans', sans-serif",
+                }}
+              >
+                Security
+              </span>
             </div>
-            <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[1.15] tracking-[-0.02em] mt-3">
+
+            {/* Headline */}
+            <h2
+              className="font-heading italic"
+              style={{
+                fontSize: "clamp(38px, 5vw, 56px)",
+                lineHeight: 1.1,
+                color: "var(--cw-ink-primary)",
+                margin: "0 0 16px",
+              }}
+            >
               Your code is never stored.
               <br />
-              <span className="text-[#ff5b35]">By design.</span>
+              <span style={{ color: "var(--cw-ember)" }}>By design.</span>
             </h2>
-            <p className="text-[17px] text-[#999990] mt-4 leading-[1.7] max-w-md">
-              We built CODEWATCH for teams reviewing proprietary, production code.
-              Security is not a feature. It is the architecture.
+
+            {/* Subline */}
+            <p
+              style={{
+                fontSize: 17,
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 400,
+                color: "var(--cw-ink-secondary)",
+                lineHeight: 1.7,
+                maxWidth: 420,
+                margin: "0 0 40px",
+              }}
+            >
+              We built CODEWATCH for teams reviewing proprietary, production
+              code. Security is not a feature. It is the architecture.
             </p>
-          </div>
 
-          {/* Compact pillars */}
-          <div className="space-y-4">
-            {PILLARS.map((p, i) => (
-              <motion.div
-                key={p.title}
-                initial={{ opacity: 0, x: -16 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.5, delay: i * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="flex items-center gap-4"
-              >
-                <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0"
-                  style={{ backgroundColor: `${p.color}12`, border: `1px solid ${p.color}22` }}
-                >
-                  {p.icon}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <span className="text-sm font-semibold text-[#0d0d0d]">{p.title}</span>
-                  <span className="text-sm text-[#999990] ml-2">{p.desc}</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* ── Right: CSS code block + shield overlay ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="rounded-2xl overflow-hidden border border-[#e8e8e2]"
-        >
-          {/* Editor chrome */}
-          <div className="bg-[#1c1c1c] px-4 py-3 flex items-center gap-2 border-b border-[#2a2a2a]">
-            <span className="w-3 h-3 rounded-full bg-[#ff5f57]" />
-            <span className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
-            <span className="w-3 h-3 rounded-full bg-[#28ca42]" />
-            <span className="ml-3 text-[11px] text-[#555550] font-mono tracking-wide">review.ts — ephemeral</span>
-          </div>
-
-          {/* Code + overlay */}
-          <div className="relative bg-[#0f0f0f] px-6 py-6 min-h-[300px] font-mono text-[12px] leading-[1.9]">
-            {/* Line numbers + code */}
-            {CODE_LINES.map((line, i) => (
-              <div key={i} className="flex gap-4">
-                <span className="text-[#333] w-4 text-right shrink-0 select-none">{i + 1}</span>
-                <span style={{ paddingLeft: line.indent * 16 }}>
-                  {line.tokens.map((tok, j) => (
-                    <span key={j} style={{ color: tok.c }}>{tok.t}</span>
-                  ))}
-                </span>
-              </div>
-            ))}
-
-            {/* Shield overlay */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-t from-[#0f0f0f] via-[#0f0f0f]/75 to-transparent">
-              {/* CSS shield using clip-path */}
-              <div className="relative mb-4">
-                <div
-                  className="w-16 h-[72px] flex items-center justify-center"
+            {/* Editorial pillar list */}
+            <div>
+              {PILLARS.map((p, i) => (
+                <motion.div
+                  key={p.title}
+                  initial={reduced ? false : { opacity: 0, x: -16 }}
+                  whileInView={reduced ? {} : { opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{
+                    duration: 0.5,
+                    delay: reduced ? 0 : i * 0.08,
+                    ease: [0.25, 0.46, 0.45, 0.94],
+                  }}
                   style={{
-                    background: "linear-gradient(150deg, #ff5b35 0%, #c4370f 100%)",
-                    clipPath: "polygon(50% 0%, 100% 18%, 100% 68%, 50% 100%, 0% 68%, 0% 18%)",
+                    position: "relative",
+                    padding: "20px 0",
+                    borderTop: i === 0 ? "0.5px solid var(--cw-bg-secondary)" : undefined,
+                    borderBottom: "0.5px solid var(--cw-bg-secondary)",
+                    overflow: "hidden",
                   }}
                 >
-                  <span className="text-white font-bold text-2xl relative z-10 mt-1">✓</span>
-                </div>
-              </div>
-              <p className="text-white font-semibold text-sm tracking-wide">Zero Retention</p>
-              <p className="text-[#555550] text-xs mt-1">Process destroyed after every review</p>
+                  {/* Background number — purely decorative */}
+                  <span
+                    aria-hidden
+                    style={{
+                      position: "absolute",
+                      right: 0,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontWeight: 700,
+                      fontSize: 80,
+                      lineHeight: 1,
+                      color: "var(--cw-ink-primary)",
+                      opacity: 0.04,
+                      pointerEvents: "none",
+                      userSelect: "none",
+                    }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
 
-              <div className="mt-6 flex items-center gap-2 px-4 py-2 rounded-full bg-[#ffffff08] border border-[#ffffff10]">
-                <span className="text-[#00c4a0] font-bold text-xs">TLS 1.3</span>
-                <span className="text-[#333] text-xs">·</span>
-                <span className="text-[#4da3ff] font-bold text-xs">AES-256</span>
-                <span className="text-[#333] text-xs">·</span>
-                <span className="text-[#fbbf24] font-bold text-xs">GDPR</span>
+                  {/* Feature name + desc inline */}
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: 14,
+                      lineHeight: 1.6,
+                      position: "relative",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontWeight: 600,
+                        color: "var(--cw-ink-primary)",
+                      }}
+                    >
+                      {p.title}
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontWeight: 400,
+                        color: "var(--cw-ink-tertiary)",
+                        marginLeft: 8,
+                      }}
+                    >
+                      {p.desc}
+                    </span>
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* ── Right: code panel ── */}
+          <motion.div
+            initial={reduced ? false : { opacity: 0, y: 24 }}
+            whileInView={reduced ? {} : { opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+            style={{
+              borderRadius: 12,
+              overflow: "hidden",
+              border: "0.5px solid var(--cw-bg-secondary)",
+            }}
+          >
+            {/* Editor chrome */}
+            <div
+              style={{
+                background: "#1c1c1c",
+                padding: "12px 16px",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                borderBottom: "1px solid #2a2a2a",
+              }}
+            >
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#ff5f57", flexShrink: 0 }} />
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#ffbd2e", flexShrink: 0 }} />
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#28ca42", flexShrink: 0 }} />
+              <span
+                style={{
+                  marginLeft: 12,
+                  fontSize: 11,
+                  color: "#555550",
+                  fontFamily: "'JetBrains Mono', monospace",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                review.ts — ephemeral
+              </span>
+            </div>
+
+            {/* Code area */}
+            <div
+              style={{
+                background: "#0f0f0f",
+                padding: "24px 24px 20px",
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 12,
+                lineHeight: 1.9,
+              }}
+            >
+              {CODE_LINES.map((line, i) => (
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    gap: 16,
+                    ...(line.annotate
+                      ? {
+                          borderLeft: "2px solid var(--cw-ember)",
+                          paddingLeft: 8,
+                          marginLeft: -10,
+                          background: "rgba(200,68,10,0.05)",
+                        }
+                      : {}),
+                  }}
+                >
+                  <span
+                    style={{
+                      color: "#333",
+                      width: 16,
+                      textAlign: "right",
+                      flexShrink: 0,
+                      userSelect: "none",
+                    }}
+                  >
+                    {line.n}
+                  </span>
+                  <span
+                    style={{
+                      paddingLeft: line.indent * 16,
+                      flex: 1,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <span>
+                      {line.tokens.map((tok, j) => (
+                        <span key={j} style={{ color: tok.c }}>
+                          {tok.t}
+                        </span>
+                      ))}
+                    </span>
+                    {line.annotate && (
+                      <span
+                        style={{
+                          fontSize: 9,
+                          fontFamily: "'DM Sans', sans-serif",
+                          fontWeight: 600,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.1em",
+                          color: "var(--cw-ember)",
+                          marginLeft: 16,
+                          flexShrink: 0,
+                        }}
+                      >
+                        EPHEMERAL PROCESS
+                      </span>
+                    )}
+                  </span>
+                </div>
+              ))}
+
+              {/* Flat badge pills */}
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  marginTop: 20,
+                  paddingTop: 16,
+                  borderTop: "0.5px solid #2a2a2a",
+                }}
+              >
+                {["TLS 1.3", "AES-256", "GDPR"].map((pill) => (
+                  <span
+                    key={pill}
+                    style={{
+                      fontSize: 11,
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontWeight: 600,
+                      color: "var(--cw-ink-secondary)",
+                      background: "var(--cw-bg-secondary)",
+                      borderRadius: 4,
+                      padding: "4px 10px",
+                    }}
+                  >
+                    {pill}
+                  </span>
+                ))}
               </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
+        </div>
       </div>
     </section>
   );

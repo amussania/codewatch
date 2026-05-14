@@ -3,56 +3,40 @@
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 
-// ─── Animated grid background (denser than hero) ──────────────────────────────
+// ─── Animated dark grid (white lines, inverted from hero) ─────────────────────
 
 const GRID_STYLES = `
-  @keyframes cw-cta-drift {
+  @keyframes cw-cta-dark-drift {
     from { background-position: 0 0; }
     to   { background-position: 64px 64px; }
   }
-  .cw-cta-grid {
+  .cw-cta-dark-grid {
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(rgba(140,133,128,0.13) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(140,133,128,0.13) 1px, transparent 1px);
+      linear-gradient(rgba(253,250,247,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(253,250,247,0.06) 1px, transparent 1px);
     background-size: 64px 64px;
-    animation: cw-cta-drift 24s linear infinite;
+    animation: cw-cta-dark-drift 24s linear infinite;
     pointer-events: none;
   }
   @media (prefers-reduced-motion: reduce) {
-    .cw-cta-grid { animation: none; }
+    .cw-cta-dark-grid { animation: none; }
   }
 `;
 
-function GridBackground() {
+function DarkGridBackground() {
   return (
     <>
-      <div className="cw-cta-grid" aria-hidden />
-
-      {/* Edge-fade mask so grid doesn't reach the section borders */}
+      <div className="cw-cta-dark-grid" aria-hidden />
+      {/* Radial vignette so grid fades toward edges */}
       <div
         aria-hidden
         style={{
           position: "absolute",
           inset: 0,
           background:
-            "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, var(--cw-bg-primary) 100%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Subtle ember bloom at top-center */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          top: -60,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: 520,
-          height: 520,
-          background: "radial-gradient(circle, rgba(200,68,10,0.07) 0%, transparent 65%)",
+            "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, var(--cw-bg-ink) 100%)",
           pointerEvents: "none",
         }}
       />
@@ -69,14 +53,14 @@ export default function FinalCTA() {
     <section
       id="cta"
       style={{
-        background: "var(--cw-bg-primary)",
+        background: "var(--cw-bg-ink)",
         padding: "160px 0",
         position: "relative",
         overflow: "hidden",
       }}
     >
       <style>{GRID_STYLES}</style>
-      <GridBackground />
+      <DarkGridBackground />
 
       <div className="max-w-[1120px] mx-auto px-6 lg:px-12" style={{ position: "relative" }}>
         <motion.div
@@ -90,9 +74,9 @@ export default function FinalCTA() {
           <h2
             className="font-heading italic"
             style={{
-              fontSize: "clamp(38px, 5vw, 56px)",
+              fontSize: "clamp(40px, 5vw, 64px)",
               lineHeight: 1.1,
-              color: "var(--cw-ink-primary)",
+              color: "#FDFAF7",
               margin: "0 0 20px",
             }}
           >
@@ -102,12 +86,12 @@ export default function FinalCTA() {
           {/* Subline */}
           <p
             style={{
-              fontSize: 16,
+              fontSize: 18,
               fontFamily: "'DM Sans', sans-serif",
               fontWeight: 400,
-              color: "var(--cw-ink-secondary)",
+              color: "rgba(253,250,247,0.6)",
               lineHeight: 1.75,
-              maxWidth: 420,
+              maxWidth: 440,
               margin: "0 auto 44px",
             }}
           >
@@ -150,7 +134,7 @@ export default function FinalCTA() {
               fontSize: 12,
               fontFamily: "'DM Sans', sans-serif",
               fontWeight: 400,
-              color: "var(--cw-ink-tertiary)",
+              color: "rgba(253,250,247,0.4)",
               margin: 0,
             }}
           >
