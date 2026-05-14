@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useRef, useState, useCallback, useEffect } from "react";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -38,227 +38,421 @@ const FEATURES = [
   },
 ];
 
-// ─── Chevron ──────────────────────────────────────────────────────────────────
+const CARD_W = 380;
+const CARD_GAP = 20;
 
-function Chevron({ open }: { open: boolean }) {
+// ─── Injected styles ──────────────────────────────────────────────────────────
+
+const TRACK_STYLES = `
+  .cw-unique-track::-webkit-scrollbar { display: none; }
+`;
+
+// ─── Arrow button ─────────────────────────────────────────────────────────────
+
+function ArrowBtn({
+  dir,
+  onClick,
+  disabled,
+}: {
+  dir: "left" | "right";
+  onClick: () => void;
+  disabled: boolean;
+}) {
   return (
-    <motion.svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden
-      animate={{ rotate: open ? 180 : 0 }}
-      transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
-      style={{ flexShrink: 0 }}
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={dir === "left" ? "Scroll left" : "Scroll right"}
+      style={{
+        width: 40,
+        height: 40,
+        borderRadius: "50%",
+        border: "1px solid var(--cw-bg-secondary)",
+        background: "var(--cw-bg-surface)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: disabled ? "default" : "pointer",
+        opacity: disabled ? 0.35 : 1,
+        flexShrink: 0,
+        transition: "opacity 200ms ease, border-color 200ms ease, background 200ms ease",
+      }}
+      onMouseEnter={(e) => {
+        if (!disabled) {
+          const el = e.currentTarget;
+          el.style.borderColor = "var(--cw-ember)";
+          el.style.background = "var(--cw-ember-light)";
+        }
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget;
+        el.style.borderColor = "var(--cw-bg-secondary)";
+        el.style.background = "var(--cw-bg-surface)";
+      }}
     >
-      <path
-        d="M3 6L8 11L13 6"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </motion.svg>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+        {dir === "left" ? (
+          <path
+            d="M9 2L4 7L9 12"
+            stroke="var(--cw-ink-primary)"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        ) : (
+          <path
+            d="M5 2L10 7L5 12"
+            stroke="var(--cw-ink-primary)"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        )}
+      </svg>
+    </button>
+  );
+}
+
+// ─── Feature card ─────────────────────────────────────────────────────────────
+
+function FeatureCard({
+  feature,
+  index,
+  inView,
+  reduced,
+}: {
+  feature: (typeof FEATURES)[0];
+  index: number;
+  inView: boolean;
+  reduced: boolean;
+}) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <motion.div
+      initial={reduced ? false : { opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+      animate={
+        reduced
+          ? {}
+          : inView
+          ? { opacity: 1, clipPath: "inset(0 0 0% 0)" }
+          : { opacity: 0, clipPath: "inset(0 0 100% 0)" }
+      }
+      whileHover={reduced ? {} : { y: -6 }}
+      transition={{
+        clipPath: {
+          duration: 0.5,
+          delay: reduced ? 0 : index * 0.1,
+          ease: [0.16, 1, 0.3, 1],
+        },
+        opacity: {
+          duration: 0.5,
+          delay: reduced ? 0 : index * 0.1,
+        },
+        y: {
+          duration: 0.4,
+          ease: [0.16, 1, 0.3, 1],
+        },
+      }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      style={{
+        width: CARD_W,
+        flexShrink: 0,
+        minHeight: 480,
+        borderRadius: 12,
+        background: "var(--cw-bg-surface)",
+        border: `0.5px solid ${hovered ? "rgba(200,68,10,0.3)" : "var(--cw-bg-secondary)"}`,
+        padding: 40,
+        display: "flex",
+        flexDirection: "column",
+        scrollSnapAlign: "start",
+        boxShadow: hovered ? "0 20px 48px rgba(26,23,20,0.10)" : "none",
+        transition:
+          "border-color 400ms cubic-bezier(0.16,1,0.3,1), box-shadow 400ms cubic-bezier(0.16,1,0.3,1)",
+      }}
+    >
+      {/* Badge pill */}
+      <span
+        style={{
+          display: "inline-block",
+          width: "fit-content",
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 10,
+          fontWeight: 600,
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          padding: "4px 10px",
+          borderRadius: 4,
+          background: "var(--cw-ember-light)",
+          color: "var(--cw-ember)",
+          marginBottom: 24,
+          flexShrink: 0,
+        }}
+      >
+        {feature.pill}
+      </span>
+
+      {/* Feature name */}
+      <h3
+        className="font-heading italic"
+        style={{
+          fontSize: 32,
+          lineHeight: 1.15,
+          color: "var(--cw-ink-primary)",
+          margin: "0 0 20px",
+        }}
+      >
+        {feature.name}
+      </h3>
+
+      {/* Body text */}
+      <p
+        style={{
+          fontSize: 15,
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: 400,
+          color: "var(--cw-ink-secondary)",
+          lineHeight: 1.7,
+          margin: "0 0 32px",
+        }}
+      >
+        {feature.body}
+      </p>
+
+      {/* Pull quote — pushed to bottom of flex column */}
+      <blockquote
+        style={{
+          marginTop: "auto",
+          paddingLeft: 16,
+          borderLeft: "3px solid var(--cw-ember)",
+        }}
+      >
+        <p
+          className="font-heading italic"
+          style={{
+            fontSize: 16,
+            color: "var(--cw-ink-secondary)",
+            lineHeight: 1.6,
+            margin: 0,
+          }}
+        >
+          {feature.quote}
+        </p>
+      </blockquote>
+    </motion.div>
   );
 }
 
 // ─── Section ──────────────────────────────────────────────────────────────────
 
 export default function UniqueFeatures() {
-  const [openIdx, setOpenIdx] = useState<number | null>(0);
+  const reduced = useReducedMotion();
+  const trackRef  = useRef<HTMLDivElement>(null); // outer wrapper — drives inView
+  const scrollRef = useRef<HTMLDivElement>(null); // inner scrollable div
+
+  const inView = useInView(trackRef, { once: true, margin: "-80px" });
+
+  const [canLeft,  setCanLeft]  = useState(false);
+  const [canRight, setCanRight] = useState(true);
+
+  // Drag state in refs (no re-render needed)
+  const isDragging       = useRef(false);
+  const dragStartX       = useRef(0);
+  const dragStartScroll  = useRef(0);
+
+  // ── Arrow state ────────────────────────────────────────────────────────────
+
+  const updateArrows = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanLeft(el.scrollLeft > 4);
+    setCanRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    updateArrows();
+    el.addEventListener("scroll", updateArrows, { passive: true });
+    return () => el.removeEventListener("scroll", updateArrows);
+  }, [updateArrows]);
+
+  const scrollDir = (dir: "left" | "right") => {
+    scrollRef.current?.scrollBy({
+      left: dir === "left" ? -(CARD_W + CARD_GAP) : CARD_W + CARD_GAP,
+      behavior: "smooth",
+    });
+  };
+
+  // ── Drag handlers ──────────────────────────────────────────────────────────
+
+  const onMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    isDragging.current      = true;
+    dragStartX.current      = e.clientX;
+    dragStartScroll.current = el.scrollLeft;
+    el.style.cursor         = "grabbing";
+    el.style.scrollSnapType = "none";
+  }, []);
+
+  const onMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging.current || !scrollRef.current) return;
+    e.preventDefault();
+    const delta = dragStartX.current - e.clientX;
+    scrollRef.current.scrollLeft = dragStartScroll.current + delta * 1.2;
+  }, []);
+
+  const onDragEnd = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el || !isDragging.current) return;
+    isDragging.current = false;
+    el.style.cursor    = "grab";
+    // Snap to nearest card, then restore CSS snap
+    const idx    = Math.round(el.scrollLeft / (CARD_W + CARD_GAP));
+    const target = Math.max(0, idx) * (CARD_W + CARD_GAP);
+    el.scrollTo({ left: target, behavior: "smooth" });
+    setTimeout(() => {
+      if (scrollRef.current) scrollRef.current.style.scrollSnapType = "x mandatory";
+    }, 420);
+  }, []);
+
+  // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <section className="py-[140px] max-w-[1120px] mx-auto px-6 lg:px-12">
+    <section
+      id="unique-features"
+      style={{ background: "var(--cw-bg-primary)", padding: "140px 0" }}
+    >
+      <style>{TRACK_STYLES}</style>
 
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 32 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="text-center mb-16"
-      >
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <span style={{ display: "block", width: 24, height: 1, background: "var(--cw-ember)" }} />
-          <span
+      {/* Header + arrows */}
+      <div className="max-w-[1120px] mx-auto px-6 lg:px-12">
+        <motion.div
+          initial={reduced ? false : { opacity: 0, y: 32 }}
+          whileInView={reduced ? {} : { opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+          style={{ textAlign: "center", marginBottom: 48 }}
+        >
+          <div
             style={{
-              color: "var(--cw-ember)",
-              fontSize: 11,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              fontWeight: 600,
-              fontFamily: "'DM Sans', sans-serif",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              marginBottom: 12,
             }}
           >
-            What Nobody Else Does
-          </span>
-        </div>
-        <h2
-          className="font-heading italic"
-          style={{
-            fontSize: "clamp(38px, 5vw, 64px)",
-            lineHeight: 1.15,
-            color: "var(--cw-ink-primary)",
-            margin: "12px 0 0",
-          }}
-        >
-          The gaps every
-          <br />
-          <span style={{ color: "var(--cw-ember)" }}>competitor leaves open.</span>
-        </h2>
-        <p
-          style={{
-            fontSize: 17,
-            fontFamily: "'DM Sans', sans-serif",
-            fontWeight: 400,
-            color: "var(--cw-ink-secondary)",
-            marginTop: 20,
-            maxWidth: 480,
-            marginLeft: "auto",
-            marginRight: "auto",
-            lineHeight: 1.7,
-          }}
-        >
-          Every competitor catches syntax errors and common patterns. These capabilities exist nowhere else in the market.
-        </p>
-      </motion.div>
-
-      {/* Accordion */}
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-        style={{
-          borderRadius: 12,
-          border: "0.5px solid var(--cw-bg-secondary)",
-          overflow: "hidden",
-        }}
-      >
-        {FEATURES.map((f, i) => {
-          const isOpen = openIdx === i;
-          return (
-            <div
-              key={i}
-              className={i < FEATURES.length - 1 ? "border-b" : ""}
+            <span
               style={{
-                borderColor: "var(--cw-bg-secondary)",
-                borderLeft: `3px solid ${isOpen ? "var(--cw-ember)" : "transparent"}`,
-                backgroundColor: isOpen ? "var(--cw-bg-surface)" : "var(--cw-bg-primary)",
-                transition: "background-color 200ms ease, border-color 200ms ease",
+                display: "block",
+                width: 24,
+                height: 1,
+                background: "var(--cw-ember)",
+              }}
+            />
+            <span
+              style={{
+                color: "var(--cw-ember)",
+                fontSize: 11,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                fontWeight: 600,
+                fontFamily: "'DM Sans', sans-serif",
               }}
             >
-              {/* Header row */}
-              <button
-                onClick={() => setOpenIdx(isOpen ? null : i)}
-                aria-expanded={isOpen}
-                className="w-full flex items-center gap-4 px-6 py-6 text-left"
-                style={{
-                  cursor: "pointer",
-                  color: isOpen ? "var(--cw-ember)" : "var(--cw-ink-tertiary)",
-                }}
-                onMouseEnter={(e) => {
-                  if (!isOpen) {
-                    (e.currentTarget as HTMLButtonElement).parentElement!.style.backgroundColor =
-                      "var(--cw-bg-secondary)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isOpen) {
-                    (e.currentTarget as HTMLButtonElement).parentElement!.style.backgroundColor =
-                      "var(--cw-bg-primary)";
-                  }
-                }}
-              >
-                {/* Left: pill + name */}
-                <div className="flex flex-col gap-2 flex-1 min-w-0">
-                  <span
-                    style={{
-                      display: "inline-block",
-                      width: "fit-content",
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 10,
-                      fontWeight: 600,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.08em",
-                      padding: "3px 8px",
-                      borderRadius: 4,
-                      background: "var(--cw-ember-light)",
-                      color: "var(--cw-ember)",
-                    }}
-                  >
-                    {f.pill}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: 17,
-                      fontWeight: 600,
-                      fontFamily: "'DM Sans', sans-serif",
-                      color: isOpen ? "var(--cw-ember)" : "var(--cw-ink-primary)",
-                      transition: "color 200ms ease",
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    {f.name}
-                  </span>
-                </div>
+              What Nobody Else Does
+            </span>
+          </div>
+          <h2
+            className="font-heading italic"
+            style={{
+              fontSize: "clamp(38px, 5vw, 64px)",
+              lineHeight: 1.15,
+              color: "var(--cw-ink-primary)",
+              margin: "12px 0 0",
+            }}
+          >
+            The gaps every
+            <br />
+            <span style={{ color: "var(--cw-ember)" }}>competitor leaves open.</span>
+          </h2>
+          <p
+            style={{
+              fontSize: 17,
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 400,
+              color: "var(--cw-ink-secondary)",
+              marginTop: 20,
+              maxWidth: 480,
+              marginLeft: "auto",
+              marginRight: "auto",
+              lineHeight: 1.7,
+            }}
+          >
+            Every competitor catches syntax errors and common patterns. These
+            capabilities exist nowhere else in the market.
+          </p>
+        </motion.div>
 
-                {/* Right: chevron */}
-                <Chevron open={isOpen} />
-              </button>
+        {/* Arrow controls — right-aligned */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: 8,
+            marginBottom: 24,
+          }}
+        >
+          <ArrowBtn dir="left"  onClick={() => scrollDir("left")}  disabled={!canLeft}  />
+          <ArrowBtn dir="right" onClick={() => scrollDir("right")} disabled={!canRight} />
+        </div>
+      </div>
 
-              {/* Expandable content */}
-              <AnimatePresence initial={false}>
-                {isOpen && (
-                  <motion.div
-                    key="content"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-                    className="overflow-hidden"
-                  >
-                    <div className="px-6 pb-7 pt-0">
-                      <p
-                        style={{
-                          fontSize: 15,
-                          fontFamily: "'DM Sans', sans-serif",
-                          fontWeight: 400,
-                          color: "var(--cw-ink-secondary)",
-                          lineHeight: 1.7,
-                          marginBottom: 16,
-                        }}
-                      >
-                        {f.body}
-                      </p>
-                      <blockquote
-                        style={{
-                          paddingLeft: 16,
-                          borderLeft: "3px solid var(--cw-ember)",
-                          margin: 0,
-                        }}
-                      >
-                        <p
-                          className="font-heading italic"
-                          style={{
-                            fontSize: 16,
-                            color: "var(--cw-ink-secondary)",
-                            lineHeight: 1.6,
-                          }}
-                        >
-                          {f.quote}
-                        </p>
-                      </blockquote>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          );
-        })}
-      </motion.div>
-
+      {/* Masked scroll track — full viewport width */}
+      <div
+        ref={trackRef}
+        style={{
+          maskImage:
+            "linear-gradient(to right, transparent 0px, black 40px, black calc(100% - 80px), transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to right, transparent 0px, black 40px, black calc(100% - 80px), transparent 100%)",
+        }}
+      >
+        <div
+          ref={scrollRef}
+          className="cw-unique-track"
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={onDragEnd}
+          onMouseLeave={onDragEnd}
+          style={{
+            display: "flex",
+            gap: CARD_GAP,
+            overflowX: "auto",
+            // Align first card with page content on all breakpoints
+            paddingLeft: "max(24px, calc((100vw - 1120px) / 2 + 48px))",
+            paddingRight: 80,
+            paddingBottom: 24,
+            scrollSnapType: "x mandatory",
+            scrollbarWidth: "none",
+            cursor: "grab",
+            userSelect: "none",
+          }}
+        >
+          {FEATURES.map((f, i) => (
+            <FeatureCard
+              key={f.name}
+              feature={f}
+              index={i}
+              inView={inView}
+              reduced={!!reduced}
+            />
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
