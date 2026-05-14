@@ -5,12 +5,30 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* ── Semantic color tokens (shadcn bridge) ── */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-heading);
-  --font-serif: var(--font-serif);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -19,27 +37,35 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
+
+  /* ── CodeWatch design tokens (Tailwind utility access) ── */
+  --color-cw-bg-primary: var(--cw-bg-primary);
+  --color-cw-bg-secondary: var(--cw-bg-secondary);
+  --color-cw-bg-surface: var(--cw-bg-surface);
+  --color-cw-bg-ink: var(--cw-bg-ink);
+  --color-cw-ink-primary: var(--cw-ink-primary);
+  --color-cw-ink-secondary: var(--cw-ink-secondary);
+  --color-cw-ink-tertiary: var(--cw-ink-tertiary);
+  --color-cw-ember: var(--cw-ember);
+  --color-cw-ember-light: var(--cw-ember-light);
+  --color-cw-signal-critical: var(--cw-signal-critical);
+  --color-cw-signal-warn: var(--cw-signal-warn);
+  --color-cw-signal-pass: var(--cw-signal-pass);
+  --color-cw-signal-info: var(--cw-signal-info);
+  --color-cw-security: var(--cw-security);
+  --color-cw-reliability: var(--cw-reliability);
+  --color-cw-performance: var(--cw-performance);
+  --color-cw-quality: var(--cw-quality);
+  --color-cw-logic: var(--cw-logic);
+
+  /* ── Font stack ── */
+  --font-sans: var(--font-sans);       /* DM Mono — monospace / labels */
+  --font-body: var(--font-body);       /* DM Sans  — body / UI */
+  --font-mono: var(--font-code);       /* JetBrains Mono — code blocks */
+  --font-heading: var(--font-heading); /* Instrument Serif — display headlines */
+  --font-serif: var(--font-serif);     /* Fraunces — pull quotes */
+
+  /* ── Radius ── */
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -47,55 +73,110 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
-  --color-cw-coral: var(--cw-coral);
-  --color-cw-blue: var(--cw-blue);
-  --color-cw-surface: var(--cw-surface);
-  --color-cw-surface-elevated: var(--cw-surface-elevated);
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #0a0f1e;
-  --card: #f7f7fa;
-  --card-foreground: #0a0f1e;
-  --popover: #ffffff;
-  --popover-foreground: #0a0f1e;
-  --primary: #ff5b35;
-  --primary-foreground: #ffffff;
-  --secondary: #f8faff;
-  --secondary-foreground: #0a0f1e;
-  --muted: #f8faff;
-  --muted-foreground: #8896ab;
-  --accent: #f0f3f9;
-  --accent-foreground: #0a0f1e;
-  --destructive: #ef4444;
-  --border: #e2e2ee;
-  --input: #e2e2ee;
-  --ring: #ff5b35;
-  --radius: 0.625rem;
+  /* ── Semantic tokens (shadcn/ui + Tailwind) ── */
+  --background:            #F5F2EE;
+  --foreground:            #1A1714;
+  --card:                  #FDFAF7;
+  --card-foreground:       #1A1714;
+  --popover:               #FDFAF7;
+  --popover-foreground:    #1A1714;
+  --primary:               #C8440A;
+  --primary-foreground:    #FDFAF7;
+  --secondary:             #EDE9E3;
+  --secondary-foreground:  #1A1714;
+  --muted:                 #EDE9E3;
+  --muted-foreground:      #8C8580;
+  --accent:                #EDE9E3;
+  --accent-foreground:     #1A1714;
+  --destructive:           #C8440A;
+  --border:                #E0DBD4;
+  --input:                 #E0DBD4;
+  --ring:                  #C8440A;
+  --radius:                0.625rem;
 
-  --sidebar: #f8faff;
-  --sidebar-foreground: #0a0f1e;
-  --sidebar-primary: #ff5b35;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f0f3f9;
-  --sidebar-accent-foreground: #0a0f1e;
-  --sidebar-border: #e2e2ee;
-  --sidebar-ring: #ff5b35;
+  /* Sidebar */
+  --sidebar:                      #EDE9E3;
+  --sidebar-foreground:           #1A1714;
+  --sidebar-primary:              #C8440A;
+  --sidebar-primary-foreground:   #FDFAF7;
+  --sidebar-accent:               #E5E0D8;
+  --sidebar-accent-foreground:    #1A1714;
+  --sidebar-border:               #E0DBD4;
+  --sidebar-ring:                 #C8440A;
 
-  --chart-1: #ff5b35;
-  --chart-2: #1a7be8;
-  --chart-3: #00c4a0;
-  --chart-4: #f5a623;
-  --chart-5: #9b59b6;
+  /* Chart (maps to signal system) */
+  --chart-1: #C8440A;
+  --chart-2: #2060A0;
+  --chart-3: #2A6B3C;
+  --chart-4: #B07A20;
+  --chart-5: #7040B0;
 
-  --cw-coral: #ff5b35;
-  --cw-blue: #1a7be8;
-  --cw-coral-glow: rgba(255, 91, 53, 0.22);
-  --cw-blue-glow: rgba(26, 123, 232, 0.22);
-  --cw-surface: #ffffff;
-  --cw-surface-elevated: #f8faff;
-  --cw-card-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  /* ────────────────────────────────────────
+     CodeWatch Design System Tokens
+     ──────────────────────────────────────── */
+
+  /* Background scale */
+  --cw-bg-primary:    #F5F2EE; /* warm parchment — the base */
+  --cw-bg-secondary:  #EDE9E3; /* subtle section differentiation */
+  --cw-bg-surface:    #FDFAF7; /* cards, elevated elements */
+  --cw-bg-ink:        #1A1714; /* near-black, warm — for dark sections */
+
+  /* Ink scale */
+  --cw-ink-primary:   #1A1714; /* main text, headings */
+  --cw-ink-secondary: #4A4540; /* body text */
+  --cw-ink-tertiary:  #8C8580; /* muted labels, captions */
+
+  /* Ember — primary accent */
+  --cw-ember:         #C8440A;
+  --cw-ember-light:   #F0EAE5;
+  --cw-ember-glow:    rgba(200, 68, 10, 0.12);
+
+  /* Signal severity system */
+  --cw-signal-critical: #C8440A;
+  --cw-signal-warn:     #B07A20;
+  --cw-signal-pass:     #2A6B3C;
+  --cw-signal-info:     #2060A0;
+
+  /* Specialist reviewer colours */
+  --cw-security:     #C8440A;
+  --cw-reliability:  #2060A0;
+  --cw-performance:  #7040B0;
+  --cw-quality:      #2A6B3C;
+  --cw-logic:        #B07A20;
+
+  /* Motion tokens */
+  --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --duration-instant:   100ms;
+  --duration-fast:      200ms;
+  --duration-medium:    400ms;
+  --duration-slow:      700ms;
+  --duration-cinematic: 1200ms;
+
+  /* Type scale */
+  --type-hero:  clamp(48px, 6vw, 80px);
+  --type-h1:    clamp(36px, 4vw, 56px);
+  --type-h2:    clamp(28px, 3vw, 42px);
+  --type-h3:    20px;
+  --type-lead:  18px;
+  --type-body:  16px;
+  --type-ui:    14px;
+  --type-label: 12px;
+  --type-code:  13px;
+
+  /* Legacy compat — kept while old components migrate */
+  --cw-coral:              #C8440A;
+  --cw-blue:               #2060A0;
+  --cw-coral-glow:         rgba(200, 68, 10, 0.22);
+  --cw-blue-glow:          rgba(32, 96, 160, 0.22);
+  --cw-surface:            #FDFAF7;
+  --cw-surface-elevated:   #EDE9E3;
+  --cw-card-shadow:        0 1px 4px rgba(26, 23, 20, 0.06);
 }
 
 @layer base {
@@ -106,7 +187,7 @@
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-sans;
+    @apply font-body;
   }
   @media (pointer: fine) {
     * { cursor: none !important; }
@@ -120,15 +201,20 @@
 
 @keyframes blink {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  50%       { opacity: 0; }
 }
+
 .terminal-cursor {
   animation: blink 1s step-end infinite;
 }
 
-.glow-coral {
-  box-shadow: 0 0 32px rgba(255, 91, 53, 0.3), 0 0 64px rgba(255, 91, 53, 0.12);
+.glow-ember {
+  box-shadow: 0 0 32px rgba(200, 68, 10, 0.30), 0 0 64px rgba(200, 68, 10, 0.12);
 }
 .glow-blue {
-  box-shadow: 0 0 32px rgba(26, 123, 232, 0.25), 0 0 64px rgba(26, 123, 232, 0.10);
+  box-shadow: 0 0 32px rgba(32, 96, 160, 0.25), 0 0 64px rgba(32, 96, 160, 0.10);
+}
+/* Legacy alias */
+.glow-coral {
+  box-shadow: 0 0 32px rgba(200, 68, 10, 0.30), 0 0 64px rgba(200, 68, 10, 0.12);
 }

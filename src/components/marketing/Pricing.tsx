@@ -1,14 +1,32 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
-const PLANS = [
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+type Billing = "monthly" | "annual";
+
+interface Plan {
+  id: string;
+  name: string;
+  monthlyPrice: number | null;
+  reviews: string;
+  desc: string;
+  features: string[];
+  cta: string;
+  href: string;
+  featured: boolean;
+}
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
+
+const PLANS: Plan[] = [
   {
+    id: "solo",
     name: "Solo",
-    price: "$12",
-    period: "/ mo",
+    monthlyPrice: 12,
     reviews: "100 reviews / mo",
     desc: "For developers who want expert-level review without the enterprise overhead.",
     features: [
@@ -18,14 +36,14 @@ const PLANS = [
       "Zero code retention",
       "30+ languages",
     ],
-    cta: "Get 10 Free Reviews",
+    cta: "Get started",
     href: "/signup",
     featured: false,
   },
   {
+    id: "pro",
     name: "Pro",
-    price: "$30",
-    period: "/ mo",
+    monthlyPrice: 30,
     reviews: "350 reviews / mo",
     desc: "For developers who need the full toolkit, including rewrites and white-label output.",
     features: [
@@ -36,14 +54,14 @@ const PLANS = [
       "Priority review queue",
       "Credit rollover (up to 200)",
     ],
-    cta: "Get 10 Free Reviews",
+    cta: "Get started",
     href: "/signup?plan=pro",
     featured: false,
   },
   {
+    id: "studio",
     name: "Studio",
-    price: "$72",
-    period: "/ mo",
+    monthlyPrice: 72,
     reviews: "1,000 reviews / mo",
     desc: "For small teams and freelancers reviewing client code at volume.",
     features: [
@@ -53,14 +71,14 @@ const PLANS = [
       "White-label client reports",
       "Webhook integrations",
     ],
-    cta: "Get Started",
+    cta: "Get started",
     href: "/signup?plan=studio",
     featured: true,
   },
   {
+    id: "agency",
     name: "Agency",
-    price: "$155",
-    period: "/ mo",
+    monthlyPrice: 155,
     reviews: "3,000 reviews / mo",
     desc: "For agencies running code review as a client-facing service.",
     features: [
@@ -70,169 +88,577 @@ const PLANS = [
       "Priority support + SLA",
       "Reseller billing support",
     ],
-    cta: "Get Started",
+    cta: "Get started",
     href: "/signup?plan=agency",
     featured: false,
   },
 ];
 
 const CREDIT_TABLE = [
-  { range: "< 100 lines", credits: "1 credit" },
-  { range: "100 – 300 lines", credits: "2 credits" },
-  { range: "300 – 600 lines", credits: "4 credits" },
-  { range: "600 – 1,500 lines", credits: "8 credits" },
+  { range: "< 100 lines",        credits: "1 credit" },
+  { range: "100 – 300 lines",    credits: "2 credits" },
+  { range: "300 – 600 lines",    credits: "4 credits" },
+  { range: "600 – 1,500 lines",  credits: "8 credits" },
   { range: "Production Clearance", credits: "12 credits" },
 ];
 
-export default function Pricing() {
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function getDisplayPrice(
+  monthlyPrice: number | null,
+  billing: Billing
+): { main: string; sub: string | null } {
+  if (monthlyPrice === null) return { main: "Free", sub: null };
+  if (billing === "monthly") return { main: `$${monthlyPrice}`, sub: "per month" };
+  const discounted = Math.round(monthlyPrice * 0.8);
+  return { main: `$${discounted}`, sub: "per month, billed annually" };
+}
+
+// ─── Toggle ───────────────────────────────────────────────────────────────────
+
+function BillingToggle({
+  billing,
+  onChange,
+}: {
+  billing: Billing;
+  onChange: (b: Billing) => void;
+}) {
+  const annual = billing === "annual";
   return (
-    <section id="pricing" className="py-[100px] max-w-[1100px] mx-auto px-6">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 32 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.55, ease: "easeOut" }}
-        className="text-center mb-16"
+    <div style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
+      <button
+        onClick={() => onChange("monthly")}
+        style={{
+          fontSize: 14,
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: annual ? 400 : 600,
+          color: annual ? "var(--cw-ink-tertiary)" : "var(--cw-ink-primary)",
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          padding: 0,
+          transition: "color 200ms ease",
+        }}
       >
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <span className="block w-6 h-px bg-[#ff5b35]" />
-          <span className="text-[#ff5b35] text-[10px] tracking-[.2em] uppercase">Pricing</span>
-        </div>
-        <h2 className="font-heading text-[clamp(38px,5vw,64px)] leading-[.97] tracking-[.02em] mt-3">
-          Pay for what you review.
-          <br />
-          <span className="text-[#ff5b35]">Not for what you don&apos;t.</span>
-        </h2>
-        <p className="font-serif italic font-light text-[#8896ab] text-[17px] mt-4 max-w-sm mx-auto">
-          Credit-based. No seat taxes. No lock-in. Local taxes calculated at checkout.
+        Monthly
+      </button>
+
+      <button
+        onClick={() => onChange(annual ? "monthly" : "annual")}
+        aria-label="Toggle billing period"
+        style={{
+          position: "relative",
+          width: 44,
+          height: 24,
+          borderRadius: 12,
+          background: annual ? "var(--cw-ember)" : "var(--cw-bg-primary)",
+          border: `1.5px solid ${annual ? "var(--cw-ember)" : "rgba(26,23,20,0.2)"}`,
+          cursor: "pointer",
+          padding: 0,
+          flexShrink: 0,
+          transition: "background 200ms ease, border-color 200ms ease",
+        }}
+      >
+        <motion.span
+          animate={{ x: annual ? 20 : 2 }}
+          transition={{ type: "spring", stiffness: 400, damping: 28 }}
+          style={{
+            position: "absolute",
+            top: 2,
+            left: 0,
+            width: 16,
+            height: 16,
+            borderRadius: "50%",
+            background: annual ? "#FDFAF7" : "var(--cw-ink-primary)",
+            display: "block",
+            transition: "background 200ms ease",
+          }}
+        />
+      </button>
+
+      <button
+        onClick={() => onChange("annual")}
+        style={{
+          fontSize: 14,
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: annual ? 600 : 400,
+          color: annual ? "var(--cw-ink-primary)" : "var(--cw-ink-tertiary)",
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          padding: 0,
+          display: "flex",
+          alignItems: "center",
+          gap: 7,
+          transition: "color 200ms ease",
+        }}
+      >
+        Annual
+        <span
+          style={{
+            fontSize: 11,
+            fontWeight: 600,
+            fontFamily: "'DM Sans', sans-serif",
+            color: "var(--cw-signal-pass)",
+            background: "rgba(42,107,60,0.1)",
+            padding: "2px 7px",
+            borderRadius: 99,
+          }}
+        >
+          Save 20%
+        </span>
+      </button>
+    </div>
+  );
+}
+
+// ─── Checkmark ────────────────────────────────────────────────────────────────
+
+function FeatureCheck() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      aria-hidden
+      style={{ flexShrink: 0, marginTop: 2 }}
+    >
+      <path
+        d="M2.5 7L5.5 10L11.5 4"
+        stroke="var(--cw-signal-pass)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+// ─── Plan card ────────────────────────────────────────────────────────────────
+
+function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
+  const { main, sub } = getDisplayPrice(plan.monthlyPrice, billing);
+  const reduced = useReducedMotion();
+
+  return (
+    <motion.div
+      style={{
+        borderRadius: 12,
+        background: "var(--cw-bg-surface)",
+        border: plan.featured
+          ? "1.5px solid var(--cw-ember)"
+          : "0.5px solid var(--cw-bg-secondary)",
+        padding: "24px 20px",
+        display: "flex",
+        flexDirection: "column",
+        gap: 20,
+      }}
+      initial={{ y: plan.featured ? -8 : 0 }}
+      animate={
+        plan.featured && !reduced
+          ? { y: [-8, -14, -8] }
+          : { y: plan.featured ? -8 : 0 }
+      }
+      transition={
+        plan.featured && !reduced
+          ? { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1.5 }
+          : { duration: 0 }
+      }
+    >
+      {/* Tier name + desc */}
+      <div>
+        <p
+          style={{
+            fontSize: 12,
+            fontWeight: 600,
+            fontFamily: "'DM Sans', sans-serif",
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            color: "var(--cw-ink-tertiary)",
+            margin: "0 0 6px",
+          }}
+        >
+          {plan.name}
         </p>
-      </motion.div>
-
-      {/* Plan cards */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-12">
-        {PLANS.map((plan, i) => (
-          <motion.div
-            key={plan.name}
-            initial={{ opacity: 0, y: 28, scale: 0.96 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.55, delay: i * 0.09, ease: "easeOut" }}
-            className="relative"
-          >
-            {plan.featured && (
-              <>
-                <div className="absolute -inset-[1px] rounded-[18px] bg-gradient-to-b from-[#ff5b35]/60 via-[#ff5b35]/20 to-[#1a7be8]/40 -z-10" />
-                <motion.div
-                  animate={{ opacity: [0.10, 0.24, 0.10], scale: [1, 1.04, 1] }}
-                  transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -inset-5 rounded-3xl bg-[#ff5b35] blur-2xl -z-20 pointer-events-none"
-                />
-              </>
-            )}
-
-            <div
-              className={`relative rounded-2xl border p-6 flex flex-col gap-5 h-full ${
-                plan.featured
-                  ? "border-[#ff5b35]/30 bg-[var(--cw-surface-elevated)]"
-                  : "border-[#e2e2ee] bg-[var(--cw-surface)]"
-              }`}
-            >
-              {plan.featured && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="px-3 py-1 rounded-full bg-[#ff5b35] text-white text-xs font-semibold shadow-lg shadow-[#ff5b3544]">
-                    Most popular
-                  </span>
-                </div>
-              )}
-
-              <div>
-                <h3 className="font-semibold text-base">{plan.name}</h3>
-                <p className="text-muted-foreground text-xs mt-1 leading-snug">{plan.desc}</p>
-              </div>
-
-              <div>
-                <div className="flex items-baseline gap-1">
-                  <span className="font-heading text-[clamp(40px,4vw,52px)] leading-none">{plan.price}</span>
-                  <span className="text-muted-foreground text-sm">{plan.period}</span>
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">{plan.reviews}</p>
-              </div>
-
-              <ul className="space-y-2 flex-1">
-                {plan.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-xs text-muted-foreground">
-                    <span className="text-[#ff5b35] mt-px shrink-0">✓</span>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-
-              <Link href={plan.href}>
-                <Button
-                  className={`w-full transition-all text-sm tracking-[.06em] rounded-[5px] ${
-                    plan.featured
-                      ? "bg-[#ff5b35] hover:bg-[#ff5b35]/90 text-white border-0 shadow-lg shadow-[#ff5b3533]"
-                      : "bg-[#f7f7fa] hover:bg-[#e6e6f2] text-foreground border border-[#e2e2ee]"
-                  }`}
-                >
-                  {plan.cta}
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-        ))}
+        <p
+          style={{
+            fontSize: 13,
+            fontFamily: "'DM Sans', sans-serif",
+            color: "var(--cw-ink-tertiary)",
+            margin: 0,
+            lineHeight: 1.5,
+          }}
+        >
+          {plan.desc}
+        </p>
       </div>
 
-      {/* Credit system + top-up */}
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.55, ease: "easeOut" }}
-        className="grid md:grid-cols-2 gap-5 mb-8"
+      {/* Price — fixed min-height prevents layout jump on toggle */}
+      <div style={{ minHeight: 64 }}>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={`${plan.id}-${billing}`}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+          >
+            <p
+              className="font-heading italic"
+              style={{
+                fontSize: "clamp(34px, 2.8vw, 44px)",
+                lineHeight: 1,
+                color: "var(--cw-ink-primary)",
+                margin: "0 0 4px",
+              }}
+            >
+              {main}
+            </p>
+            <p
+              style={{
+                fontSize: 11,
+                fontFamily: "'DM Sans', sans-serif",
+                color: "var(--cw-ink-tertiary)",
+                margin: "0 0 2px",
+              }}
+            >
+              {plan.reviews}
+            </p>
+            {sub && (
+              <p
+                style={{
+                  fontSize: 11,
+                  fontFamily: "'DM Sans', sans-serif",
+                  color: "var(--cw-ink-tertiary)",
+                  margin: 0,
+                }}
+              >
+                {sub}
+              </p>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Divider */}
+      <div style={{ height: "0.5px", background: "var(--cw-bg-secondary)" }} />
+
+      {/* Features */}
+      <ul
+        style={{
+          listStyle: "none",
+          margin: 0,
+          padding: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: 9,
+          flex: 1,
+        }}
       >
-        <div className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-6">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60 mb-4">
-            Credit Usage
+        {plan.features.map((f) => (
+          <li key={f} style={{ display: "flex", alignItems: "flex-start", gap: 9 }}>
+            <FeatureCheck />
+            <span
+              style={{
+                fontSize: 14,
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 400,
+                color: "var(--cw-ink-secondary)",
+                lineHeight: 1.45,
+              }}
+            >
+              {f}
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      {/* CTA */}
+      <Link href={plan.href} style={{ display: "block" }}>
+        <button
+          onMouseEnter={(e) => {
+            const btn = e.currentTarget as HTMLButtonElement;
+            if (plan.featured) {
+              btn.style.filter = "brightness(1.08)";
+              btn.style.transform = "translateY(-1px)";
+            } else {
+              btn.style.background = "var(--cw-bg-secondary)";
+              btn.style.borderColor = "rgba(26,23,20,0.4)";
+            }
+          }}
+          onMouseLeave={(e) => {
+            const btn = e.currentTarget as HTMLButtonElement;
+            if (plan.featured) {
+              btn.style.filter = "brightness(1)";
+              btn.style.transform = "translateY(0)";
+            } else {
+              btn.style.background = "transparent";
+              btn.style.borderColor = "rgba(26,23,20,0.2)";
+            }
+          }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            height: 40,
+            borderRadius: 6,
+            fontSize: 14,
+            fontWeight: 600,
+            fontFamily: "'DM Sans', sans-serif",
+            cursor: "pointer",
+            transition:
+              "filter 200ms ease, background 200ms ease, border-color 200ms ease, transform 200ms ease",
+            ...(plan.featured
+              ? {
+                  background: "var(--cw-ember)",
+                  color: "#FDFAF7",
+                  border: "none",
+                }
+              : {
+                  background: "transparent",
+                  color: "var(--cw-ink-primary)",
+                  border: "1px solid rgba(26,23,20,0.2)",
+                }),
+          }}
+        >
+          {plan.cta}
+        </button>
+      </Link>
+    </motion.div>
+  );
+}
+
+// ─── Main ─────────────────────────────────────────────────────────────────────
+
+export default function Pricing() {
+  const [billing, setBilling] = useState<Billing>("monthly");
+
+  return (
+    <section
+      id="pricing"
+      style={{ background: "var(--cw-bg-secondary)", padding: "120px 0" }}
+    >
+      <div className="max-w-[1120px] mx-auto px-6 lg:px-12">
+
+        {/* Header */}
+        <div style={{ textAlign: "center", marginBottom: 52 }}>
+          <p
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              color: "var(--cw-ember)",
+              fontFamily: "'DM Sans', sans-serif",
+              margin: "0 0 14px",
+            }}
+          >
+            Pricing
           </p>
-          <div className="space-y-2.5">
-            {CREDIT_TABLE.map((row) => (
-              <div key={row.range} className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">{row.range}</span>
-                <span className="text-foreground font-medium">{row.credits}</span>
-              </div>
-            ))}
-          </div>
+          <h2
+            className="font-heading italic"
+            style={{
+              fontSize: "clamp(32px, 3.5vw, 48px)",
+              lineHeight: 1.1,
+              color: "var(--cw-ink-primary)",
+              margin: "0 0 8px",
+            }}
+          >
+            Pay for what you review.
+          </h2>
+          <p
+            style={{
+              fontSize: 15,
+              fontFamily: "'DM Sans', sans-serif",
+              color: "var(--cw-ink-secondary)",
+              margin: "0 0 36px",
+              lineHeight: 1.6,
+            }}
+          >
+            Credit-based. No seat taxes. No lock-in.
+          </p>
+
+          <BillingToggle billing={billing} onChange={setBilling} />
         </div>
 
-        <div className="rounded-2xl border border-[#e2e2ee] bg-[var(--cw-surface)] p-6 flex flex-col justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60 mb-4">
-              Top-up Credits
+        {/* Plan cards */}
+        <div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+          style={{ gap: 16, alignItems: "start", marginBottom: 24 }}
+        >
+          {PLANS.map((plan) => (
+            <PlanCard key={plan.id} plan={plan} billing={billing} />
+          ))}
+        </div>
+
+        {/* Credit system + top-up */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="grid md:grid-cols-2"
+          style={{ gap: 16, marginBottom: 24 }}
+        >
+          {/* Credit usage table */}
+          <div
+            style={{
+              borderRadius: 12,
+              border: "0.5px solid var(--cw-bg-primary)",
+              background: "var(--cw-bg-surface)",
+              padding: "22px 24px",
+            }}
+          >
+            <p
+              style={{
+                fontSize: 11,
+                fontWeight: 600,
+                fontFamily: "'DM Sans', sans-serif",
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+                color: "var(--cw-ink-tertiary)",
+                marginBottom: 16,
+              }}
+            >
+              Credit Usage
             </p>
-            <div className="flex items-baseline gap-2 mb-3">
-              <span className="font-heading text-[48px] leading-none">$2.99</span>
-              <span className="text-muted-foreground text-sm">/ 25 reviews</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {CREDIT_TABLE.map((row) => (
+                <div
+                  key={row.range}
+                  style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                >
+                  <span
+                    style={{
+                      fontSize: 14,
+                      fontFamily: "'DM Sans', sans-serif",
+                      color: "var(--cw-ink-secondary)",
+                    }}
+                  >
+                    {row.range}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 14,
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontWeight: 500,
+                      color: "var(--cw-ink-primary)",
+                    }}
+                  >
+                    {row.credits}
+                  </span>
+                </div>
+              ))}
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Buy additional credits any time. No subscription required. Credits never expire.
-            </p>
           </div>
-          <div className="mt-6">
-            <Link href="/signup">
-              <Button className="w-full bg-[#f7f7fa] hover:bg-[#e6e6f2] text-foreground border border-[#e2e2ee] text-sm tracking-[.06em] rounded-[5px]">
-                Top up credits
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </motion.div>
 
-      <p className="text-center text-xs text-muted-foreground">
-        All plans include zero code retention, row-level tenant isolation, and all five specialists.
-        Local taxes (GST, VAT) calculated at checkout where applicable.
-      </p>
+          {/* Top-up */}
+          <div
+            style={{
+              borderRadius: 12,
+              border: "0.5px solid var(--cw-bg-primary)",
+              background: "var(--cw-bg-surface)",
+              padding: "22px 24px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <div>
+              <p
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  fontFamily: "'DM Sans', sans-serif",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  color: "var(--cw-ink-tertiary)",
+                  marginBottom: 12,
+                }}
+              >
+                Top-up Credits
+              </p>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 10 }}>
+                <span
+                  className="font-heading italic"
+                  style={{ fontSize: 44, lineHeight: 1, color: "var(--cw-ink-primary)" }}
+                >
+                  $2.99
+                </span>
+                <span
+                  style={{
+                    fontSize: 13,
+                    fontFamily: "'DM Sans', sans-serif",
+                    color: "var(--cw-ink-tertiary)",
+                  }}
+                >
+                  / 25 reviews
+                </span>
+              </div>
+              <p
+                style={{
+                  fontSize: 14,
+                  fontFamily: "'DM Sans', sans-serif",
+                  color: "var(--cw-ink-secondary)",
+                  lineHeight: 1.7,
+                }}
+              >
+                Buy additional credits any time. No subscription required. Credits never expire.
+              </p>
+            </div>
+            <div style={{ marginTop: 24 }}>
+              <Link href="/signup" style={{ display: "block" }}>
+                <button
+                  onMouseEnter={(e) => {
+                    const btn = e.currentTarget as HTMLButtonElement;
+                    btn.style.background = "var(--cw-bg-primary)";
+                    btn.style.borderColor = "rgba(26,23,20,0.4)";
+                  }}
+                  onMouseLeave={(e) => {
+                    const btn = e.currentTarget as HTMLButtonElement;
+                    btn.style.background = "transparent";
+                    btn.style.borderColor = "rgba(26,23,20,0.2)";
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                    height: 40,
+                    borderRadius: 6,
+                    fontSize: 14,
+                    fontWeight: 600,
+                    fontFamily: "'DM Sans', sans-serif",
+                    cursor: "pointer",
+                    background: "transparent",
+                    color: "var(--cw-ink-primary)",
+                    border: "1px solid rgba(26,23,20,0.2)",
+                    transition: "background 200ms ease, border-color 200ms ease",
+                  }}
+                >
+                  Top up credits
+                </button>
+              </Link>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Footer note */}
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: 13,
+            fontFamily: "'DM Sans', sans-serif",
+            color: "var(--cw-ink-tertiary)",
+          }}
+        >
+          All plans include zero code retention, row-level tenant isolation, and all five specialists.
+          Local taxes (GST, VAT) calculated at checkout where applicable.
+        </p>
+
+      </div>
     </section>
   );
 }

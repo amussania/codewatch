@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Hero from "@/components/marketing/Hero";
 import Ticker from "@/components/marketing/Ticker";
 import ProblemSection from "@/components/marketing/ProblemSection";
+import ProductDemo from "@/components/marketing/ProductDemo";
 import HowItWorks from "@/components/marketing/HowItWorks";
 import Specialists from "@/components/marketing/Specialists";
 import UniqueFeatures from "@/components/marketing/UniqueFeatures";
 import Comparison from "@/components/marketing/Comparison";
+import SeveritySection from "@/components/marketing/SeveritySection";
 import Pricing from "@/components/marketing/Pricing";
 import Testimonials from "@/components/marketing/Testimonials";
 import SecuritySection from "@/components/marketing/SecuritySection";
@@ -40,6 +42,8 @@ export default function LandingPage() {
         <ProblemSection />
       </AnimatedSection>
 
+      <ProductDemo />
+
       <HowItWorks />
 
       <AnimatedSection className="contents">
@@ -47,6 +51,8 @@ export default function LandingPage() {
         <UniqueFeatures />
         <Comparison />
       </AnimatedSection>
+
+      <SeveritySection />
 
       <Pricing />
 

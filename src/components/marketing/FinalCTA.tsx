@@ -1,77 +1,194 @@
-﻿"use client";
+"use client";
 
-import { motion, useSpring } from "framer-motion";
+import { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
-function SpringButton({ children, className }: { children: React.ReactNode; className?: string }) {
-  const scale = useSpring(1, { stiffness: 500, damping: 28 });
-  const y     = useSpring(0, { stiffness: 500, damping: 28 });
+// ─── Animated dark grid (white lines, inverted from hero) ─────────────────────
+
+const GRID_STYLES = `
+  @keyframes cw-cta-dark-drift {
+    from { background-position: 0 0; }
+    to   { background-position: 64px 64px; }
+  }
+  .cw-cta-dark-grid {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(253,250,247,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(253,250,247,0.06) 1px, transparent 1px);
+    background-size: 64px 64px;
+    animation: cw-cta-dark-drift 24s linear infinite;
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cw-cta-dark-grid { animation: none; }
+  }
+`;
+
+function DarkGridBackground({
+  glow1Y,
+  glow2Y,
+}: {
+  glow1Y?: MotionValue<string>;
+  glow2Y?: MotionValue<string>;
+}) {
   return (
-    <motion.div
-      style={{ scale, y }}
-      onHoverStart={() => { scale.set(1.05); y.set(-2); }}
-      onHoverEnd={()  => { scale.set(1);    y.set(0);  }}
-      onTapStart={() => { scale.set(0.97);  y.set(0);  }}
-      className={className}
-    >
-      {children}
-    </motion.div>
+    <>
+      <div className="cw-cta-dark-grid" aria-hidden />
+
+      {/* Primary ember glow — large, centred */}
+      <motion.div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(ellipse 1000px 500px at 50% 50%, rgba(200,68,10,0.25) 0%, rgba(200,68,10,0.08) 40%, transparent 70%)",
+          pointerEvents: "none",
+          y: glow1Y,
+        }}
+      />
+
+      {/* Secondary softer glow — offset for depth */}
+      <motion.div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(ellipse 600px 300px at 40% 60%, rgba(200,68,10,0.12) 0%, transparent 60%)",
+          pointerEvents: "none",
+          y: glow2Y,
+        }}
+      />
+
+      {/* Edge vignette — grid fades toward borders */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 35%, var(--cw-bg-ink) 100%)",
+          pointerEvents: "none",
+        }}
+      />
+    </>
   );
 }
 
+// ─── Section ──────────────────────────────────────────────────────────────────
+
 export default function FinalCTA() {
+  const reduced = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const glow1Y = useTransform(scrollYProgress, [0, 1], ["50px", "-50px"]);
+  const glow2Y = useTransform(scrollYProgress, [0, 1], ["80px", "-80px"]);
+
   return (
-    <section className="py-[100px] px-6">
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className="relative max-w-3xl mx-auto rounded-3xl border border-[#e2e2ee] bg-[#f7f7fa] px-8 py-16 text-center overflow-hidden"
-        style={{ boxShadow: "0 2px 40px rgba(0,0,0,0.06)" }}
-      >
-        {/* Background glows */}
-        <motion.div
-          animate={{ opacity: [0.08, 0.18, 0.08], scale: [1, 1.06, 1] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-16 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full bg-[#ff5b35] opacity-[0.08] blur-3xl pointer-events-none"
-        />
-        <motion.div
-          animate={{ opacity: [0.05, 0.12, 0.05], scale: [1.04, 1, 1.04] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full bg-[#1a7be8] opacity-[0.06] blur-3xl pointer-events-none"
-        />
+    <section
+      ref={sectionRef}
+      id="cta"
+      style={{
+        background: "var(--cw-bg-ink)",
+        padding: "160px 0",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <style>{GRID_STYLES}</style>
+      <DarkGridBackground
+        glow1Y={reduced ? undefined : glow1Y}
+        glow2Y={reduced ? undefined : glow2Y}
+      />
 
-        <div className="relative">
-          <h2 className="font-heading text-[clamp(52px,8vw,96px)] leading-[.93] tracking-[.02em] mb-4">
-            Ship Code You Can
-            <br />
-            <span className="text-[#ff5b35]">Stand Behind.</span>
+      <div className="max-w-[1120px] mx-auto px-6 lg:px-12" style={{ position: "relative" }}>
+        <motion.div
+          initial={reduced ? false : { opacity: 0, y: 32 }}
+          whileInView={reduced ? {} : { opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+          style={{ textAlign: "center" }}
+        >
+          {/* Headline */}
+          <h2
+            className="font-heading italic"
+            style={{
+              fontSize: "clamp(40px, 5vw, 64px)",
+              lineHeight: 1.1,
+              color: "#FDFAF7",
+              margin: "0 0 20px",
+            }}
+          >
+            Stop shipping your AI's mistakes.
           </h2>
-          <p className="font-serif italic font-light text-[#8896ab] max-w-md mx-auto mb-8 leading-relaxed text-lg">
-            Ten free reviews. No credit card. Your actual code, your actual vulnerabilities,
-            your actual fix — in under two minutes.
+
+          {/* Subline */}
+          <p
+            style={{
+              fontSize: 18,
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 400,
+              color: "rgba(253,250,247,0.6)",
+              lineHeight: 1.75,
+              maxWidth: 440,
+              margin: "0 auto 44px",
+            }}
+          >
+            CodeWatch catches what your AI code generator misses.
+            Every time. Before production.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <SpringButton>
-              <Link href="/signup">
-                <Button
-                  size="lg"
-                  className="bg-[#ff5b35] hover:bg-[#ff5b35]/90 text-white border-0 px-8 shadow-xl shadow-[#ff5b3533] text-base"
-                >
-                  Get 10 Free Reviews →
-                </Button>
-              </Link>
-            </SpringButton>
-          </div>
+          {/* CTA button */}
+          <motion.div
+            whileHover={reduced ? {} : { y: -1, filter: "brightness(1.08)" }}
+            whileTap={reduced ? {} : { scale: 0.98 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            style={{ display: "inline-block", marginBottom: 20 }}
+          >
+            <Link
+              href="/signup"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 52,
+                padding: "0 32px",
+                background: "var(--cw-ember)",
+                color: "#FDFAF7",
+                borderRadius: 6,
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 600,
+                fontSize: 15,
+                textDecoration: "none",
+                letterSpacing: "0.01em",
+              }}
+            >
+              Start reviewing for free →
+            </Link>
+          </motion.div>
 
-          <p className="text-xs text-muted-foreground mt-6">
-            10 free reviews · No card required · Cancel anytime · Your code never stored · Local taxes calculated at checkout
+          {/* Trust line */}
+          <p
+            style={{
+              fontSize: 12,
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 400,
+              color: "rgba(253,250,247,0.4)",
+              margin: 0,
+            }}
+          >
+            Free tier · no credit card · up and running in 60 seconds
           </p>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </section>
   );
 }

@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, DM_Mono, Fraunces, Geist_Mono } from "next/font/google";
+import {
+  Instrument_Serif,
+  DM_Sans,
+  DM_Mono,
+  Fraunces,
+  JetBrains_Mono,
+} from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "sonner";
@@ -7,12 +13,25 @@ import SmoothScroll from "@/components/shared/SmoothScroll";
 import CustomCursor from "@/components/shared/CustomCursor";
 import PageTransition from "@/components/shared/PageTransition";
 
-const bebasNeue = Bebas_Neue({
+/* ── Display / hero headlines ── */
+const instrumentSerif = Instrument_Serif({
   variable: "--font-heading",
   subsets: ["latin"],
   weight: "400",
+  style: ["normal", "italic"],
   display: "swap",
 });
+
+/* ── Body / UI ── */
+const dmSans = DM_Sans({
+  variable: "--font-body",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+/* ── Monospace labels / table headers ── */
 const dmMono = DM_Mono({
   variable: "--font-sans",
   subsets: ["latin"],
@@ -20,6 +39,8 @@ const dmMono = DM_Mono({
   style: ["normal", "italic"],
   display: "swap",
 });
+
+/* ── Pull quotes ── */
 const fraunces = Fraunces({
   variable: "--font-serif",
   subsets: ["latin"],
@@ -27,7 +48,14 @@ const fraunces = Fraunces({
   style: ["normal", "italic"],
   display: "swap",
 });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+
+/* ── Code blocks / terminal ── */
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-code",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://codewatch.dev"),
@@ -91,11 +119,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${bebasNeue.variable} ${dmMono.variable} ${fraunces.variable} ${geistMono.variable} h-full antialiased`}
+      className={`
+        ${instrumentSerif.variable}
+        ${dmSans.variable}
+        ${dmMono.variable}
+        ${fraunces.variable}
+        ${jetbrainsMono.variable}
+        h-full antialiased
+      `}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        {/* Global SVG filter definitions — NoiseOverlay references url(#cw-noise) */}
         <svg
           aria-hidden
           className="absolute w-0 h-0 overflow-hidden"

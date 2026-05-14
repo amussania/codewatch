@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence, useSpring } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
+import { LogoContent } from "@/components/shared/Logo";
 
 const NAV_LINKS = [
   { label: "How It Works", href: "#how-it-works" },
@@ -36,173 +36,214 @@ function HamburgerIcon({ open }: { open: boolean }) {
 }
 
 export default function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const logoRotate = useSpring(0, { stiffness: 400, damping: 20 });
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 80);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Prevent body scroll while mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
   return (
     <>
-      {/* ── Header bar ── */}
       <motion.header
-        animate={
-          scrolled
-            ? { backgroundColor: "rgba(255,255,255,0.92)", borderBottomColor: "rgba(226,226,238,1)" }
-            : { backgroundColor: "rgba(255,255,255,0)",    borderBottomColor: "rgba(226,226,238,0)" }
-        }
-        transition={{ duration: 0.22, ease: "easeOut" }}
+        className="fixed top-0 left-0 right-0 z-50"
         style={{
-          backdropFilter: scrolled ? "blur(20px) saturate(180%)" : "blur(0px)",
-          borderBottomWidth: 1,
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          borderBottomWidth: "0.5px",
           borderBottomStyle: "solid",
         }}
-        className="fixed top-0 left-0 right-0 z-50"
+        animate={{
+          backgroundColor: scrolled
+            ? "rgba(245,242,238,0.85)"
+            : "rgba(245,242,238,0)",
+          borderBottomColor: scrolled
+            ? "rgba(237,233,227,1)"
+            : "rgba(237,233,227,0)",
+        }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
       >
-        <nav className="max-w-[1100px] mx-auto px-6 h-16 flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 shrink-0">
-            <motion.div
-              style={{ rotate: logoRotate }}
-              onHoverStart={() => logoRotate.set(180)}
-              onHoverEnd={() => logoRotate.set(0)}
-              className="w-7 h-7 rounded-[5px] bg-[#ff5b35] flex items-center justify-center text-white text-xs font-bold select-none"
-            >
-              ◈
-            </motion.div>
-            <span className="font-heading text-xl tracking-[.08em] text-foreground">CODEWATCH</span>
-          </Link>
+        {/* Relative container so the absolutely-centred links work */}
+        <nav className="relative max-w-[1120px] mx-auto px-6 lg:px-12 h-16 flex items-center justify-between">
 
-          {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-8">
+          {/* Logo — left */}
+          <LogoContent markSize={28} textSize={19} />
+
+          {/* Links — truly centred in the full nav width */}
+          <div className="hidden md:flex items-center gap-7 absolute left-1/2 -translate-x-1/2">
             {NAV_LINKS.map(({ label, href }) => (
               <Link
                 key={label}
                 href={href}
-                className="text-[10px] tracking-[.12em] uppercase text-muted-foreground hover:text-foreground transition-colors duration-200"
+                className="transition-colors duration-200 whitespace-nowrap"
+                style={{
+                  fontSize: 14,
+                  fontFamily: "'DM Sans', sans-serif",
+                  color: "var(--cw-ink-secondary)",
+                  textDecoration: "none",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "var(--cw-ink-primary)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "var(--cw-ink-secondary)";
+                }}
               >
                 {label}
               </Link>
             ))}
           </div>
 
-          {/* Desktop CTAs */}
-          <div className="hidden md:flex items-center gap-3">
-            <Link href="/login">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground hover:text-foreground text-[10px] tracking-[.1em] uppercase"
+          {/* Right slot — desktop CTA + mobile hamburger */}
+          <div className="flex items-center gap-3">
+            {/* Desktop CTA */}
+            <Link href="/signup" className="hidden md:block">
+              <button
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  height: 36,
+                  padding: "0 18px",
+                  borderRadius: 6,
+                  background: "var(--cw-ember)",
+                  color: "#FDFAF7",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  fontFamily: "'DM Sans', sans-serif",
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "filter 200ms ease",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.filter = "brightness(1.08)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.filter = "brightness(1)";
+                }}
               >
-                Sign in
-              </Button>
+                Start for free
+              </button>
             </Link>
-            <Link href="/signup">
-              <Button
-                size="sm"
-                className="bg-[#ff5b35] hover:bg-[#ff5b35]/90 text-white border-0 shadow-lg shadow-[#ff5b3530] tracking-[.06em] rounded-[5px]"
-              >
-                Get 10 Free Reviews
-              </Button>
-            </Link>
-          </div>
 
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMenuOpen((v) => !v)}
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={menuOpen}
-            className="md:hidden p-2 -mr-2 rounded-lg text-foreground hover:bg-[#ededf5] transition-colors"
-          >
-            <HamburgerIcon open={menuOpen} />
-          </button>
+            {/* Mobile hamburger */}
+            <button
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              className="md:hidden p-2 -mr-2 rounded-lg transition-colors"
+              style={{ color: "var(--cw-ink-primary)" }}
+            >
+              <HamburgerIcon open={menuOpen} />
+            </button>
+          </div>
         </nav>
       </motion.header>
 
-      {/* ── Mobile drawer ── */}
+      {/* ── Mobile full-screen overlay ─────────────────────────────────── */}
       <AnimatePresence>
         {menuOpen && (
-          <>
-            <motion.div
-              key="drawer-scrim"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-[55] bg-black/60 backdrop-blur-sm md:hidden"
-              onClick={() => setMenuOpen(false)}
-            />
-            <motion.aside
-              key="drawer-panel"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 320, damping: 32, mass: 0.9 }}
-              className="fixed top-0 right-0 bottom-0 z-[60] w-72 flex flex-col bg-[var(--cw-surface)] border-l border-[#e2e2ee] md:hidden"
+          <motion.div
+            key="mobile-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="fixed inset-0 z-[60] flex flex-col md:hidden"
+            style={{ background: "var(--cw-bg-primary)" }}
+          >
+            {/* Top bar */}
+            <div
+              className="flex items-center justify-between px-6 h-16 shrink-0"
+              style={{ borderBottom: "0.5px solid var(--cw-bg-secondary)" }}
             >
-              <div className="flex items-center justify-between px-5 h-16 border-b border-[#e2e2ee] shrink-0">
-                <Link
-                  href="/"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 font-heading text-xl tracking-[.08em] text-foreground"
-                >
-                  <span className="w-6 h-6 rounded-[4px] bg-[#ff5b35] flex items-center justify-center text-[10px] text-white font-bold">
-                    ◈
-                  </span>
-                  CODEWATCH
-                </Link>
-                <button
-                  onClick={() => setMenuOpen(false)}
-                  aria-label="Close menu"
-                  className="p-1.5 rounded-lg text-foreground hover:bg-[#ededf5] transition-colors"
-                >
-                  <HamburgerIcon open={true} />
-                </button>
-              </div>
-
-              <nav className="flex flex-col gap-0.5 p-4 flex-1 overflow-y-auto">
-                {NAV_LINKS.map(({ label, href }, i) => (
-                  <motion.div
-                    key={label}
-                    initial={{ opacity: 0, x: 16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.04 + i * 0.055, duration: 0.22, ease: "easeOut" }}
-                  >
-                    <Link
-                      href={href}
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center px-3 py-3 rounded-xl text-[10px] tracking-[.12em] uppercase font-medium text-muted-foreground hover:text-foreground hover:bg-[#f2f2f8] transition-colors"
-                    >
-                      {label}
-                    </Link>
-                  </motion.div>
-                ))}
-              </nav>
-
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.22, duration: 0.25 }}
-                className="p-5 border-t border-[#e2e2ee] flex flex-col gap-2.5 shrink-0"
+              <LogoContent
+                markSize={24}
+                textSize={17}
+                onNavigate={() => setMenuOpen(false)}
+              />
+              <button
+                onClick={() => setMenuOpen(false)}
+                aria-label="Close menu"
+                className="p-2 -mr-2 rounded-lg"
+                style={{ color: "var(--cw-ink-primary)" }}
               >
-                <Link href="/login" onClick={() => setMenuOpen(false)}>
-                  <Button variant="outline" className="w-full border-[#e2e2ee] text-foreground hover:bg-[#f2f2f8] tracking-[.06em] rounded-[5px]">
-                    Sign in
-                  </Button>
-                </Link>
-                <Link href="/signup" onClick={() => setMenuOpen(false)}>
-                  <Button className="w-full bg-[#ff5b35] hover:bg-[#ff5b35]/90 text-white border-0 shadow-md shadow-[#ff5b3530] tracking-[.06em] rounded-[5px]">
-                    Get 10 Free Reviews
-                  </Button>
-                </Link>
-              </motion.div>
-            </motion.aside>
-          </>
+                <HamburgerIcon open={true} />
+              </button>
+            </div>
+
+            {/* Links — staggered reveal, centred */}
+            <nav className="flex flex-col items-center justify-center flex-1 gap-1">
+              {NAV_LINKS.map(({ label, href }, i) => (
+                <motion.div
+                  key={label}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    delay: 0.04 + i * 0.06,
+                    duration: 0.28,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                >
+                  <Link
+                    href={href}
+                    onClick={() => setMenuOpen(false)}
+                    style={{
+                      display: "block",
+                      padding: "10px 40px",
+                      fontSize: 24,
+                      fontWeight: 400,
+                      fontFamily: "'Instrument Serif', serif",
+                      fontStyle: "italic",
+                      color: "var(--cw-ink-primary)",
+                      textDecoration: "none",
+                    }}
+                  >
+                    {label}
+                  </Link>
+                </motion.div>
+              ))}
+            </nav>
+
+            {/* CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.36, duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              className="shrink-0 px-6 pb-10 pt-5"
+              style={{ borderTop: "0.5px solid var(--cw-bg-secondary)" }}
+            >
+              <Link href="/signup" onClick={() => setMenuOpen(false)}>
+                <button
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                    height: 50,
+                    borderRadius: 8,
+                    background: "var(--cw-ember)",
+                    color: "#FDFAF7",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    fontFamily: "'DM Sans', sans-serif",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  Start for free
+                </button>
+              </Link>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
     </>
