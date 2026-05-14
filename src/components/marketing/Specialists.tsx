@@ -230,7 +230,6 @@ export default function Specialists() {
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <s.Icon color={s.color} />
                   <span
                     style={{
                       fontSize: 14,

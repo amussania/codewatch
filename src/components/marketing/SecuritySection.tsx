@@ -186,7 +186,7 @@ export default function SecuritySection() {
                     aria-hidden
                     style={{
                       position: "absolute",
-                      right: 0,
+                      left: 0,
                       top: "50%",
                       transform: "translateY(-50%)",
                       fontFamily: "'DM Sans', sans-serif",
@@ -209,6 +209,7 @@ export default function SecuritySection() {
                       fontSize: 14,
                       lineHeight: 1.6,
                       position: "relative",
+                      paddingLeft: 48,
                     }}
                   >
                     <span

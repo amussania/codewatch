@@ -30,14 +30,26 @@ function DarkGridBackground() {
     <>
       <div className="cw-cta-dark-grid" aria-hidden />
 
-      {/* Ember warmth glow centred behind headline */}
+      {/* Primary ember glow — large, centred */}
       <div
         aria-hidden
         style={{
           position: "absolute",
           inset: 0,
           background:
-            "radial-gradient(ellipse 800px 400px at 50% 50%, rgba(200,68,10,0.18) 0%, transparent 70%)",
+            "radial-gradient(ellipse 1000px 500px at 50% 50%, rgba(200,68,10,0.25) 0%, rgba(200,68,10,0.08) 40%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Secondary softer glow — offset for depth */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(ellipse 600px 300px at 40% 60%, rgba(200,68,10,0.12) 0%, transparent 60%)",
           pointerEvents: "none",
         }}
       />
