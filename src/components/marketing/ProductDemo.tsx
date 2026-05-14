@@ -177,17 +177,43 @@ function CodeEditorPanel({
   activeLines: number[];
   specColor: string;
 }) {
+  const [hovered, setHovered] = useState(false);
+
   return (
-    <div style={{ perspective: "1100px", perspectiveOrigin: "50% 30%" }}>
+    <div style={{ position: "relative" }}>
+      {/* Ember glow behind panel */}
       <div
         style={{
+          position: "absolute",
+          inset: "-30px -40px",
+          background:
+            "radial-gradient(ellipse at 40% 50%, rgba(200,68,10,0.06) 0%, transparent 68%)",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
+      <div
+        style={{
+          perspective: "1000px",
+          perspectiveOrigin: "50% 30%",
           position: "relative",
-          transform: "rotateY(-8deg) rotateX(3deg)",
+          zIndex: 1,
+        }}
+      >
+      <div
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          position: "relative",
+          transform: hovered
+            ? "perspective(1000px) rotateY(-4deg) rotateX(3deg)"
+            : "perspective(1000px) rotateY(-8deg) rotateX(3deg)",
+          transition: "transform 600ms cubic-bezier(0.16, 1, 0.3, 1)",
           borderRadius: 16,
           overflow: "hidden",
           background: "#21252B",
           boxShadow:
-            "0 40px 90px rgba(0,0,0,0.55), 0 6px 20px rgba(0,0,0,0.3)",
+            "0 25px 60px rgba(0,0,0,0.5), -10px 10px 40px rgba(0,0,0,0.3)",
         }}
       >
         {/* Specular sheen */}
@@ -272,6 +298,7 @@ function CodeEditorPanel({
             );
           })}
         </div>
+      </div>
       </div>
     </div>
   );
