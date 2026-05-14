@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import Link from "next/link";
 
 // ─── Animated dark grid (white lines, inverted from hero) ─────────────────────
@@ -25,13 +26,19 @@ const GRID_STYLES = `
   }
 `;
 
-function DarkGridBackground() {
+function DarkGridBackground({
+  glow1Y,
+  glow2Y,
+}: {
+  glow1Y?: MotionValue<string>;
+  glow2Y?: MotionValue<string>;
+}) {
   return (
     <>
       <div className="cw-cta-dark-grid" aria-hidden />
 
       {/* Primary ember glow — large, centred */}
-      <div
+      <motion.div
         aria-hidden
         style={{
           position: "absolute",
@@ -39,11 +46,12 @@ function DarkGridBackground() {
           background:
             "radial-gradient(ellipse 1000px 500px at 50% 50%, rgba(200,68,10,0.25) 0%, rgba(200,68,10,0.08) 40%, transparent 70%)",
           pointerEvents: "none",
+          y: glow1Y,
         }}
       />
 
       {/* Secondary softer glow — offset for depth */}
-      <div
+      <motion.div
         aria-hidden
         style={{
           position: "absolute",
@@ -51,6 +59,7 @@ function DarkGridBackground() {
           background:
             "radial-gradient(ellipse 600px 300px at 40% 60%, rgba(200,68,10,0.12) 0%, transparent 60%)",
           pointerEvents: "none",
+          y: glow2Y,
         }}
       />
 
@@ -73,9 +82,19 @@ function DarkGridBackground() {
 
 export default function FinalCTA() {
   const reduced = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const glow1Y = useTransform(scrollYProgress, [0, 1], ["50px", "-50px"]);
+  const glow2Y = useTransform(scrollYProgress, [0, 1], ["80px", "-80px"]);
 
   return (
     <section
+      ref={sectionRef}
       id="cta"
       style={{
         background: "var(--cw-bg-ink)",
@@ -85,7 +104,10 @@ export default function FinalCTA() {
       }}
     >
       <style>{GRID_STYLES}</style>
-      <DarkGridBackground />
+      <DarkGridBackground
+        glow1Y={reduced ? undefined : glow1Y}
+        glow2Y={reduced ? undefined : glow2Y}
+      />
 
       <div className="max-w-[1120px] mx-auto px-6 lg:px-12" style={{ position: "relative" }}>
         <motion.div

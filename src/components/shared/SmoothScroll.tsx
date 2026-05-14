@@ -9,6 +9,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
+  const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -17,7 +18,12 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     });
     lenisRef.current = lenis;
 
-    lenis.on("scroll", () => ScrollTrigger.update());
+    lenis.on("scroll", ({ progress }: { progress: number }) => {
+      ScrollTrigger.update();
+      if (barRef.current) {
+        barRef.current.style.transform = `scaleX(${progress})`;
+      }
+    });
 
     const ticker = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(ticker);
@@ -29,5 +35,26 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     };
   }, []);
 
-  return <>{children}</>;
+  return (
+    <>
+      {/* 1px ember scroll progress indicator */}
+      <div
+        ref={barRef}
+        aria-hidden
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 1,
+          background: "var(--cw-ember)",
+          transformOrigin: "left",
+          transform: "scaleX(0)",
+          zIndex: 9999,
+          pointerEvents: "none",
+        }}
+      />
+      {children}
+    </>
+  );
 }

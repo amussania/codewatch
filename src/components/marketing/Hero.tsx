@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import Link from "next/link";
 
 // ─── Data ──────────────────────────────────────────────────────────────────
@@ -76,9 +76,21 @@ const CODE: { n: number; t: string }[] = [
 
 // ─── Dashed vertical lines background ─────────────────────────────────────
 
-function DashedLines() {
+function DashedLines({ y }: { y?: MotionValue<string> }) {
   return (
-    <div aria-hidden className="absolute inset-0 pointer-events-none overflow-hidden">
+    <motion.div
+      aria-hidden
+      style={{
+        position: "absolute",
+        top: -80,
+        bottom: -80,
+        left: 0,
+        right: 0,
+        pointerEvents: "none",
+        overflow: "hidden",
+        y,
+      }}
+    >
       <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
         <defs>
           <pattern id="cw-vdash" x="0" y="0" width="88" height="20" patternUnits="userSpaceOnUse">
@@ -104,7 +116,7 @@ function DashedLines() {
             "linear-gradient(to right, var(--cw-bg-primary) 0%, transparent 10%, transparent 90%, var(--cw-bg-primary) 100%)",
         }}
       />
-    </div>
+    </motion.div>
   );
 }
 
@@ -400,21 +412,32 @@ function ClipWord({ word, delay, reduced }: { word: string; delay: number; reduc
 
 export default function Hero() {
   const reduced = useReducedMotion() ?? false;
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const dashY    = useTransform(scrollYProgress, [0, 1], ["0px", "-70px"]);
+  const glowY    = useTransform(scrollYProgress, [0, 1], ["0px", "-30px"]);
 
   return (
     <section
+      ref={sectionRef}
       className="relative min-h-[100svh] overflow-hidden"
       style={{ background: "var(--cw-bg-primary)" }}
     >
-      <DashedLines />
+      <DashedLines y={reduced ? undefined : dashY} />
 
       {/* Ember ambient — top left */}
-      <div
+      <motion.div
         aria-hidden
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
             "radial-gradient(ellipse 55% 55% at 5% 5%, rgba(200,68,10,0.11) 0%, transparent 70%)",
+          y: reduced ? undefined : glowY,
         }}
       />
 
@@ -505,7 +528,14 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={reduced ? { duration: 0 } : { duration: 0.9, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
         >
-          <CodeReviewPanel reduced={reduced} />
+          {/* Float loop — wraps inside entrance so it starts from settled position */}
+          <motion.div
+            className="h-full flex flex-col"
+            animate={reduced ? {} : { y: [0, -8, 0] }}
+            transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
+          >
+            <CodeReviewPanel reduced={reduced} />
+          </motion.div>
         </motion.div>
       </div>
     </section>

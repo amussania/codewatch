@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -239,9 +239,10 @@ function FeatureCheck() {
 
 function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
   const { main, sub } = getDisplayPrice(plan.monthlyPrice, billing);
+  const reduced = useReducedMotion();
 
   return (
-    <div
+    <motion.div
       style={{
         borderRadius: 12,
         background: "var(--cw-bg-surface)",
@@ -249,11 +250,21 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
           ? "1.5px solid var(--cw-ember)"
           : "0.5px solid var(--cw-bg-secondary)",
         padding: "24px 20px",
-        transform: plan.featured ? "translateY(-8px)" : "none",
         display: "flex",
         flexDirection: "column",
         gap: 20,
       }}
+      initial={{ y: plan.featured ? -8 : 0 }}
+      animate={
+        plan.featured && !reduced
+          ? { y: [-8, -14, -8] }
+          : { y: plan.featured ? -8 : 0 }
+      }
+      transition={
+        plan.featured && !reduced
+          ? { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1.5 }
+          : { duration: 0 }
+      }
     >
       {/* Tier name + desc */}
       <div>
@@ -415,7 +426,7 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
           {plan.cta}
         </button>
       </Link>
-    </div>
+    </motion.div>
   );
 }
 
