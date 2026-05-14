@@ -29,14 +29,27 @@ function DarkGridBackground() {
   return (
     <>
       <div className="cw-cta-dark-grid" aria-hidden />
-      {/* Radial vignette so grid fades toward edges */}
+
+      {/* Ember warmth glow centred behind headline */}
       <div
         aria-hidden
         style={{
           position: "absolute",
           inset: 0,
           background:
-            "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, var(--cw-bg-ink) 100%)",
+            "radial-gradient(ellipse 800px 400px at 50% 50%, rgba(200,68,10,0.18) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Edge vignette — grid fades toward borders */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 35%, var(--cw-bg-ink) 100%)",
           pointerEvents: "none",
         }}
       />

@@ -85,7 +85,7 @@ export default function SecuritySection() {
   return (
     <section
       id="security"
-      style={{ background: "var(--cw-bg-primary)", padding: "140px 0" }}
+      style={{ background: "var(--cw-bg-primary)", padding: "140px 0", paddingBottom: 80 }}
     >
       <div className="max-w-[1120px] mx-auto px-6 lg:px-12">
         <div className="grid lg:grid-cols-2 gap-16 items-start">
@@ -96,6 +96,7 @@ export default function SecuritySection() {
             whileInView={reduced ? {} : { opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+            style={{ alignSelf: "start" }}
           >
             {/* Section label */}
             <div
@@ -177,7 +178,7 @@ export default function SecuritySection() {
                     padding: "20px 0",
                     borderTop: i === 0 ? "0.5px solid var(--cw-bg-secondary)" : undefined,
                     borderBottom: "0.5px solid var(--cw-bg-secondary)",
-                    overflow: "hidden",
+                    overflow: "visible",
                   }}
                 >
                   {/* Background number — purely decorative */}
@@ -242,6 +243,9 @@ export default function SecuritySection() {
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
             style={{
+              position: "sticky",
+              top: 120,
+              alignSelf: "start",
               borderRadius: 12,
               overflow: "hidden",
               border: "0.5px solid var(--cw-bg-secondary)",

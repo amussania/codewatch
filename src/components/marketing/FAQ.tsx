@@ -107,10 +107,12 @@ function FAQItem({
           justifyContent: "space-between",
           gap: 20,
           padding: "28px 0",
+          paddingLeft: isOpen ? 20 : 0,
           background: "none",
           border: "none",
           cursor: "pointer",
           textAlign: "left",
+          transition: "padding-left 200ms ease",
         }}
       >
         {/* Question text */}
@@ -166,7 +168,7 @@ function FAQItem({
                 color: "var(--cw-ink-secondary)",
                 lineHeight: 1.7,
                 margin: 0,
-                padding: "0 0 28px",
+                padding: "8px 0 28px 20px",
                 maxWidth: "72ch",
               }}
             >
