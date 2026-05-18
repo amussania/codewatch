@@ -104,7 +104,7 @@ export async function runSpecialist(
 
   const userPrompt = `Language: ${language}${contextBlock}\n\nCode to review:\n\n${code}`;
 
-  const response = await moonshot.chat.createChatCompletion.request({
+  const response = await moonshot.chat.createCompletion.request({
     model: MOONSHOT_MODEL,
     messages: [
       { role: "system", content: systemPrompt },
@@ -114,7 +114,7 @@ export async function runSpecialist(
     max_tokens: 4000,
   });
 
-  const content = response.choices[0]?.message?.content || "{}";
+  const content = response.choices?.[0]?.message?.content || "{}";
 
   // Parse JSON response
   try {
@@ -237,14 +237,14 @@ ${code}
 
 Corrected code:`;
 
-  const response = await moonshot.chat.createChatCompletion.request({
+  const response = await moonshot.chat.createCompletion.request({
     model: MOONSHOT_MODEL,
     messages: [{ role: "user", content: prompt }],
     temperature: 0.1,
     max_tokens: 8000,
   });
 
-  return response.choices[0]?.message?.content || code;
+  return response.choices?.[0]?.message?.content || code;
 }
 
 // Humanisation layer: make AI-generated code sound human-written
@@ -258,12 +258,12 @@ ${code}
 
 Refactored code:`;
 
-  const response = await moonshot.chat.createChatCompletion.request({
+  const response = await moonshot.chat.createCompletion.request({
     model: MOONSHOT_MODEL,
     messages: [{ role: "user", content: prompt }],
     temperature: 0.7,
     max_tokens: 8000,
   });
 
-  return response.choices[0]?.message?.content || code;
+  return response.choices?.[0]?.message?.content || code;
 }

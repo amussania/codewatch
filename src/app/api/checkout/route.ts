@@ -57,9 +57,12 @@ export async function POST(request: NextRequest) {
 
     // 5. Create checkout session
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://codewatch-theta.vercel.app";
+    const storeId = process.env.LEMONSQUEEZY_STORE_ID!;
 
-    const checkout = await createCheckout({
-      variantId,
+    const checkout = await createCheckout(storeId, variantId, {
+      productOptions: {
+        redirectUrl: redirectUrl || `${appUrl}/dashboard?checkout=success`,
+      },
       checkoutOptions: {
         embed: false,
         media: false,
@@ -67,22 +70,26 @@ export async function POST(request: NextRequest) {
         desc: true,
         discount: true,
         subscriptionPreview: true,
-        buttonColor: "#C8440A", // Ember accent from CLAUDE.md
+        buttonColor: "#C8440A",
       },
       checkoutData: {
         email: user.email,
         custom: {
           user_id: user.id,
         },
-        redirectUrl: redirectUrl || `${appUrl}/dashboard?checkout=success`,
       },
     });
+
+    if (checkout.error) {
+      console.error("Lemon Squeezy checkout error:", checkout.error);
+      return NextResponse.json({ error: "Failed to create checkout session" }, { status: 502 });
+    }
 
     // 6. Return checkout URL
     return NextResponse.json({
       success: true,
-      checkoutUrl: checkout.data.attributes.url,
-      checkoutId: checkout.data.id,
+      checkoutUrl: checkout.data?.data?.attributes?.url,
+      checkoutId: checkout.data?.data?.id,
     });
   } catch (error: any) {
     console.error("Checkout API error:", error);
