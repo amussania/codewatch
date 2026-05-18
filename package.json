@@ -33,7 +33,6 @@
     "next-themes": "^0.4.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "moonshot-node": "^0.0.5",
     "resend": "^4.0.0",
     "stripe": "^18.0.0",
     "zod": "^3.23.0",

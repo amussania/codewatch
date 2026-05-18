@@ -1,18 +1,21 @@
-// lib/ai/moonshot.ts — Moonshot Kimi K2.6 client for CODEWATCH
-// SOUL.md v4: Use Moonshot Kimi K2.6, NOT Anthropic. Server-side only.
-// Author: Kimi Build Agent | Date: 2026-05-17
+// lib/ai/client.ts — Anthropic Claude client for CODEWATCH
+// Uses Claude Sonnet 4.6 via @anthropic-ai/sdk. Server-side only.
 
-import { createSDK } from "moonshot-node";
+import Anthropic from "@anthropic-ai/sdk";
 
-const apiKey = process.env.MOONSHOT_API_KEY;
-if (!apiKey) {
-  throw new Error("MOONSHOT_API_KEY is not set in environment variables");
+let _client: Anthropic | null = null;
+
+function getClient(): Anthropic {
+  if (_client) return _client;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error("ANTHROPIC_API_KEY is not set");
+  }
+  _client = new Anthropic({ apiKey });
+  return _client;
 }
 
-export const moonshot = createSDK({ accessToken: apiKey });
-
-// Model identifier — use 128k context for code review
-export const MOONSHOT_MODEL = "moonshot-v1-128k";
+export const CLAUDE_MODEL = "claude-sonnet-4-6";
 
 // Base system prompt shared across all specialists
 export const BASE_SYSTEM_PROMPT = `You are a senior software engineer conducting a code review.
@@ -97,6 +100,7 @@ export async function runSpecialist(
   language: string,
   businessContext?: string
 ) {
+  const client = getClient();
   const systemPrompt = SPECIALIST_PROMPTS[specialist];
   const contextBlock = businessContext
     ? `\n\nBusiness Context:\n${businessContext}`
@@ -104,19 +108,17 @@ export async function runSpecialist(
 
   const userPrompt = `Language: ${language}${contextBlock}\n\nCode to review:\n\n${code}`;
 
-  const response = await moonshot.chat.createCompletion.request({
-    model: MOONSHOT_MODEL,
-    messages: [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: userPrompt },
-    ],
-    temperature: 0.2,
+  const message = await client.messages.create({
+    model: CLAUDE_MODEL,
     max_tokens: 4000,
+    system: systemPrompt,
+    messages: [{ role: "user", content: userPrompt }],
+    temperature: 0.2,
   });
 
-  const content = response.choices?.[0]?.message?.content || "{}";
+  const content =
+    message.content[0]?.type === "text" ? message.content[0].text : "{}";
 
-  // Parse JSON response
   try {
     const parsed = JSON.parse(content);
     return {
@@ -127,7 +129,6 @@ export async function runSpecialist(
       raw: content,
     };
   } catch {
-    // Fallback if JSON parsing fails
     return {
       specialist,
       findings: [],
@@ -159,7 +160,9 @@ export async function runAllSpecialists(
   }
 
   const results = await Promise.allSettled(
-    specialists.map((s) => runSpecialist(s, code, language, options?.businessContext))
+    specialists.map((s) =>
+      runSpecialist(s, code, language, options?.businessContext)
+    )
   );
 
   const findings: Array<{
@@ -175,8 +178,7 @@ export async function runAllSpecialists(
   let successCount = 0;
   const specialistsRun: string[] = [];
 
-  for (let i = 0; i < results.length; i++) {
-    const result = results[i];
+  for (const result of results) {
     if (result.status === "fulfilled") {
       const data = result.value;
       specialistsRun.push(data.specialist);
@@ -184,20 +186,15 @@ export async function runAllSpecialists(
       successCount++;
 
       for (const finding of data.findings) {
-        findings.push({
-          ...finding,
-          specialist: data.specialist,
-        });
+        findings.push({ ...finding, specialist: data.specialist });
       }
     }
   }
 
-  // Calculate Master Score: average of specialist scores, weighted down by CRITICAL findings
   const avgScore = successCount > 0 ? totalScore / successCount : 0;
   const criticalCount = findings.filter((f) => f.severity === "CRITICAL").length;
   const masterScore = Math.max(0, avgScore - criticalCount * 15);
 
-  // Sort findings: CRITICAL first, then by line number
   findings.sort((a, b) => {
     const severityOrder = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
     if (severityOrder[a.severity] !== severityOrder[b.severity]) {
@@ -210,9 +207,10 @@ export async function runAllSpecialists(
     masterScore: Math.round(masterScore),
     findings,
     specialistsRun,
-    summary: findings.length > 0
-      ? `${findings.length} findings (${criticalCount} critical). Review recommended before merging.`
-      : "No significant issues detected. Code looks good.",
+    summary:
+      findings.length > 0
+        ? `${findings.length} findings (${criticalCount} critical). Review recommended before merging.`
+        : "No significant issues detected. Code looks good.",
   };
 }
 
@@ -222,6 +220,7 @@ export async function generateRewrite(
   language: string,
   findings: Array<{ line: number; severity: string; description: string }>
 ) {
+  const client = getClient();
   const findingsText = findings
     .map((f) => `Line ${f.line} [${f.severity}]: ${f.description}`)
     .join("\n");
@@ -237,18 +236,20 @@ ${code}
 
 Corrected code:`;
 
-  const response = await moonshot.chat.createCompletion.request({
-    model: MOONSHOT_MODEL,
+  const message = await client.messages.create({
+    model: CLAUDE_MODEL,
+    max_tokens: 8000,
     messages: [{ role: "user", content: prompt }],
     temperature: 0.1,
-    max_tokens: 8000,
   });
 
-  return response.choices?.[0]?.message?.content || code;
+  return message.content[0]?.type === "text" ? message.content[0].text : code;
 }
 
 // Humanisation layer: make AI-generated code sound human-written
 export async function humaniseCode(code: string, language: string) {
+  const client = getClient();
+
   const prompt = `You are a senior engineer refactoring code to sound naturally human-written.
 Add subtle imperfections: slightly inconsistent spacing, a meaningful comment, a minor variable rename that shows human thought.
 Do NOT change logic or introduce bugs. Return ONLY the refactored code.
@@ -258,12 +259,12 @@ ${code}
 
 Refactored code:`;
 
-  const response = await moonshot.chat.createCompletion.request({
-    model: MOONSHOT_MODEL,
+  const message = await client.messages.create({
+    model: CLAUDE_MODEL,
+    max_tokens: 8000,
     messages: [{ role: "user", content: prompt }],
     temperature: 0.7,
-    max_tokens: 8000,
   });
 
-  return response.choices?.[0]?.message?.content || code;
+  return message.content[0]?.type === "text" ? message.content[0].text : code;
 }
