@@ -1,76 +1,74 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-const SAMPLE_CODE = `async function verifyToken(token: string) {
-  const payload = jwt.verify(token, process.env.JWT_SECRET!);
-  const user = await db.users.findById(payload.sub);
-  if (!user?.active) throw new AuthError("Account suspended");
-  return user;
-}`;
+import { useState, useCallback } from "react";
 
 interface ReviewEditorProps {
   code?: string;
-  isTyping?: boolean;
+  onChange?: (code: string) => void;
+  language?: string;
+  readOnly?: boolean;
 }
 
 export default function ReviewEditor({
-  code = SAMPLE_CODE,
-  isTyping = true,
+  code: initialCode = "",
+  onChange,
+  language = "typescript",
+  readOnly = false,
 }: ReviewEditorProps) {
-  const [displayed, setDisplayed] = useState("");
-  const [done, setDone] = useState(false);
+  const [code, setCode] = useState(initialCode);
 
-  useEffect(() => {
-    setDisplayed("");
-    setDone(false);
-    let i = 0;
-    const speed = 18;
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const newCode = e.target.value;
+      setCode(newCode);
+      onChange?.(newCode);
+    },
+    [onChange]
+  );
 
-    const interval = setInterval(() => {
-      if (i < code.length) {
-        setDisplayed(code.slice(0, i + 1));
-        i++;
-      } else {
-        setDone(true);
-        clearInterval(interval);
-      }
-    }, speed);
-
-    return () => clearInterval(interval);
-  }, [code]);
-
-  const lines = displayed.split("\n");
+  const lines = code.split("\n");
+  const lineCount = lines.length;
 
   return (
     <div className="rounded-xl border border-white/8 bg-[var(--cw-surface)] overflow-hidden font-mono text-sm">
       {/* Title bar */}
-      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/8 bg-[var(--cw-surface-elevated)]">
-        <div className="flex gap-1.5">
-          {["#ff5f57", "#ffbd2e", "#28c840"].map((c) => (
-            <div key={c} className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: c }} />
-          ))}
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/8 bg-[var(--cw-surface-elevated)]">
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1.5">
+            {["#ff5f57", "#ffbd2e", "#28c840"].map((c) => (
+              <div key={c} className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: c }} />
+            ))}
+          </div>
+          <span className="text-xs text-muted-foreground ml-2">
+            {language || "code"}.{language === "typescript" ? "ts" : language === "javascript" ? "js" : language}
+          </span>
         </div>
-        <span className="text-xs text-muted-foreground ml-2">auth.service.ts</span>
+        <span className="text-xs text-muted-foreground">{lineCount} lines</span>
       </div>
 
-      {/* Code body */}
-      <div className="p-4 min-h-[200px] overflow-x-auto">
-        <pre className="text-[13px] leading-6">
-          {lines.map((line, i) => (
-            <div key={i} className="flex">
-              <span className="text-muted-foreground/40 w-8 text-right mr-4 select-none shrink-0">
+      {/* Code editor */}
+      <div className="relative">
+        <div className="flex">
+          {/* Line numbers */}
+          <div className="py-4 pl-4 pr-2 text-right select-none bg-[var(--cw-surface-elevated)]/50">
+            {lines.map((_, i) => (
+              <div key={i} className="text-muted-foreground/40 text-[13px] leading-6 w-8">
                 {i + 1}
-              </span>
-              <span className="text-foreground/80">
-                {line}
-                {i === lines.length - 1 && !done && isTyping && (
-                  <span className="terminal-cursor inline-block w-[2px] h-[1em] bg-[var(--cw-coral)] ml-px align-text-bottom" />
-                )}
-              </span>
-            </div>
-          ))}
-        </pre>
+              </div>
+            ))}
+          </div>
+
+          {/* Textarea */}
+          <textarea
+            value={code}
+            onChange={handleChange}
+            readOnly={readOnly}
+            placeholder="Paste your code here..."
+            spellCheck={false}
+            className="flex-1 py-4 px-4 bg-transparent text-[13px] leading-6 text-foreground/80 resize-none outline-none min-h-[300px] font-mono"
+            style={{ tabSize: 2 }}
+          />
+        </div>
       </div>
     </div>
   );
