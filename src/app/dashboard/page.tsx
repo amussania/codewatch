@@ -88,9 +88,9 @@ function scoreVerdict(score: number): { label: string; color: string } {
 }
 
 const selectCls = [
-  "h-9 pl-3 pr-8 rounded-lg bg-white/[0.05] border border-white/10",
-  "text-sm text-foreground/80 appearance-none outline-none cursor-pointer",
-  "focus:border-[#ff6b6b] focus:ring-1 focus:ring-[#ff6b6b] transition-all",
+  "h-9 pl-3 pr-8 rounded-lg bg-[#FDFAF7] border border-[#E0DBD4]",
+  "text-sm text-[#4A4540] appearance-none outline-none cursor-pointer",
+  "focus:border-[#C8440A] focus:ring-1 focus:ring-[#C8440A]/20 transition-all",
 ].join(" ");
 
 export default function DashboardPage() {
@@ -258,7 +258,7 @@ export default function DashboardPage() {
                     className={selectCls}
                   >
                     {LANGUAGES.map((l) => (
-                      <option key={l.value} value={l.value} className="bg-[#0d0f1a]">
+                      <option key={l.value} value={l.value} className="bg-[#FDFAF7] text-[#4A4540]">
                         {l.label}
                       </option>
                     ))}
@@ -274,7 +274,7 @@ export default function DashboardPage() {
                     className={selectCls}
                   >
                     {SPECIALISTS.map((s) => (
-                      <option key={s.value} value={s.value} className="bg-[#0d0f1a]">
+                      <option key={s.value} value={s.value} className="bg-[#FDFAF7] text-[#4A4540]">
                         {s.label}
                       </option>
                     ))}
