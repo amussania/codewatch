@@ -5,7 +5,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { humaniseCode } from "@/lib/ai/moonshot";
+import { humaniseCode } from "@/lib/ai/client";
 import { rateLimitOrThrow } from "@/lib/upstash/ratelimit";
 
 const humaniseSchema = z.object({

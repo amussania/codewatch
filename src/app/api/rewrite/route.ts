@@ -5,7 +5,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { generateRewrite } from "@/lib/ai/moonshot";
+import { generateRewrite } from "@/lib/ai/client";
 import { rateLimitOrThrow } from "@/lib/upstash/ratelimit";
 
 const rewriteSchema = z.object({
