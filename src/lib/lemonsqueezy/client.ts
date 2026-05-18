@@ -1,26 +1,46 @@
 // lib/lemonsqueezy/client.ts — Lemon Squeezy client for CODEWATCH
 // SOUL.md v4: Lemon Squeezy is the payment processor. NOT Stripe.
-// Author: Kimi Build Agent | Date: 2026-05-17
 
-import { lemonSqueezySetup } from "@lemonsqueezy/lemonsqueezy.js";
+import {
+  lemonSqueezySetup,
+  createCheckout as _createCheckout,
+  getProduct as _getProduct,
+  getVariant as _getVariant,
+} from "@lemonsqueezy/lemonsqueezy.js";
 
-const apiKey = process.env.LEMONSQUEEZY_API_KEY;
-const storeId = process.env.LEMONSQUEEZY_STORE_ID;
+let initialized = false;
 
-if (!apiKey) {
-  throw new Error("LEMONSQUEEZY_API_KEY is not set");
+function ensureInitialized() {
+  if (initialized) return;
+  const apiKey = process.env.LEMONSQUEEZY_API_KEY;
+  if (!apiKey) {
+    throw new Error("LEMONSQUEEZY_API_KEY is not set");
+  }
+  lemonSqueezySetup({ apiKey });
+  initialized = true;
 }
 
-if (!storeId) {
-  throw new Error("LEMONSQUEEZY_STORE_ID is not set");
+export function createCheckout(
+  ...args: Parameters<typeof _createCheckout>
+): ReturnType<typeof _createCheckout> {
+  ensureInitialized();
+  return _createCheckout(...args);
 }
 
-// Initialize Lemon Squeezy SDK
-lemonSqueezySetup({ apiKey });
+export function getProduct(
+  ...args: Parameters<typeof _getProduct>
+): ReturnType<typeof _getProduct> {
+  ensureInitialized();
+  return _getProduct(...args);
+}
 
-export { createCheckout, getProduct, getVariant } from "@lemonsqueezy/lemonsqueezy.js";
+export function getVariant(
+  ...args: Parameters<typeof _getVariant>
+): ReturnType<typeof _getVariant> {
+  ensureInitialized();
+  return _getVariant(...args);
+}
 
-// Product/variant IDs for CODEWATCH tiers (populate from Lemon Squeezy dashboard)
 export const LEMON_SQUEEZY_VARIANTS = {
   solo: process.env.LEMONSQUEEZY_VARIANT_SOLO || "",
   pro: process.env.LEMONSQUEEZY_VARIANT_PRO || "",
@@ -29,7 +49,6 @@ export const LEMON_SQUEEZY_VARIANTS = {
   topup: process.env.LEMONSQUEEZY_VARIANT_TOPUP || "",
 };
 
-// Credit allocation per tier (matches SOUL.md Section 6)
 export const TIER_CREDITS: Record<string, number> = {
   free: 3,
   solo: 30,
@@ -38,7 +57,6 @@ export const TIER_CREDITS: Record<string, number> = {
   agency: 1000,
 };
 
-// Validate variant configuration
 export function validateVariantConfig(): string[] {
   const missing: string[] = [];
   for (const [tier, id] of Object.entries(LEMON_SQUEEZY_VARIANTS)) {
