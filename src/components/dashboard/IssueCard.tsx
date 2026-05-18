@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 
-export type Severity = "high" | "medium" | "low";
+export type Severity = "critical" | "high" | "medium" | "low";
 
 export interface Issue {
   id: string;
@@ -22,6 +22,11 @@ interface IssueCardProps {
 }
 
 const SEVERITY_STYLES: Record<Severity, { border: string; dot: string; badge: string }> = {
+  critical: {
+    border: "border-[#C8440A]/20",
+    dot: "#C8440A",
+    badge: "bg-[#C8440A]/10 text-[#C8440A] border-[#C8440A]/20",
+  },
   high: {
     border: "border-[#ff6b6b]/20",
     dot: "#ff6b6b",
@@ -40,6 +45,7 @@ const SEVERITY_STYLES: Record<Severity, { border: string; dot: string; badge: st
 };
 
 const STAGGER_BY_SEVERITY: Record<Severity, number> = {
+  critical: 0,
   high: 0,
   medium: 0.05,
   low: 0.1,

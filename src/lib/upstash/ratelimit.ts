@@ -45,7 +45,7 @@ export async function checkRateLimit(
   pipeline.expire(key, config.window);
 
   const results = await pipeline.exec();
-  const currentCount = (results?.[1]?.result as number) || 0;
+  const currentCount = (results?.[1] as number) || 0;
 
   const success = currentCount < config.requests;
   const remaining = Math.max(0, config.requests - currentCount - 1);
