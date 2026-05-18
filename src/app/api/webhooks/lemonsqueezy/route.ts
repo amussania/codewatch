@@ -5,6 +5,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { TIER_CREDITS } from "@/lib/lemonsqueezy/client";
+import { sendTopupConfirmation, sendSubscriptionConfirmation } from "@/lib/resend/templates";
 
 // Initialize Supabase admin client for webhook operations
 const supabaseAdmin = createClient(
@@ -38,13 +39,6 @@ interface LemonSqueezyWebhook {
   };
 }
 
-// Verify webhook signature (Lemon Squeezy uses HMAC-SHA256)
-function verifyWebhookSignature(payload: string, signature: string, secret: string): boolean {
-  // In production, implement proper HMAC verification
-  // For now, check the secret matches
-  return signature === secret;
-}
-
 // Map variant name to tier
 function variantToTier(variantName: string): string {
   const name = variantName.toLowerCase();
@@ -69,10 +63,8 @@ export async function POST(request: NextRequest) {
 
     const payload = await request.text();
 
-    // In production, verify signature properly
-    // if (!verifyWebhookSignature(payload, signature, secret)) {
-    //   return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
-    // }
+    // In production, verify signature properly with HMAC-SHA256
+    // For now, we accept all webhooks (configure signature check before going live)
 
     // 2. Parse webhook payload
     const event: LemonSqueezyWebhook = JSON.parse(payload);
@@ -80,7 +72,7 @@ export async function POST(request: NextRequest) {
     const eventData = event.data.attributes;
     const userId = event.meta.custom_data?.user_id;
 
-    console.log(`Lemon Squeezy webhook received: ${eventName}`, { userId, orderId: event.data.id });
+    console.log(`Lemon Squeezy webhook: ${eventName}`, { userId, orderId: event.data.id });
 
     // 3. Handle events per SOUL.md Section 2
     switch (eventName) {
@@ -105,6 +97,11 @@ export async function POST(request: NextRequest) {
           if (error) {
             console.error("Failed to add top-up credits:", error);
             return NextResponse.json({ error: "Failed to add credits" }, { status: 500 });
+          }
+
+          // Send confirmation email
+          if (eventData.user_email) {
+            await sendTopupConfirmation(eventData.user_email, 25);
           }
 
           console.log(`Added 25 top-up credits for user ${userId}`);
@@ -150,6 +147,11 @@ export async function POST(request: NextRequest) {
 
         if (profileError) {
           console.error("Failed to update profile:", profileError);
+        }
+
+        // Send confirmation email
+        if (eventData.user_email) {
+          await sendSubscriptionConfirmation(eventData.user_email, tier, allocation);
         }
 
         console.log(`Subscription created: ${tier} tier, ${allocation} credits for user ${userId}`);
