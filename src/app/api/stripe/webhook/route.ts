@@ -22,7 +22,7 @@ function creditsForPlan(planTier: string | undefined | null): number {
 
 function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: "2026-04-22.dahlia",
+    apiVersion: "2025-08-27.basil",
   });
 }
 
