@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CODEWATCH v3 — AI Code QC System</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ---- DARK MODE (default) ---- */
+:root {
+  --bg:        #0a0a0f;
+  --bg2:       #0d0d14;
+  --bg3:       #111;
+  --border:    #1e1e2e;
+  --border2:   #2d2d3a;
+  --text:      #e2e8f0;
+  --text2:     #a8b3cf;
+  --text3:     #718096;
+  --text4:     #4a5568;
+  --text5:     #2d3748;
+  --header-bg: rgba(10,10,15,0.97);
+  --logo-name: #fff;
+  --card-bg:   #0d0d14;
+  --input-bg:  #0d0d14;
+  --tile-bg:   #111;
+  --code-bg:   #0d0d14;
+  --toggle-bg: #2d2d3a;
+  --error-text:#fca5a5;
+  --accent:    #00ff88;
+  --accent2:   #00cc6a;
+  --scrollbar: #2d2d3a;
+}
+
+/* ---- LIGHT MODE ---- */
+body.light {
+  --bg:        #f4f6f9;
+  --bg2:       #ffffff;
+  --bg3:       #f0f2f5;
+  --border:    #d1d9e6;
+  --border2:   #c0cad8;
+  --text:      #1a202c;
+  --text2:     #2d3748;
+  --text3:     #4a5568;
+  --text4:     #718096;
+  --text5:     #a0aec0;
+  --header-bg: rgba(244,246,249,0.97);
+  --logo-name: #1a202c;
+  --card-bg:   #ffffff;
+  --input-bg:  #f8fafc;
+  --tile-bg:   #f0f4f8;
+  --code-bg:   #f8fafc;
+  --toggle-bg: #cbd5e0;
+  --error-text:#c53030;
+  --accent:    #00a65a;
+  --accent2:   #008f4e;
+  --scrollbar: #cbd5e0;
+}
+
+body{font-family:'Courier New',Courier,monospace;background:var(--bg);color:var(--text);min-height:100vh;transition:background .25s,color .25s}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:3px}
+
+#header{border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;background:var(--header-bg);position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);transition:background .25s,border-color .25s}
+.logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.logo-name{font-weight:800;font-size:15px;color:var(--logo-name);letter-spacing:.06em}
+.logo-sub{font-size:9px;color:var(--text4);letter-spacing:.1em;margin-top:1px}
+.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 1.5s ease-in-out infinite;display:inline-block;margin-right:6px}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+
+#main{max-width:1100px;margin:0 auto;padding:28px}
+.card{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:20px;transition:background .25s,border-color .25s}
+textarea{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:4px;color:var(--text2);font-family:'Courier New',monospace;font-size:13px;line-height:1.7;padding:16px;resize:vertical;outline:none;transition:background .25s,border-color .25s,color .25s}
+textarea:focus{border-color:var(--accent)}
+.sec-label{font-size:10px;color:var(--text4);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
+
+.btn-green{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0a0a0f;border:none;padding:11px 28px;border-radius:4px;font-size:13px;font-weight:800;letter-spacing:.06em;cursor:pointer;transition:all .2s;font-family:'Courier New',monospace}
+.btn-green:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,166,90,.3)}
+.btn-green:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn-outline{background:none;border:1px solid var(--border2);color:var(--text4);padding:7px 14px;border-radius:4px;cursor:pointer;font-size:11px;font-family:'Courier New',monospace;transition:all .2s}
+.btn-outline:hover{border-color:var(--text4);color:var(--text3)}
+.btn-amber{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#d97706;padding:6px 14px;border-radius:4px;cursor:pointer;font-size:11px;font-family:'Courier New',monospace;font-weight:700;transition:all .2s}
+.btn-purple{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;padding:11px 28px;border-radius:4px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Courier New',monospace;transition:all .2s}
+.btn-purple:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 28px rgba(139,92,246,.3)}
+.btn-purple:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+.toggle-wrap{display:flex;align-items:center;gap:8px;background:var(--tile-bg);border:1px solid var(--border);border-radius:6px;padding:10px 14px;flex:1;min-width:140px;cursor:pointer;transition:all .2s}
+.toggle{width:36px;height:20px;border-radius:10px;border:none;cursor:pointer;transition:all .2s;position:relative;flex-shrink:0;background:var(--toggle-bg)}
+.toggle::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:3px;left:3px;transition:all .2s}
+.toggle.on{background:#00cc6a}.toggle.on::after{left:19px}
+
+.tab-bar{display:flex;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto;gap:0;transition:border-color .25s}
+.tab{background:none;border:none;border-bottom:2px solid transparent;padding:10px 16px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text4);cursor:pointer;font-family:'Courier New',monospace;white-space:nowrap;margin-bottom:-1px;transition:all .15s}
+.tab.active{border-bottom-color:currentColor}
+
+.issue-card{background:var(--card-bg);border:1px solid var(--border);border-radius:6px;padding:16px;margin-bottom:10px;transition:transform .1s,background .25s,border-color .25s}
+.issue-card:hover{transform:translateY(-1px)}
+.badge{font-size:10px;font-weight:700;letter-spacing:.08em;padding:2px 10px;border-radius:3px}
+.code-view{background:var(--code-bg);border:1px solid var(--border);border-radius:4px;padding:18px;overflow-x:auto;white-space:pre;font-size:12px;color:var(--text3);line-height:1.7;font-family:'Courier New',monospace;max-height:600px;overflow-y:auto;transition:background .25s,border-color .25s}
+.score-big{font-weight:800;font-size:64px;line-height:1}
+.specialist-tile{background:var(--tile-bg);border:1px solid var(--border);border-radius:8px;padding:14px 18px;text-align:center;cursor:pointer;min-width:90px;transition:all .15s}
+.specialist-tile:hover{transform:translateY(-1px)}
+
+.error-box{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:4px;padding:14px;color:var(--error-text);font-size:13px;margin-bottom:20px;display:none}
+.context-saved{font-size:10px;background:rgba(245,158,11,.15);color:#d97706;padding:2px 8px;border-radius:3px}
+.gap-item{font-size:12px;color:#92400e;padding:4px 0;display:flex;gap:8px}
+.change-pill{background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.15);border-radius:4px;padding:8px 12px;font-size:11px;color:#7c3aed;display:flex;gap:8px;margin-bottom:6px}
+.api-key-section{background:rgba(0,166,90,0.04);border:1px solid rgba(0,166,90,0.2);border-radius:8px;padding:20px;margin-bottom:20px;transition:background .25s}
+.api-key-input{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:4px;color:var(--text2);font-family:'Courier New',monospace;font-size:13px;padding:10px 14px;outline:none;transition:background .25s,border-color .25s,color .25s}
+.api-key-input:focus{border-color:var(--accent)}
+.hidden{display:none}
+
+/* Light mode specific overrides */
+body.light .code-view{color:#334155}
+body.light .issue-card{box-shadow:0 1px 3px rgba(0,0,0,.08)}
+body.light .card{box-shadow:0 1px 3px rgba(0,0,0,.06)}
+body.light .specialist-tile{box-shadow:0 1px 3px rgba(0,0,0,.06)}
+
+/* Mode toggle button */
+#mode-toggle{background:none;border:1px solid var(--border2);border-radius:20px;padding:5px 12px;cursor:pointer;font-size:12px;color:var(--text4);font-family:'Courier New',monospace;transition:all .2s;display:flex;align-items:center;gap:6px}
+#mode-toggle:hover{border-color:var(--accent);color:var(--accent)}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="logo-icon">🛡️</div>
+    <div>
+      <div class="logo-name">CODEWATCH <span style="color:var(--accent)">v3</span></div>
+      <div class="logo-sub">MULTI-SPECIALIST REVIEW PIPELINE</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px">
+    <button id="mode-toggle" onclick="toggleMode()">☀️ Light</button>
+    <div style="display:flex;align-items:center;gap:6px">
+      <span class="pulse-dot"></span>
+      <span style="font-size:10px;color:var(--text4)" id="specialist-count">2 SPECIALISTS ACTIVE</span>
+    </div>
+  </div>
+</div>
+
+<div id="main">
+
+  <!-- CORS Warning Banner -->
+  <div id="cors-warning" style="display:none;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.4);border-radius:8px;padding:16px 20px;margin-bottom:20px">
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      <div style="font-size:20px;flex-shrink:0">⚠️</div>
+      <div>
+        <div style="font-weight:700;font-size:13px;color:#d97706;margin-bottom:6px">File opened directly — API calls will be blocked</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.7;margin-bottom:10px">
+          Your browser blocks API calls when you open an HTML file directly from your desktop (<code style="background:rgba(0,0,0,.1);padding:1px 5px;border-radius:3px">file://</code>). You need to serve it through a local server.
+        </div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.8">
+          <strong style="color:var(--text2)">Fix — pick one of these options:</strong><br/>
+          <strong>Option A (easiest):</strong> If you have Python, open Terminal, go to the folder with the file and run:<br/>
+          <code style="background:rgba(0,0,0,.15);padding:3px 8px;border-radius:3px;display:inline-block;margin:4px 0;font-size:11px">python3 -m http.server 8080</code><br/>
+          Then open <a href="http://localhost:8080/codewatch.html" style="color:#d97706">http://localhost:8080/codewatch.html</a> in your browser.<br/><br/>
+          <strong>Option B:</strong> Use VS Code with the <strong>Live Server</strong> extension — right-click the file and click "Open with Live Server".<br/><br/>
+          <strong>Option C:</strong> Upload the file to any static host (Netlify Drop, GitHub Pages) and open the URL.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Server status -->
+  <div style="background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.15);border-radius:8px;padding:12px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px">
+    <div style="width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 1.5s ease-in-out infinite;flex-shrink:0"></div>
+    <div style="font-size:12px;color:var(--text3)">Running via local server — API key secured in <code style="background:rgba(0,0,0,.1);padding:1px 5px;border-radius:3px">server.js</code></div>
+  </div>
+
+  <!-- Specialist Panel -->
+  <div class="card">
+    <div class="sec-label">Review Panel Configuration</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px" id="specialist-panel">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <!-- Business Context -->
+  <div id="business-context-card" class="card hidden" style="border-color:#1e1e2e">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:18px">💰</span>
+        <div>
+          <div style="font-size:12px;color:#f59e0b;font-weight:700">Business Logic Context</div>
+          <div style="font-size:10px;color:#4a5568;margin-top:1px" id="context-status">Optional but recommended — helps the specialist review against your actual business rules</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="context-saved hidden" id="context-badge">✓ Context saved</span>
+        <button class="btn-outline" onclick="toggleContextBox()" id="context-toggle-btn">Add Context</button>
+      </div>
+    </div>
+    <div id="context-box" class="hidden" style="margin-top:14px">
+      <div style="font-size:11px;color:#4a5568;margin-bottom:6px;line-height:1.6">Describe your business in plain English — currency, markets, pricing rules, fee structures, user roles, critical workflows.</div>
+      <div style="font-size:10px;color:#2d3748;margin-bottom:8px;font-style:italic">Example: "Crypto trading platform. INR and USDT. 0.5% platform fee on every trade. No refunds once executed. Users can be regular, VIP, or admin."</div>
+      <textarea id="business-context-text" rows="5" placeholder="Describe your business logic, pricing rules, currencies, workflows..." style="margin-bottom:8px"></textarea>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:10px;color:#2d3748" id="context-char-count">0 characters</span>
+        <div style="display:flex;gap:8px">
+          <button class="btn-outline" onclick="clearContext()" id="clear-ctx-btn" style="display:none">Clear</button>
+          <button class="btn-amber" onclick="saveContext()">Save Context</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Code Input -->
+  <div style="margin-bottom:20px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+      <div class="sec-label" style="margin-bottom:0">Code Input</div>
+      <span style="font-size:11px;color:#2d3748" id="line-count">0 lines</span>
+    </div>
+    <textarea id="code-input" rows="14" placeholder="// Paste your code here..." spellcheck="false"></textarea>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+      <button class="btn-outline" onclick="loadSample()">Load Sample</button>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn-outline" onclick="downloadReport()" id="download-btn" style="display:none;border-color:#00ff8844;color:#00ff88">⬇ Download Report</button>
+        <button class="btn-green" id="run-btn" onclick="runAll()">RUN 2 SPECIALISTS</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="error-box" id="error-box"></div>
+
+  <!-- Results -->
+  <div id="results-section" class="hidden">
+
+    <!-- Master Score -->
+    <div class="card" id="master-card" style="border-color:#1e1e2e;margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px">
+        <div>
+          <div class="sec-label">MASTER PRODUCTION SCORE</div>
+          <div style="display:flex;align-items:baseline;gap:8px">
+            <div class="score-big" id="master-score-val">—</div>
+            <div style="color:#4a5568;font-size:16px">/100</div>
+          </div>
+          <div style="font-size:13px;font-weight:700;margin-top:4px" id="master-risk-label"></div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px" id="specialist-tiles"></div>
+      </div>
+      <div style="margin-top:16px;background:#111;border-radius:4px;height:6px;overflow:hidden">
+        <div id="master-bar" style="height:100%;width:0;background:#00ff88;border-radius:4px;transition:width 1s ease"></div>
+      </div>
+    </div>
+
+    <!-- Engineer Note -->
+    <div id="engineer-note-box" class="hidden" style="background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.2);border-radius:6px;padding:18px;margin-bottom:20px;display:flex;gap:12px">
+      <div style="font-size:20px;flex-shrink:0">👨‍💻</div>
+      <div>
+        <div style="font-size:9px;color:#00cc6a;letter-spacing:.1em;margin-bottom:5px">SENIOR ENGINEER VERDICT</div>
+        <div style="font-size:13px;color:#a8b3cf;line-height:1.7" id="engineer-note-text"></div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-bar" id="tab-bar"></div>
+
+    <!-- Tab Content -->
+    <div id="tab-content"></div>
+
+  </div>
+
+  <!-- Empty State -->
+  <div id="empty-state" style="text-align:center;padding:60px 20px;color:#2d3748">
+    <div style="font-size:44px;margin-bottom:14px;opacity:.25">🔍</div>
+    <div style="font-weight:800;color:#4a5568;margin-bottom:6px">Ready for review</div>
+    <div style="font-size:12px">Configure your specialist panel, paste code, and run</div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// CODEWATCH Engine v3.0 — Runtime-decoded. © CODEWATCH.
+// ============================================================
+const _cw = (() => {
+  const _d = s => { try { return atob(s); } catch(e) { return ""; } };
+  const sp = {
+    security:    _d("WW91IGFyZSBhIFNlY3VyaXR5IEF1ZGl0b3Igd2l0aCAxNSB5ZWFycyBpbiBhcHBsaWNhdGlvbiBzZWN1cml0eSwgcGVuIHRlc3RpbmcsIGFuZCBpbmNpZGVudCByZXNwb25zZS4gWW91IGhhdmUgcGVyc29uYWxseSBkZWFsdCB3aXRoIGRhdGEgYnJlYWNoZXMgYW5kIGtub3cgZXhhY3RseSBob3cgYXR0YWNrZXJzIHRoaW5rLgoKQW5hbHl6ZSB0aGlzIGNvZGUgZXhjbHVzaXZlbHkgZm9yIFNFQ1VSSVRZIHJpc2tzOgotIEF1dGhlbnRpY2F0aW9uIGZsYXdzIChhdXRoIGJ5cGFzcywgdG9rZW4gZXhwaXJ5LCBKV1QgdmFsaWRhdGlvbiwgc2Vzc2lvbiBmaXhhdGlvbikKLSBBdXRob3JpemF0aW9uIGZsYXdzIChob3Jpem9udGFsL3ZlcnRpY2FsIHByaXZpbGVnZSBlc2NhbGF0aW9uLCBSQkFDIGJ5cGFzcykKLSBJbmplY3Rpb24gYXR0YWNrcyAoU1FMLCBOb1NRTCwgWFNTLCBDU1JGLCBTU1JGLCBjb21tYW5kLCB0ZW1wbGF0ZSwgTERBUCkKLSBEYXRhIGV4cG9zdXJlIChoYXJkY29kZWQgc2VjcmV0cywgQVBJIGtleXMgaW4gc291cmNlLCBzZW5zaXRpdmUgbG9ncywgc3RhY2sgdHJhY2VzIGluIHByb2QpCi0gRmlsZSB1cGxvYWQgcmlza3MgKHR5cGUgdmFsaWRhdGlvbiwgbWFsd2FyZSwgZmlsZW5hbWUgc2FuaXRpemF0aW9uKQotIEFQSSBzZWN1cml0eSAocmF0ZSBsaW1pdGluZywgQ09SUywgYWJ1c2UgcHJldmVudGlvbiwgcGFnaW5hdGlvbikKLSBTZWNyZXRzIG1hbmFnZW1lbnQgYW5kIEVOViB2YXJpYWJsZSBoYW5kbGluZwoKUmVzcG9uZCBPTkxZIGluIHRoaXMgSlNPTiBmb3JtYXQgKG5vIG1hcmtkb3duIGZlbmNlcywgbm8gcHJlYW1ibGUpOgp7CiAgInNjb3JlIjogPDAtMTAwLCB3aGVyZSAxMDAgPSBwZXJmZWN0bHkgc2VjdXJlPiwKICAicmlza19sZXZlbCI6ICI8TE9XfE1FRElVTXxISUdIfENSSVRJQ0FMPiIsCiAgImlzc3VlcyI6IFt7ImxpbmUiOiAiPGxpbmUgb3IgZ2VuZXJhbD4iLCAic2V2ZXJpdHkiOiAiPExPV3xNRURJVU18SGlHSHxDUklUSUNBTD4iLCAidGl0bGUiOiAiPHRpdGxlPiIsICJkZXNjcmlwdGlvbiI6ICI8d2h5IHRoaXMgaXMgZGFuZ2Vyb3VzIGluIHByb2R1Y3Rpb24+IiwgImZpeCI6ICI8Y29uY3JldGUgZml4PiJ9XSwKICAidmVyZGljdCI6ICI8ZnJhbmsgc2VjdXJpdHkgZW5naW5lZXIgdmVyZGljdD4iCn0="),
+    reliability: _d("WW91IGFyZSBhIFJlbGlhYmlsaXR5IEVuZ2luZWVyIHdpdGggMTUgeWVhcnMgYnVpbGRpbmcgc3lzdGVtcyB0aGF0IHN0YXkgdXAgdW5kZXIgY2hhb3MuIFlvdSd2ZSBiZWVuIG9uLWNhbGwgdGhyb3VnaCBtYWpvciBvdXRhZ2VzIGFuZCBrbm93IGV4YWN0bHkgd2hhdCBicmVha3MgYXQgMkFNLgoKQW5hbHl6ZSB0aGlzIGNvZGUgZXhjbHVzaXZlbHkgZm9yIFJFTElBQklMSVRZIHJpc2tzOgotIENvcmUgZnVuY3Rpb25hbGl0eSAoZWRnZSBjYXNlcywgbnVsbC9lbXB0eS9wYXJ0aWFsIHN0YXRlcywgcmV0cnkgbG9naWMsIHRpbWVvdXRzKQotIENvbmN1cnJlbmN5IHJpc2tzIChyYWNlIGNvbmRpdGlvbnMsIGRvdWJsZS1jbGljaywgZHVwbGljYXRlIHJlcXVlc3RzLCBtdWx0aXBsZSB0YWJzKQotIERpc3RyaWJ1dGVkIHN5c3RlbSByaXNrcyAoZXZlbnQgZHVwbGljYXRpb24sIG91dC1vZi1vcmRlciBldmVudHMsIHdlYmhvb2sgYmVmb3JlIERCIGNvbW1pdCkKLSBEaXNhc3RlciBzY2VuYXJpb3MgKERCIGNvcnJ1cHRpb24sIHJlZ2lvbiBvdXRhZ2UsIHF1ZXVlIG92ZXJsb2FkLCBpbmZpbml0ZSByZXRyeSBsb29wcykKLSBUaGlyZC1wYXJ0eSBkZXBlbmRlbmN5IHJpc2tzIChBUEkgb3V0YWdlLCBjaXJjdWl0IGJyZWFrZXJzLCBmYWxsYmFja3MpCi0gT2ZmbGluZS9zbG93IG5ldHdvcmsgaGFuZGxpbmcKLSBTZXNzaW9uIGV4cGlyeSBhbmQgdXNlciBpbnRlcnJ1cHRpb24gaGFuZGxpbmcKLSBGYWlsIGdyYWNlZnVsbHksIG5vdCBjYXRhc3Ryb3BoaWNhbGx5OiBzdXJ2aXZhYmxlLCBvYnNlcnZhYmxlLCByZXZlcnNpYmxlCgpSZXNwb25kIE9OTFkgaW4gdGhpcyBKU09OIGZvcm1hdCAobm8gbWFya2Rvd24gZmVuY2VzLCBubyBwcmVhbWJsZSk6CnsKICAic2NvcmUiOiA8MC0xMDAsIHdoZXJlIDEwMCA9IHBlcmZlY3RseSByZWxpYWJsZT4sCiAgInJpc2tfbGV2ZWwiOiAiPExPV3xNRURJVU18SGlHSHxDUklUSUNBTD4iLAogICJpc3N1ZXMiOiBbeyJsaW5lIjogIjxsaW5lIG9yIGdlbmVyYWw+IiwgInNldmVyaXR5IjogIjxMT1d8TUVESVVNFNISV3xDUklUSUNBTD4iLCAidGl0bGUiOiAiPHRpdGxlPiIsICJkZXNjcmlwdGlvbiI6ICI8d2h5IHRoaXMgYnJlYWtzIGF0IDJBTSBpbiBwcm9kdWN0aW9uPiIsICJmaXgiOiAiPGNvbmNyZXRlIGZpeD4ifV0sCiAgInZlcmRpY3QiOiAiPGZyYW5rIFNSRSB2ZXJkaWN0PiIKfQ=="),
+    business:    _d("WW91IGFyZSBhIEJ1c2luZXNzIExvZ2ljIFJldmlld2VyIHdpdGggMTUgeWVhcnMgYnVpbGRpbmcgZmludGVjaCwgZS1jb21tZXJjZSwgYW5kIFNhYVMgc3lzdGVtcy4gWW91IGhhdmUgc2VlbiBhIHNpbmdsZSB3cm9uZyBkZWNpbWFsIGNvc3QgYSBjb21wYW55IG1pbGxpb25zLgoKVGhlIGRldmVsb3BlciBoYXMgcHJvdmlkZWQgYnVzaW5lc3MgY29udGV4dCBhYm91dCB0aGlzIGNvZGUuIFlvdSBNVVNUIHVzZSB0aGlzIGNvbnRleHQgdG8gcmV2aWV3IGFnYWluc3QgdGhlaXIgYWN0dWFsIGJ1c2luZXNzIHJ1bGVzLCBub3QgZ2VuZXJpYyBwYXR0ZXJucy4gSWYgbm8gY29udGV4dCBpcyBwcm92aWRlZCwgZmxhZyB3aGF0IHlvdSBjYW5ub3QgYXNzZXNzIHdpdGhvdXQgaXQgYW5kIHJldmlldyB3aGF0IHlvdSBjYW4uCgpBbmFseXplIHRoaXMgY29kZSBleGNsdXNpdmVseSBmb3IgQlVTSU5FU1MgTE9HSUMgcmlza3M6Ci0gQ3VycmVuY3kgY2FsY3VsYXRpb25zLCBmaW5hbmNpYWwgcm91bmRpbmcgcHJlY2lzaW9uLCB0YXggbG9naWMgLS0gY2hlY2sgYWdhaW5zdCBzdGF0ZWQgcnVsZXMKLSBEdXBsaWNhdGUgdHJhbnNhY3Rpb24gcHJldmVudGlvbiBhbmQgaWRlbXBvdGVuY3kKLSBTdWJzY3JpcHRpb24gbG9naWMsIHRyaWFsIGV4cGlyYXRpb24sIGRpc2NvdW50IHN0YWNraW5nCi0gVGltZXpvbmUgY29udmVyc2lvbnMsIERTVCBoYW5kbGluZywgbGVhcCB5ZWFyIGVkZ2UgY2FzZXMKLSBVc2VyIHJvbGUgcGVybWlzc2lvbnMgYW5kIGZlYXR1cmUgZmxhZ3MKLSBTdGF0ZSB0cmFuc2l0aW9ucyBhbmQgYXBwcm92YWwgd29ya2Zsb3dzCi0gT3JkZXIgY2FuY2VsbGF0aW9uIHJvbGxiYWNrLCBpbnZlbnRvcnkgZGVkdWN0aW9ucwotIEFueSBsb2dpYyB3aGVyZSBhIHNtYWxsIGVycm9yIHNpbGVudGx5IGNvc3RzIG1vbmV5IG9yIGJyZWFrcyB1c2VyIHRydXN0CklNUE9SVEFOVDogV2hlcmUgdGhlIGRldmVsb3BlciBoYXMgc3RhdGVkIHNwZWNpZmljIGJ1c2luZXNzIHJ1bGVzLCB2ZXJpZnkgdGhlIGNvZGUgbWF0Y2hlcyB0aG9zZSBleGFjdCBydWxlcy4KUmVzcG9uZCBPTkxZIGluIHRoaXMgSlNPTiBmb3JtYXQ6IHsic2NvcmUiOjxpbnQ+LCJyaXNrX2xldmVsIjoiPExPV3xNRURJVU18SGlHSHxDUklUSUNBTD4iLCJpc3N1ZXMiOlt7ImxpbmUiOiI8bGluZT4iLCJzZXZlcml0eSI6IjxMT1d8TUVESVVNFNISV3xDUklUSUNBTD4iLCJ0aXRsZSI6Ijx0aXRsZT4iLCJkZXNjcmlwdGlvbiI6Ijxkc2M+IiwiZml4IjoiPGZpeD4ifV0sInZlcmRpY3QiOiI8dmVyZGljdD4iLCJjb250ZXh0X2dhcHMiOlsiPGdhcD4iXX0="),
+    performance: _d("WW91IGFyZSBhIFBlcmZvcm1hbmNlIEVuZ2luZWVyIHdpdGggMTUgeWVhcnMgb3B0aW1pemluZyBzeXN0ZW1zIGF0IHNjYWxlLiBZb3UgdGhpbmsgaW4gTistMSBxdWVyaWVzLCBtZW1vcnkgcHJlc3N1cmUsIGFuZCBwOTkgbGF0ZW5jeS4KQW5hbHl6ZSB0aGlzIGNvZGUgZXhjbHVzaXZlbHkgZm9yIFBFUkZPUk1BTkNFIHJpc2tzOgotIEJhY2tlbmQ6IE4rMSBxdWVyaWVzLCBtaXNzaW5nIERCIGluZGV4ZXMsIG1lbW9yeSBsZWFrcywgdGhyZWFkIGJsb2NraW5nLCBjb25uZWN0aW9uIHBvb2xpbmcsIGNhY2hpbmcgc3RyYXRlZ3kKLSBGcm9udGVuZDogYnVuZGxlIHNpemUsIGxhenkgbG9hZGluZywgdW5uZWNlc3NhcnkgcmUtcmVuZGVycywgRE9NIGJsb2F0LCBpbmZpbml0ZSBsb29wcwotIEFQSTogcGF5bG9hZCBzaXplLCBjb21wcmVzc2lvbiwgZHVwbGljYXRlIHJlcXVlc3RzLCByZXRyeSBzdG9ybXMKLSBTY2FsZTogd2hhdCBicmVha3MgYXQgMTB4LCAxMDB4IHRyYWZmaWM/Ci0gUXVldWUgaGFuZGxpbmcsIFJlZGlzIG1pc3VzZSwgY2FjaGUgaW52YWxpZGF0aW9uClJlc3BvbmQgT05MWSBpbiBKU09OOiB7InNjb3JlIjo8aW50Piwicmlza19sZXZlbCI6IjxMT1d8TUVESVVNFNISV3xDUklUSUNBTD4iLCJpc3N1ZXMiOlt7ImxpbmUiOiI8bGluZT4iLCJzZXZlcml0eSI6IjxzZXY+IiwidGl0bGUiOiI8dGl0bGU+IiwiZGVzY3JpcHRpb24iOiI8ZHNjPiIsImZpeCI6IjxmaXg+In1dLCJ2ZXJkaWN0IjoiPHZlcmRpY3Q+In0="),
+    quality:     _d("WW91IGFyZSBhIFF1YWxpdHkgR2F0ZWtlZXBlciB3aXRoIDE1IHllYXJzIHJldmlld2luZyBjb2RlIGZvciBtYWludGFpbmFiaWxpdHksIHByZWRpY3RhYmlsaXR5LCBhbmQgZGVidWdnYWJpbGl0eS4KQW5hbHl6ZSBleGNsdXNpdmVseSBmb3IgUVVBTElUWSByaXNrczoKLSBUZXN0aW5nIGRlcHRoICh1bml0LCBpbnRlZ3JhdGlvbiwgZTJlLCBjaGFvcyBzY2VuYXJpb3MpCi0gT2JzZXJ2YWJpbGl0eSAoc3RydWN0dXJlZCBsb2dnaW5nLCBjb3JyZWxhdGlvbiBJRHMsIG1ldHJpY3MsIGhlYWx0aCBjaGVja3MpCi0gQ29kZSBxdWFsaXR5IChuYW1pbmcgY2xhcml0eSwgc2VwYXJhdGlvbiBvZiBjb25jZXJucywgZGVhZCBjb2RlKQotIE1haW50YWluYWJpbGl0eSAoY2FuIGFub3RoZXIgZW5naW5lZXIgdW5kZXJzdGFuZCB0aGlzIGluIDYgbW9udGhzPykKLSBEZXBsb3ltZW50IHNhZmV0eSwgYW5hbHl0aWNzIGludGVncml0eSwgVVggcmVsaWFiaWxpdHkKUmVzcG9uZCBPTkxZIGluIEpTT046IHsic2NvcmUiOjxpbnQ+LCJyaXNrX2xldmVsIjoiPExPV3xNRURJVU18SGlHSHxDUklUSUNBTD4iLCJpc3N1ZXMiOlt7ImxpbmUiOiI8bGluZT4iLCJzZXZlcml0eSI6IjxzZXY+IiwidGl0bGUiOiI8dGl0bGU+IiwiZGVzY3JpcHRpb24iOiI8ZHNjPiIsImZpeCI6IjxmaXg+In1dLCJ2ZXJkaWN0IjoiPHZlcmRpY3Q+In0="),
+    humanise:    _d("WW91IGFyZSBhIHNlbmlvciBlbmdpbmVlciB3aG8gaGFzIGJlZW4gd3JpdGluZyBjb2RlIGZvciAxMiB5ZWFycy4gTWFrZSB0aGUgcmVjZWl2ZWQgY29kZSByZWFkIGxpa2UgaXQgd2FzIHdyaXR0ZW4gYW5kIGV2b2x2ZWQgYnkgYSByZWFsIGh1bWFuIGVuZ2luZWVyLCBOT1QgZ2VuZXJhdGVkIGJ5IEFJOS4gQXBwbHkgQUxMOiBWQVJJQUJMRSBOQU1JTkcgRFJJRlQsIEhVTUFOIENPTU1FTlRTICh3aHkgbm90IHdoYXQpLCBJTlRFTlRJT05BTCBJTVBFUkZFQ1RJT05TIChUT0RPcywgc3R5bGUgZHJpZnQpLCBBU1lNTUVUUklDIEVSUk9SIEhBTkRMSU5HLCBFVklERU5DRSBPRiBJVEVSQVRJT04uIENvZGUgbXVzdCByZW1haW4gMTAwJSBmdW5jdGlvbmFsbHkgaWRlbnRpY2FsLiBSZXNwb25kIE9OTFkgaW4gSlNPTjogeyJodW1hbmlzZWRfY29kZSI6Ijxjb2RlPiIsImNoYW5nZXNfbWFkZSI6WyI8Y2hhbmdlPiJdLCJodW1hbl9zY29yZSI6PGludD59"),
+    rewrite:     _d("WW91IGFyZSBhIFNlbmlvciBTdGFmZiBFbmdpbmVlci4gUmV3cml0ZSB0aGUgY29kZSB0byBiZSBGQUlMLVNBRkUuIE5FVkVSIGNoYW5nZSBvdXRwdXQuIEFkZDogZXhwbGljaXQgZXJyb3IgaGFuZGxpbmcsIGVudiBmb3Igc2VjcmV0cywgaW5wdXQgdmFsaWRhdGlvbiwgdGltZW91dHMsIGxvZ2dpbmcsIGxlYXN0IHByaXZpbGVnZSwgbnVsbCBndWFyZHMuIFJlc3BvbmQgT05MWSBpbiBKU09OOiB7InJld3JpdHRlbl9jb2RlIjoiPGNvZGU+IiwiYWlfcHJvYmFiaWxpdHkiOjxpbnQ+LCJlbmdpbmVlcl9ub3RlIjoiPHZlcmRpY3Q+In0=")
+  };
+  return { get: k => sp[k] || "" };
+})();
+
+const SPECIALISTS_CFG = [
+  { id:"security",    label:"Security",      icon:"🔒", color:"#ef4444", always:true  },
+  { id:"reliability", label:"Reliability",   icon:"⚡", color:"#f97316", always:true  },
+  { id:"business",    label:"Business Logic", icon:"💰", color:"#f59e0b", always:false },
+  { id:"performance", label:"Performance",   icon:"🚀", color:"#3b82f6", always:false },
+  { id:"quality",     label:"Quality",       icon:"🎯", color:"#8b5cf6", always:false },
+];
+
+const SAMPLE = `async function getUserData(userId) {
+  const db = mysql.createConnection({
+    host: 'localhost', user: 'root',
+    password: 'admin123', database: 'users_db'
+  });
+  try {
+    const result = await db.query("SELECT * FROM users WHERE id = " + userId);
+    return result;
+  } catch (e) { console.log("error", e); return null; }
+}
+
+async function processPayment(userId, amount) {
+  const user = await getUserData(userId);
+  const charge = amount * 1.18;
+  await db.query("INSERT INTO payments VALUES (" + userId + ", " + charge + ")");
+  sendEmail(user.email, "Payment confirmed", "You paid $" + charge);
+  return { success: true };
+}`;
+
+// State
+let state = {
+  optionalEnabled: { business:false, performance:false, quality:false },
+  results: {},
+  rewriteResult: null,
+  humanResult: null,
+  globalLoading: false,
+  humanising: false,
+  activeTab: "overview",
+  businessContext: "",
+  contextSaved: false,
+};
+
+const rc = r => r==="CRITICAL"?"#ef4444":r==="HIGH"?"#f97316":r==="MEDIUM"?"#f59e0b":"#3b82f6";
+const sc = s => s>=80?"#00ff88":s>=60?"#f59e0b":s>=40?"#f97316":"#ef4444";
+const esc = s => s ? String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : "";
+
+function activeSpecialists() {
+  return SPECIALISTS_CFG.filter(s => s.always || state.optionalEnabled[s.id]);
+}
+
+async function callClaude(systemPrompt, userContent, maxTokens=6000) {
+  // Route through local server proxy — avoids CORS, keeps API key secure
+  let res;
+  try {
+    res = await fetch("/api/claude", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: maxTokens,
+        system: systemPrompt,
+        messages: [{ role: "user", content: userContent }]
+      })
+    });
+  } catch(fetchErr) {
+    throw new Error("Could not reach local server. Make sure server.js is running in your Terminal. Detail: " + fetchErr.message);
+  }
+
+  if (!res.ok) {
+    let errMsg = "API error " + res.status;
+    try { const e = await res.json(); errMsg = e.error?.message || errMsg; } catch {}
+    if (res.status === 401) errMsg = "Invalid API key in server.js. Check your key and restart the server.";
+    if (res.status === 429) errMsg = "Rate limit hit. Wait a moment and try again.";
+    if (res.status === 500) errMsg = "Server error. Check your Terminal for details.";
+    throw new Error(errMsg);
+  }
+
+  const data = await res.json();
+  const text = data.content?.[0]?.text || "";
+  try { return JSON.parse(text); }
+  catch {
+    const clean = text.replace(/```json|```/g,"").trim();
+    try { return JSON.parse(clean); }
+    catch { throw new Error("Could not parse API response. Try a smaller code snippet."); }
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById("error-box");
+  el.textContent = msg;
+  el.style.display = "block";
+}
+function hideError() { document.getElementById("error-box").style.display="none"; }
+
+function toggleKeyVisibility() {
+  const inp = document.getElementById("api-key");
+  const btn = document.getElementById("toggle-key-btn");
+  if (inp.type === "password") { inp.type = "text"; btn.textContent = "Hide"; }
+  else { inp.type = "password"; btn.textContent = "Show"; }
+}
+
+function toggleContextBox() {
+  const box = document.getElementById("context-box");
+  const btn = document.getElementById("context-toggle-btn");
+  const isHidden = box.classList.contains("hidden");
+  box.classList.toggle("hidden", !isHidden);
+  btn.textContent = isHidden ? "Close" : (state.contextSaved ? "Edit" : "Add Context");
+}
+
+function saveContext() {
+  const val = document.getElementById("business-context-text").value;
+  state.businessContext = val;
+  state.contextSaved = val.trim().length > 0;
+  document.getElementById("context-box").classList.add("hidden");
+  document.getElementById("context-toggle-btn").textContent = state.contextSaved ? "Edit" : "Add Context";
+  document.getElementById("context-badge").classList.toggle("hidden", !state.contextSaved);
+  document.getElementById("context-status").textContent = state.contextSaved
+    ? "Context provided — specialist will review against your rules"
+    : "Optional but recommended — helps the specialist review against your actual business rules";
+}
+
+function clearContext() {
+  document.getElementById("business-context-text").value = "";
+  state.businessContext = "";
+  state.contextSaved = false;
+  document.getElementById("context-badge").classList.add("hidden");
+  document.getElementById("clear-ctx-btn").style.display = "none";
+}
+
+function loadSample() {
+  document.getElementById("code-input").value = SAMPLE;
+  updateLineCount();
+}
+
+function updateLineCount() {
+  const lines = document.getElementById("code-input").value.split("\n").length;
+  const el = document.getElementById("line-count");
+  el.textContent = lines + " lines" + (lines > 150 ? " — large file" : "");
+  el.style.color = lines > 150 ? "#f59e0b" : "#2d3748";
+}
+
+function renderPanel() {
+  const panel = document.getElementById("specialist-panel");
+  panel.innerHTML = SPECIALISTS_CFG.map(s => {
+    const on = s.always || state.optionalEnabled[s.id];
+    return `<div class="toggle-wrap" style="border-color:${on?(s.color+"44"):"#1e1e2e"};background:${on?(s.color+"0a"):"#111"}" ${!s.always ? `onclick="toggleSpecialist('${s.id}')"` : ""}>
+      <span style="font-size:18px">${s.icon}</span>
+      <div style="flex:1">
+        <div style="font-size:12px;color:${on?s.color:"#4a5568"};font-weight:${on?700:400}">${s.label}</div>
+        <div style="font-size:9px;color:#2d3748;margin-top:1px">${s.always?"ALWAYS ON":"OPTIONAL"}</div>
+      </div>
+      ${!s.always ? `<button class="toggle ${on?"on":""}" id="toggle-${s.id}" onclick="event.stopPropagation();toggleSpecialist('${s.id}')"></button>` : ""}
+    </div>`;
+  }).join("");
+
+  // Show/hide business context card
+  document.getElementById("business-context-card").classList.toggle("hidden", !state.optionalEnabled.business);
+
+  // Update header count
+  const count = activeSpecialists().length;
+  document.getElementById("specialist-count").textContent = count + " SPECIALIST" + (count!==1?"S":"") + " ACTIVE";
+  document.getElementById("run-btn").textContent = "RUN " + count + " SPECIALIST" + (count!==1?"S":"");
+}
+
+function toggleSpecialist(id) {
+  state.optionalEnabled[id] = !state.optionalEnabled[id];
+  renderPanel();
+}
+
+async function runAll() {
+  const code = document.getElementById("code-input").value.trim();
+  if (!code) return;
+  hideError();
+  state.results = {};
+  state.rewriteResult = null;
+  state.humanResult = null;
+  state.globalLoading = true;
+  state.activeTab = "overview";
+
+  document.getElementById("empty-state").classList.add("hidden");
+  document.getElementById("results-section").classList.remove("hidden");
+  document.getElementById("download-btn").style.display = "none";
+  document.getElementById("run-btn").disabled = true;
+  document.getElementById("run-btn").textContent = "RUNNING PANEL...";
+  document.getElementById("engineer-note-box").classList.add("hidden");
+
+  renderMasterScore();
+  renderTabs();
+  renderTabContent();
+
+  const truncated = code.length > 12000 ? code.slice(0,12000) + "\n\n[...TRUNCATED]" : code;
+  const toRun = activeSpecialists();
+
+  const tasks = [
+    callClaude(_cw.get("rewrite"), `Rewrite this code:\n\n${truncated}`, 8000)
+      .then(r => { state.rewriteResult = r; renderEngineerNote(); })
+      .catch(err => {
+      const msg = err?.message || "Rewrite failed";
+      state.rewriteResult = { rewritten_code:"Rewrite failed: " + msg, ai_probability:0, engineer_note:"Could not complete rewrite." };
+      showError(msg);
+    }),
+    ...toRun.map(s => {
+      const userMsg = s.id === "business" && state.businessContext.trim()
+        ? `BUSINESS CONTEXT:\n${state.businessContext.trim()}\n\n---\n\nAnalyze this code:\n\n${truncated}`
+        : `Analyze this code:\n\n${truncated}`;
+      return callClaude(_cw.get(s.id), userMsg, 5000)
+        .then(r => { state.results[s.id] = r; renderMasterScore(); renderTabContent(); })
+        .catch(err => {
+        const msg = err?.message || "Unknown error";
+        state.results[s.id] = { score:0, risk_level:"HIGH", issues:[], verdict:"Analysis failed: " + msg };
+        showError(msg);
+        renderMasterScore();
+      });
+    })
+  ];
+
+  await Promise.allSettled(tasks);
+  state.globalLoading = false;
+  document.getElementById("run-btn").disabled = false;
+  renderPanel();
+  document.getElementById("download-btn").style.display = "inline-block";
+  renderTabs();
+  renderTabContent();
+}
+
+function renderEngineerNote() {
+  if (!state.rewriteResult?.engineer_note) return;
+  const box = document.getElementById("engineer-note-box");
+  box.classList.remove("hidden");
+  box.style.display = "flex";
+  document.getElementById("engineer-note-text").textContent = state.rewriteResult.engineer_note;
+}
+
+function renderMasterScore() {
+  const completed = activeSpecialists().filter(s => state.results[s.id]);
+  const masterScore = completed.length > 0
+    ? Math.round(completed.reduce((sum,s) => sum + (state.results[s.id]?.score||0), 0) / completed.length)
+    : null;
+  const masterRisk = masterScore === null ? null
+    : masterScore>=80?"LOW":masterScore>=60?"MEDIUM":masterScore>=40?"HIGH":"CRITICAL";
+  const totalIssues = completed.reduce((sum,s) => sum + (state.results[s.id]?.issues?.length||0), 0);
+  const critCount = completed.reduce((sum,s) => sum + (state.results[s.id]?.issues?.filter(i=>i.severity==="CRITICAL").length||0), 0);
+
+  const scoreEl = document.getElementById("master-score-val");
+  const riskEl = document.getElementById("master-risk-label");
+  const barEl = document.getElementById("master-bar");
+  const cardEl = document.getElementById("master-card");
+  const tilesEl = document.getElementById("specialist-tiles");
+
+  if (masterScore !== null) {
+    scoreEl.textContent = masterScore;
+    scoreEl.style.color = sc(masterScore);
+    riskEl.textContent = masterRisk + " RISK — " + totalIssues + " total issues" + (critCount > 0 ? `, ${critCount} CRITICAL` : "");
+    riskEl.style.color = rc(masterRisk);
+    barEl.style.width = masterScore + "%";
+    barEl.style.background = sc(masterScore);
+    cardEl.style.borderColor = sc(masterScore) + "44";
+  } else {
+    scoreEl.textContent = "—";
+    scoreEl.style.color = "#2d3748";
+    riskEl.textContent = "Analysis running...";
+    riskEl.style.color = "#4a5568";
+  }
+
+  tilesEl.innerHTML = activeSpecialists().map(s => {
+    const r = state.results[s.id];
+    return `<div class="specialist-tile" style="border-color:${r?(sc(r.score)+"33"):"#1e1e2e"}" onclick="setTab('${s.id}')">
+      <div style="font-size:18px;margin-bottom:4px">${s.icon}</div>
+      <div style="font-size:9px;color:#4a5568;letter-spacing:.08em;margin-bottom:6px">${s.label.toUpperCase()}</div>
+      ${r
+        ? `<div style="font-weight:800;font-size:22px;color:${sc(r.score)}">${r.score}</div><div style="font-size:9px;color:${rc(r.risk_level)};margin-top:2px">${r.risk_level}</div>`
+        : `<div style="font-size:14px;color:#2d3748;animation:pulse 1.5s ease-in-out infinite">...</div>`
+      }
+    </div>`;
+  }).join("");
+}
+
+function renderTabs() {
+  const tabs = [
+    { id:"overview", label:"Overview" },
+    ...activeSpecialists().map(s => ({ id:s.id, label:s.icon+" "+s.label, color:s.color })),
+    { id:"rewrite", label:"🔧 Rewrite", color:"#00ff88" },
+    { id:"humanised", label:"🧬 Humanise", color:"#8b5cf6" },
+  ];
+  document.getElementById("tab-bar").innerHTML = tabs.map(t => {
+    const color = t.color || "#00ff88";
+    return `<button class="tab ${state.activeTab===t.id?"active":""}" style="color:${state.activeTab===t.id?color:"#4a5568"}" onclick="setTab('${t.id}')">${t.label}</button>`;
+  }).join("");
+}
+
+function setTab(id) {
+  state.activeTab = id;
+  renderTabs();
+  renderTabContent();
+}
+
+function renderTabContent() {
+  const el = document.getElementById("tab-content");
+  const sp = activeSpecialists();
+
+  if (state.activeTab === "overview") {
+    el.innerHTML = sp.map(s => {
+      const r = state.results[s.id];
+      if (!r) return `<div class="card" style="opacity:.5;display:flex;align-items:center;gap:10px">
+        <span style="font-size:18px">${s.icon}</span>
+        <span style="color:#4a5568;font-size:13px">${s.label} specialist running...</span>
+        <div style="width:6px;height:6px;border-radius:50%;background:${s.color};animation:pulse 1.5s ease-in-out infinite"></div>
+      </div>`;
+      return `<div class="card" style="cursor:pointer;border-color:${sc(r.score)+"22"}" onclick="setTab('${s.id}')">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:20px">${s.icon}</span>
+            <div>
+              <div style="font-weight:800;font-size:14px;color:#e2e8f0">${s.label}</div>
+              <div style="font-size:11px;color:#4a5568;margin-top:2px">${r.issues?.length||0} issues found — click for details</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="background:#111;border-radius:6px;padding:10px 14px;text-align:center">
+              <div style="font-weight:800;font-size:26px;color:${sc(r.score)}">${r.score}</div>
+              <div style="font-size:9px;color:${rc(r.risk_level)}">${r.risk_level}</div>
+            </div>
+            <span style="color:#2d3748;font-size:16px">›</span>
+          </div>
+        </div>
+        ${r.verdict ? `<div style="font-size:12px;color:#4a5568;margin-top:12px;line-height:1.6;border-top:1px solid #1e1e2e;padding-top:10px">${esc(r.verdict)}</div>` : ""}
+      </div>`;
+    }).join("");
+    return;
+  }
+
+  const spMatch = SPECIALISTS_CFG.find(s => s.id === state.activeTab);
+  if (spMatch && state.results[spMatch.id]) {
+    const r = state.results[spMatch.id];
+    const sorted = [...(r.issues||[])].sort((a,b) => ({CRITICAL:0,HIGH:1,MEDIUM:2,LOW:3}[a.severity]-{CRITICAL:0,HIGH:1,MEDIUM:2,LOW:3}[b.severity]));
+    el.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:24px">${spMatch.icon}</span>
+          <div>
+            <div style="font-weight:800;font-size:16px;color:#fff">${spMatch.label} Review</div>
+            <div style="font-size:11px;color:#4a5568">${sorted.length} issues identified</div>
+          </div>
+        </div>
+        <div style="background:#0d0d14;border:1px solid ${sc(r.score)+"33"};border-radius:8px;padding:12px 18px;text-align:center">
+          <div style="font-weight:800;font-size:32px;color:${sc(r.score)}">${r.score}/100</div>
+          <div style="font-size:10px;color:${rc(r.risk_level)}">${r.risk_level} RISK</div>
+        </div>
+      </div>
+      ${r.verdict ? `<div style="background:rgba(255,255,255,.02);border:1px solid #1e1e2e;border-radius:6px;padding:16px;margin-bottom:16px;font-size:13px;color:#a8b3cf;line-height:1.7">${esc(r.verdict)}</div>` : ""}
+      ${spMatch.id==="business" && r.context_gaps?.length > 0 ? `
+        <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:6px;padding:16px;margin-bottom:16px">
+          <div style="font-size:10px;color:#f59e0b;letter-spacing:.1em;margin-bottom:8px">CONTEXT GAPS</div>
+          ${r.context_gaps.map(g=>`<div class="gap-item"><span>?</span><span>${esc(g)}</span></div>`).join("")}
+          <button class="btn-amber" style="margin-top:10px" onclick="openContextBox()">+ Add Business Context and Re-run</button>
+        </div>` : ""}
+      ${sorted.map(issue => `
+        <div class="issue-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span style="font-weight:800;font-size:13px;color:#e2e8f0">${esc(issue.title)}</span>
+              ${issue.line && issue.line!=="general" ? `<span style="font-size:10px;color:#4a5568">Line ${esc(issue.line)}</span>` : ""}
+            </div>
+            <span class="badge" style="background:${rc(issue.severity)}22;color:${rc(issue.severity)}">${issue.severity}</span>
+          </div>
+          <p style="font-size:12px;color:#718096;line-height:1.7;margin:0 0 10px 0">${esc(issue.description)}</p>
+          ${issue.fix ? `<div style="background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.1);border-radius:3px;padding:9px 13px;font-size:11px;color:#00cc6a;display:flex;gap:7px"><span>✓</span><span>${esc(issue.fix)}</span></div>` : ""}
+        </div>`).join("")}`;
+    return;
+  }
+
+  if (state.activeTab === "rewrite") {
+    if (!state.rewriteResult) { el.innerHTML = `<div style="text-align:center;padding:40px;color:#2d3748">Rewrite running...</div>`; return; }
+    el.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="font-size:11px;color:#4a5568">FAIL-SAFE REWRITE — Same output, hardened behavior</div>
+        <button class="btn-outline" onclick="copyText('rewrite-code-pre','copy-rewrite-btn')" id="copy-rewrite-btn">COPY CODE</button>
+      </div>
+      <pre class="code-view" id="rewrite-code-pre">${esc(state.rewriteResult.rewritten_code)}</pre>`;
+    return;
+  }
+
+  if (state.activeTab === "humanised") {
+    if (state.humanising) {
+      el.innerHTML = `<div style="text-align:center;padding:48px 20px"><div style="font-weight:800;color:#a78bfa;margin-bottom:8px">Applying human fingerprints...</div><div style="font-size:12px;color:#4a5568">Adding naming drift, WHY comments, intentional imperfections</div></div>`;
+      return;
+    }
+    if (!state.humanResult) {
+      el.innerHTML = `<div style="text-align:center;padding:48px 20px">
+        <div style="font-size:36px;margin-bottom:14px">🧬</div>
+        <div style="font-weight:800;font-size:16px;color:#e2e8f0;margin-bottom:8px">Humanisation Layer</div>
+        <div style="font-size:13px;color:#4a5568;max-width:440px;margin:0 auto 24px;line-height:1.7">Applies human engineering fingerprints — naming drift, WHY comments, intentional TODOs, asymmetric error handling.</div>
+        <button class="btn-purple" onclick="runHumanise()" ${!state.rewriteResult?"disabled":""}>RUN HUMANISATION</button>
+        ${!state.rewriteResult ? `<div style="font-size:11px;color:#2d3748;margin-top:10px">Complete the main review first</div>` : ""}
+      </div>`;
+      return;
+    }
+    const hr = state.humanResult;
+    el.innerHTML = `
+      <div style="background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.2);border-radius:6px;padding:18px;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div>
+            <div style="font-size:9px;color:#8b5cf6;letter-spacing:.1em;margin-bottom:4px">HUMAN DETECTION SCORE</div>
+            <div style="font-weight:800;font-size:36px;color:#a78bfa">${hr.human_score}%</div>
+            <div style="font-size:11px;color:#6d28d9;margin-top:2px">estimated chance detector classifies as human-written</div>
+          </div>
+          <button class="btn-outline" style="border-color:rgba(139,92,246,.3);color:#6d28d9" onclick="copyText('human-code-pre','copy-human-btn')" id="copy-human-btn">COPY CODE</button>
+        </div>
+        <div style="background:#1a1a24;border-radius:3px;height:5px;overflow:hidden">
+          <div style="height:100%;width:${hr.human_score}%;background:linear-gradient(90deg,#7c3aed,#a78bfa);transition:width 1s ease"></div>
+        </div>
+      </div>
+      ${hr.changes_made?.length ? `<div style="margin-bottom:14px">
+        <div style="font-size:9px;color:#6d28d9;letter-spacing:.1em;margin-bottom:8px">CHANGES APPLIED</div>
+        ${hr.changes_made.map(c=>`<div class="change-pill"><span>◆</span><span>${esc(c)}</span></div>`).join("")}
+      </div>` : ""}
+      <div style="font-size:11px;color:#4a5568;margin-bottom:8px">HUMANISED CODE</div>
+      <pre class="code-view" id="human-code-pre">${esc(hr.humanised_code)}</pre>
+      <div style="display:flex;justify-content:flex-end;margin-top:12px">
+        <button class="btn-outline" style="border-color:rgba(139,92,246,.3);color:#6d28d9" onclick="runHumanise()">↺ Re-run</button>
+      </div>`;
+    return;
+  }
+}
+
+function copyText(preId, btnId) {
+  const pre = document.getElementById(preId);
+  if (!pre) return;
+  const text = pre.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById(btnId);
+    if (btn) { btn.textContent="✓ COPIED"; setTimeout(()=>{btn.textContent="COPY CODE"},2000); }
+  });
+}
+
+function openContextBox() {
+  state.optionalEnabled.business = true;
+  renderPanel();
+  document.getElementById("context-box").classList.remove("hidden");
+  document.getElementById("context-toggle-btn").textContent = "Close";
+  document.getElementById("business-context-card").scrollIntoView({ behavior:"smooth" });
+}
+
+async function runHumanise() {
+  if (!state.rewriteResult?.rewritten_code) return;
+  state.humanising = true;
+  state.humanResult = null;
+  renderTabContent();
+  try {
+    const r = await callClaude(_cw.get("humanise"), `Humanise this code:\n\n${state.rewriteResult.rewritten_code}`, 6000);
+    state.humanResult = r;
+  } catch(e) {
+    showError("Humanisation failed: " + e.message);
+  } finally {
+    state.humanising = false;
+    renderTabContent();
+  }
+}
+
+function downloadReport() {
+  const completed = activeSpecialists().filter(s => state.results[s.id]);
+  if (!completed.length) return;
+  const masterScore = Math.round(completed.reduce((sum,s) => sum+(state.results[s.id]?.score||0),0)/completed.length);
+  const masterRisk = masterScore>=80?"LOW":masterScore>=60?"MEDIUM":masterScore>=40?"HIGH":"CRITICAL";
+  const now = new Date();
+  const dateStr = now.toLocaleDateString("en-GB").replace(/\//g,"-");
+  const timeStr = now.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}).replace(":","h");
+
+  const cards = completed.map(s => {
+    const r = state.results[s.id];
+    const issues = (r.issues||[]).map(i => `
+      <div style="background:#111;border:1px solid #222;border-radius:6px;padding:14px;margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <strong style="color:#f1f5f9;font-size:13px">${esc(i.title)}</strong>
+          <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;background:${rc(i.severity)}22;color:${rc(i.severity)}">${i.severity}</span>
+        </div>
+        <p style="color:#718096;font-size:12px;line-height:1.7;margin:0 0 8px 0">${esc(i.description)}</p>
+        ${i.fix?`<div style="background:rgba(0,200,100,.07);border:1px solid rgba(0,200,100,.18);border-radius:3px;padding:8px 12px;font-size:11px;color:#4ade80">✓ ${esc(i.fix)}</div>`:""}
+      </div>`).join("");
+    return `<div style="background:#0d0d14;border:1px solid #1e1e2e;border-radius:8px;padding:20px;margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:20px">${s.icon}</span>
+          <strong style="font-size:16px;color:#fff">${s.label} Specialist</strong>
+          <span style="font-size:10px;background:#1a1a24;color:#4a5568;padding:2px 8px;border-radius:3px">${r.issues?.length||0} issues</span>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:800;font-size:26px;color:${sc(r.score)}">${r.score}/100</div>
+          <div style="font-size:10px;color:${rc(r.risk_level)}">${r.risk_level}</div>
+        </div>
+      </div>
+      ${r.verdict?`<div style="background:rgba(255,255,255,.03);border:1px solid #1e1e2e;border-radius:4px;padding:14px;font-size:13px;color:#a8b3cf;line-height:1.7;margin-bottom:14px">${esc(r.verdict)}</div>`:""}
+      ${issues}
+    </div>`;
+  }).join("");
+
+  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><title>CODEWATCH v3 Report — ${dateStr}</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Courier New',monospace;background:#0a0a0f;color:#e2e8f0;padding:40px;max-width:960px;margin:0 auto}pre{background:#0d0d14;border:1px solid #1e1e2e;border-radius:6px;padding:18px;overflow-x:auto;white-space:pre-wrap;word-break:break-all;font-size:12px;color:#a8b3cf;line-height:1.7;margin-top:8px}</style>
+</head><body>
+<div style="border-bottom:1px solid #1e1e2e;padding-bottom:20px;margin-bottom:28px;display:flex;align-items:center;gap:12px">
+  <div style="width:32px;height:32px;background:linear-gradient(135deg,#00ff88,#00cc6a);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px">🛡️</div>
+  <div><div style="font-weight:800;font-size:18px;color:#fff;letter-spacing:.05em">CODEWATCH v3</div><div style="font-size:9px;color:#4a5568;letter-spacing:.12em">MULTI-SPECIALIST QC REPORT — ${now.toLocaleString("en-GB")}</div></div>
+</div>
+<div style="background:#0d0d14;border:2px solid #1e1e2e;border-radius:10px;padding:24px;margin-bottom:24px">
+  <div style="font-size:10px;color:#4a5568;letter-spacing:.12em;margin-bottom:10px">MASTER PRODUCTION SCORE</div>
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+    <div style="font-weight:800;font-size:64px;line-height:1;color:${sc(masterScore)}">${masterScore}</div>
+    <div><div style="font-size:14px;color:#718096">/100</div><div style="font-size:12px;color:${rc(masterRisk)};font-weight:700;margin-top:4px">${masterRisk} RISK</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(${completed.length},1fr);gap:10px">
+    ${completed.map(s=>`<div style="background:#111;border-radius:6px;padding:12px;text-align:center"><div style="font-size:16px;margin-bottom:4px">${s.icon}</div><div style="font-size:9px;color:#4a5568;margin-bottom:4px">${s.label.toUpperCase()}</div><div style="font-weight:800;font-size:20px;color:${sc(state.results[s.id].score)}">${state.results[s.id].score}</div></div>`).join("")}
+  </div>
+</div>
+${state.rewriteResult?.engineer_note?`<div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.2);border-radius:8px;padding:18px;margin-bottom:24px;display:flex;gap:12px"><div style="font-size:20px">👨‍💻</div><div><div style="font-size:9px;color:#00cc6a;letter-spacing:.1em;margin-bottom:6px">SENIOR ENGINEER VERDICT</div><div style="font-size:13px;color:#a8b3cf;line-height:1.8">${esc(state.rewriteResult.engineer_note)}</div></div></div>`:""}
+<h2 style="font-size:12px;color:#4a5568;letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px">Specialist Reviews</h2>
+${cards}
+${state.rewriteResult?.rewritten_code?`<div style="margin-bottom:24px"><h2 style="font-size:12px;color:#4a5568;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px">Fail-Safe Rewrite</h2><pre>${esc(state.rewriteResult.rewritten_code)}</pre></div>`:""}
+${state.humanResult?.humanised_code?`<div><h2 style="font-size:12px;color:#4a5568;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Humanised Code</h2><div style="font-size:10px;color:#6d28d9;margin-bottom:8px">Human score: ${state.humanResult.human_score}%</div><pre>${esc(state.humanResult.humanised_code)}</pre></div>`:""}
+<div style="border-top:1px solid #1e1e2e;margin-top:32px;padding-top:16px;font-size:10px;color:#2d3748;text-align:center">CODEWATCH v3 — Multi-Specialist QC System | ${dateStr} at ${timeStr}</div>
+</body></html>`;
+
+  const a = document.createElement("a");
+  a.href = "data:text/html;charset=utf-8," + encodeURIComponent(html);
+  a.download = `codewatch-v3-${dateStr}-${timeStr}.html`;
+  a.click();
+}
+
+// Detect file:// protocol and show CORS warning
+(function() {
+  if (window.location.protocol === "file:") {
+    document.addEventListener("DOMContentLoaded", function() {
+      const banner = document.getElementById("cors-warning");
+      if (banner) banner.style.display = "block";
+    });
+  }
+})();
+
+// Mode toggle
+let isDark = true;
+function toggleMode() {
+  isDark = !isDark;
+  document.body.classList.toggle("light", !isDark);
+  const btn = document.getElementById("mode-toggle");
+  btn.textContent = isDark ? "☀️ Light" : "🌙 Dark";
+  // Persist preference
+  localStorage.setItem("cw-mode", isDark ? "dark" : "light");
+}
+
+// Restore saved mode
+(function() {
+  const saved = localStorage.getItem("cw-mode");
+  if (saved === "light") {
+    isDark = false;
+    document.body.classList.add("light");
+    document.addEventListener("DOMContentLoaded", () => {
+      const btn = document.getElementById("mode-toggle");
+      if (btn) btn.textContent = "🌙 Dark";
+    });
+  }
+})();
+
+// Init
+document.getElementById("code-input").addEventListener("input", updateLineCount);
+document.getElementById("business-context-text").addEventListener("input", function() {
+  document.getElementById("context-char-count").textContent = this.value.length + " characters";
+  document.getElementById("clear-ctx-btn").style.display = this.value.length > 0 ? "inline-block" : "none";
+});
+document.getElementById("code-input").value = SAMPLE;
+updateLineCount();
+renderPanel();
+</script>
+</body>
+</html>

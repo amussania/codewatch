@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:localhost)",
+      "Bash(node -e \"console.log\\(Buffer.from\\('test'\\).toString\\('base64'\\)\\)\")",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(node *)",
+      "Bash(gh pr *)",
+      "Bash(git *)",
+      "Bash(rm \"D:\\\\codewatch\\\\src\\\\app\\\\api\\\\credits\\\\route.ts\")",
+      "Bash(rm \"D:\\\\codewatch\\\\src\\\\app\\\\api\\\\review\\\\route.ts\")",
+      "Bash(gh run *)",
+      "Bash(xargs grep -l \"supabase/service\")",
+      "WebFetch(domain:registry.npmjs.org)",
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(npm info *)",
+      "Bash(npm search *)",
+      "Bash(Select-String *)"
+    ]
+  }
+}

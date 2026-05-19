@@ -1,5 +1,5 @@
-// lib/ai/client.ts — Anthropic Claude client for CODEWATCH
-// Uses Claude Sonnet 4.6 via @anthropic-ai/sdk. Server-side only.
+// lib/ai/client.ts — CODEWATCH AI Engine
+// Ported faithfully from prototype v3. Server-side only.
 
 import Anthropic from "@anthropic-ai/sdk";
 
@@ -8,118 +8,180 @@ let _client: Anthropic | null = null;
 function getClient(): Anthropic {
   if (_client) return _client;
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error("ANTHROPIC_API_KEY is not set");
-  }
+  if (!apiKey) throw new Error("ANTHROPIC_API_KEY is not set");
   _client = new Anthropic({ apiKey });
   return _client;
 }
 
-export const CLAUDE_MODEL = "claude-sonnet-4-6";
+export const CLAUDE_MODEL = "claude-sonnet-4-5-20251001";
 
-// Strip markdown code fences that Claude sometimes wraps JSON responses in
+// ─── JSON extraction ────────────────────────────────────────────────────────
+
 function extractJSON(raw: string): string {
   const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
   return fenced ? fenced[1].trim() : raw.trim();
 }
 
-// Base system prompt shared across all specialists
-export const BASE_SYSTEM_PROMPT = `You are a senior software engineer conducting a code review.
-Analyze the provided code for issues. Respond in strict JSON format.
-Do not include markdown code blocks or explanations outside the JSON.
+// ─── Specialist prompts (ported exactly from prototype v3) ──────────────────
 
-Response format:
+const SPECIALIST_PROMPTS = {
+  security: `You are a Security Auditor with 15 years in application security, pen testing, and incident response. You have personally dealt with data breaches and know exactly how attackers think.
+
+Analyze this code exclusively for SECURITY risks:
+- Authentication flaws (auth bypass, token expiry, JWT validation, session fixation)
+- Authorization flaws (horizontal/vertical privilege escalation, RBAC bypass)
+- Injection attacks (SQL, NoSQL, XSS, CSRF, SSRF, command, template, LDAP)
+- Data exposure (hardcoded secrets, API keys in source, sensitive logs, stack traces in prod)
+- File upload risks (type validation, malware, filename sanitization)
+- API security (rate limiting, CORS, abuse prevention, pagination)
+- Secrets management and ENV variable handling
+
+Respond ONLY in this JSON format (no markdown fences, no preamble):
 {
-  "findings": [
-    {
-      "line": number,
-      "severity": "CRITICAL" | "HIGH" | "MEDIUM" | "LOW",
-      "category": "security" | "reliability" | "performance" | "quality" | "logic",
-      "title": "Brief issue title",
-      "description": "Detailed explanation"
-    }
-  ],
-  "summary": "Overall assessment in 1-2 sentences",
-  "score": number (0-100)
-}`;
+  "score": <0-100, where 100 = perfectly secure>,
+  "risk_level": "<LOW|MEDIUM|HIGH|CRITICAL>",
+  "issues": [{"line": "<line or general>", "severity": "<LOW|MEDIUM|HIGH|CRITICAL>", "title": "<title>", "description": "<why this is dangerous in production>", "fix": "<concrete fix>"}],
+  "verdict": "<frank security engineer verdict>"
+}`,
 
-// Specialist prompts — each focuses on a different dimension
-export const SPECIALIST_PROMPTS = {
-  security: `You are a Security Analyst. Focus exclusively on:
-- Authentication/authorization vulnerabilities
-- Injection risks (SQL, XSS, command)
-- Sensitive data exposure
-- Insecure dependencies
-- Missing input validation
-- Cryptographic weaknesses
+  reliability: `You are a Reliability Engineer with 15 years building systems that stay up under chaos. You've been on-call through major outages and know exactly what breaks at 2AM.
 
-${BASE_SYSTEM_PROMPT}`,
+Analyze this code exclusively for RELIABILITY risks:
+- Core functionality (edge cases, null/empty/partial states, retry logic, timeouts)
+- Concurrency risks (race conditions, double-click, duplicate requests, multiple tabs)
+- Distributed system risks (event duplication, out-of-order events, webhook before DB commit)
+- Disaster scenarios (DB corruption, region outage, queue overload, infinite retry loops)
+- Third-party dependency risks (API outage, circuit breakers, fallbacks)
+- Offline/slow network handling
+- Session expiry and user interruption handling
+- Fail gracefully, not catastrophically: survivable, observable, reversible
 
-  reliability: `You are a Reliability Engineer. Focus exclusively on:
-- Error handling gaps
-- Silent failures
-- Resource leaks
-- Race conditions
-- Unhandled edge cases
-- Missing rollback mechanisms
-- Timeout and retry logic
+Respond ONLY in this JSON format (no markdown fences, no preamble):
+{
+  "score": <0-100, where 100 = perfectly reliable>,
+  "risk_level": "<LOW|MEDIUM|HIGH|CRITICAL>",
+  "issues": [{"line": "<line or general>", "severity": "<LOW|MEDIUM|HIGH|CRITICAL>", "title": "<title>", "description": "<why this breaks at 2AM in production>", "fix": "<concrete fix>"}],
+  "verdict": "<frank SRE verdict>"
+}`,
 
-${BASE_SYSTEM_PROMPT}`,
+  business: `You are a Business Logic Reviewer with 15 years building fintech, e-commerce, and SaaS systems. You have seen a single wrong decimal cost a company millions.
 
-  performance: `You are a Performance Engineer. Focus exclusively on:
-- Algorithmic complexity (Big O)
-- N+1 queries and unnecessary DB calls
-- Memory leaks and excessive allocation
-- Blocking operations in async contexts
-- Inefficient data structures
-- Missing caching opportunities
+The developer has provided business context about this code. You MUST use this context to review against their actual business rules, not generic patterns. If no context is provided, flag what you cannot assess without it and review what you can.
 
-${BASE_SYSTEM_PROMPT}`,
+Analyze this code exclusively for BUSINESS LOGIC risks:
+- Currency calculations, financial rounding precision, tax logic -- check against stated rules
+- Duplicate transaction prevention and idempotency
+- Subscription logic, trial expiration, discount stacking
+- Timezone conversions, DST handling, leap year edge cases
+- User role permissions and feature flags
+- State transitions and approval workflows
+- Order cancellation rollback, inventory deductions
+- Any logic where a small error silently costs money or breaks user trust
 
-  quality: `You are a Code Quality Specialist. Focus exclusively on:
-- SOLID principle violations
-- Code duplication
-- Naming conventions and readability
-- Type safety issues
-- Dead code and unused imports
-- Test coverage gaps
-- Documentation deficiencies
+IMPORTANT: Where the developer has stated specific business rules, verify the code matches those exact rules.
 
-${BASE_SYSTEM_PROMPT}`,
+Respond ONLY in this JSON format (no markdown fences, no preamble):
+{
+  "score": <0-100>,
+  "risk_level": "<LOW|MEDIUM|HIGH|CRITICAL>",
+  "issues": [{"line": "<line or general>", "severity": "<LOW|MEDIUM|HIGH|CRITICAL>", "title": "<title>", "description": "<description>", "fix": "<fix>"}],
+  "verdict": "<verdict>",
+  "context_gaps": ["<things you could not assess without more business context>"]
+}`,
 
-  logic: `You are a Business Logic Validator. Focus exclusively on:
-- Logic errors and incorrect conditions
-- Off-by-one errors
-- State management issues
-- API contract violations
-- Data validation gaps
-- Workflow correctness
-- Edge case handling
+  performance: `You are a Performance Engineer with 15 years optimizing systems at scale. You think in N+1 queries, memory pressure, and p99 latency.
 
-${BASE_SYSTEM_PROMPT}`,
-};
+Analyze this code exclusively for PERFORMANCE risks:
+- Backend: N+1 queries, missing DB indexes, memory leaks, thread blocking, connection pooling, caching strategy
+- Frontend: bundle size, lazy loading, unnecessary re-renders, DOM bloat, infinite loops
+- API: payload size, compression, duplicate requests, retry storms
+- Scale: what breaks at 10x, 100x traffic?
+- Queue handling, Redis misuse, cache invalidation
 
-// Run a single specialist review
-export async function runSpecialist(
-  specialist: keyof typeof SPECIALIST_PROMPTS,
+Respond ONLY in this JSON format (no markdown fences, no preamble):
+{
+  "score": <0-100>,
+  "risk_level": "<LOW|MEDIUM|HIGH|CRITICAL>",
+  "issues": [{"line": "<line or general>", "severity": "<LOW|MEDIUM|HIGH|CRITICAL>", "title": "<title>", "description": "<description>", "fix": "<fix>"}],
+  "verdict": "<verdict>"
+}`,
+
+  quality: `You are a Quality Gatekeeper with 15 years reviewing code for maintainability, predictability, and debuggability.
+
+Analyze this code exclusively for QUALITY risks:
+- Testing depth (unit, integration, e2e, chaos scenarios)
+- Observability (structured logging, correlation IDs, metrics, health checks)
+- Code quality (naming clarity, separation of concerns, dead code)
+- Maintainability (can another engineer understand this in 6 months?)
+- Deployment safety, analytics integrity, UX reliability
+
+Respond ONLY in this JSON format (no markdown fences, no preamble):
+{
+  "score": <0-100>,
+  "risk_level": "<LOW|MEDIUM|HIGH|CRITICAL>",
+  "issues": [{"line": "<line or general>", "severity": "<LOW|MEDIUM|HIGH|CRITICAL>", "title": "<title>", "description": "<description>", "fix": "<fix>"}],
+  "verdict": "<verdict>"
+}`,
+} as const;
+
+// ─── Types ──────────────────────────────────────────────────────────────────
+
+export type SpecialistId = keyof typeof SPECIALIST_PROMPTS;
+
+export interface SpecialistIssue {
+  line: string;
+  severity: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
+  title: string;
+  description: string;
+  fix: string;
+  specialist: SpecialistId;
+}
+
+export interface SpecialistResult {
+  specialist: SpecialistId;
+  score: number;
+  risk_level: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
+  issues: SpecialistIssue[];
+  verdict: string;
+  context_gaps?: string[]; // business specialist only
+}
+
+export interface ReviewResult {
+  masterScore: number;
+  masterRisk: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
+  specialists: SpecialistResult[];
+  allIssues: SpecialistIssue[];
+  summary: string;
+  engineerNote: string;
+  rewrittenCode: string;
+  aiProbability: number;
+}
+
+export interface HumaniseResult {
+  humanisedCode: string;
+  changesMade: string[];
+  humanScore: number;
+}
+
+// ─── Run a single specialist ─────────────────────────────────────────────────
+
+async function runSpecialist(
+  specialist: SpecialistId,
   code: string,
-  language: string,
   businessContext?: string
-) {
+): Promise<SpecialistResult> {
   const client = getClient();
-  const systemPrompt = SPECIALIST_PROMPTS[specialist];
-  const contextBlock = businessContext
-    ? `\n\nBusiness Context:\n${businessContext}`
-    : "";
 
-  const userPrompt = `Language: ${language}${contextBlock}\n\nCode to review:\n\n${code}`;
+  const userMessage =
+    specialist === "business" && businessContext?.trim()
+      ? `BUSINESS CONTEXT:\n${businessContext.trim()}\n\n---\n\nAnalyze this code:\n\n${code}`
+      : `Analyze this code:\n\n${code}`;
 
   const message = await client.messages.create({
     model: CLAUDE_MODEL,
-    max_tokens: 4000,
-    system: systemPrompt,
-    messages: [{ role: "user", content: userPrompt }],
-    temperature: 0.2,
+    max_tokens: 5000,
+    system: SPECIALIST_PROMPTS[specialist],
+    messages: [{ role: "user", content: userMessage }],
   });
 
   const raw =
@@ -130,148 +192,167 @@ export async function runSpecialist(
     const parsed = JSON.parse(content);
     return {
       specialist,
-      findings: parsed.findings || [],
-      summary: parsed.summary || "",
-      score: typeof parsed.score === "number" ? parsed.score : 75,
-      raw,
+      score: typeof parsed.score === "number" ? parsed.score : 0,
+      risk_level: parsed.risk_level ?? "HIGH",
+      issues: (parsed.issues ?? []).map((i: SpecialistIssue) => ({
+        ...i,
+        specialist,
+      })),
+      verdict: parsed.verdict ?? "",
+      context_gaps: parsed.context_gaps ?? [],
     };
   } catch {
     return {
       specialist,
-      findings: [],
-      summary: "Failed to parse review response",
       score: 0,
-      raw,
+      risk_level: "HIGH",
+      issues: [],
+      verdict: "Analysis failed — could not parse response.",
     };
   }
 }
 
-// Run all specialists in parallel
+// ─── Run all specialists in parallel ────────────────────────────────────────
+
 export async function runAllSpecialists(
   code: string,
-  language: string,
   options?: {
     businessContext?: string;
-    skipQuality?: boolean;
+    includeOptional?: {
+      business?: boolean;
+      performance?: boolean;
+      quality?: boolean;
+    };
   }
-) {
-  const specialists: (keyof typeof SPECIALIST_PROMPTS)[] = [
-    "security",
-    "reliability",
-    "performance",
-    "logic",
-  ];
+): Promise<ReviewResult> {
+  const client = getClient();
 
-  if (!options?.skipQuality) {
-    specialists.push("quality");
+  // Always-on: security + reliability
+  const activeSpecialists: SpecialistId[] = ["security", "reliability"];
+
+  // Optional specialists — only run if explicitly enabled
+  if (options?.includeOptional?.business) activeSpecialists.push("business");
+  if (options?.includeOptional?.performance) activeSpecialists.push("performance");
+  if (options?.includeOptional?.quality) activeSpecialists.push("quality");
+
+  const truncated =
+    code.length > 12000 ? code.slice(0, 12000) + "\n\n[...TRUNCATED]" : code;
+
+  // Run all specialists + rewrite in parallel
+  const [specialistResults, rewriteRaw] = await Promise.all([
+    Promise.allSettled(
+      activeSpecialists.map((s) =>
+        runSpecialist(s, truncated, options?.businessContext)
+      )
+    ),
+    client.messages.create({
+      model: CLAUDE_MODEL,
+      max_tokens: 8000,
+      system: `You are a Senior Staff Engineer. Rewrite the code to be FAIL-SAFE. NEVER change output. Add: explicit error handling, env for secrets, input validation, timeouts, logging, least privilege, null guards. Respond ONLY in JSON: {"rewritten_code":"<code>","ai_probability":<int>,"engineer_note":"<verdict>"}`,
+      messages: [{ role: "user", content: `Rewrite this code:\n\n${truncated}` }],
+    }),
+  ]);
+
+  // Process specialist results
+  const specialists: SpecialistResult[] = [];
+  const allIssues: SpecialistIssue[] = [];
+  let totalScore = 0;
+
+  for (const result of specialistResults) {
+    if (result.status === "fulfilled") {
+      specialists.push(result.value);
+      totalScore += result.value.score;
+      allIssues.push(...result.value.issues);
+    }
   }
 
-  const results = await Promise.allSettled(
-    specialists.map((s) =>
-      runSpecialist(s, code, language, options?.businessContext)
-    )
+  // Sort issues by severity
+  const severityOrder = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
+  allIssues.sort(
+    (a, b) => severityOrder[a.severity] - severityOrder[b.severity]
   );
 
-  const findings: Array<{
-    line: number;
-    severity: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
-    category: string;
-    title: string;
-    description: string;
-    specialist: string;
-  }> = [];
+  // Master score = average of specialist scores
+  const avgScore =
+    specialists.length > 0 ? totalScore / specialists.length : 0;
+  const masterScore = Math.round(Math.max(0, Math.min(100, avgScore)));
+  const masterRisk: ReviewResult["masterRisk"] =
+    masterScore >= 80
+      ? "LOW"
+      : masterScore >= 60
+      ? "MEDIUM"
+      : masterScore >= 40
+      ? "HIGH"
+      : "CRITICAL";
 
-  let totalScore = 0;
-  let successCount = 0;
-  const specialistsRun: string[] = [];
+  const criticalCount = allIssues.filter(
+    (i) => i.severity === "CRITICAL"
+  ).length;
+  const summary =
+    allIssues.length > 0
+      ? `${allIssues.length} issues found (${criticalCount} critical). Review recommended before deploying.`
+      : "No significant issues detected. Code looks good.";
 
-  for (const result of results) {
-    if (result.status === "fulfilled") {
-      const data = result.value;
-      specialistsRun.push(data.specialist);
-      totalScore += data.score;
-      successCount++;
+  // Process rewrite result
+  let rewrittenCode = "";
+  let aiProbability = 0;
+  let engineerNote = "";
 
-      for (const finding of data.findings) {
-        findings.push({ ...finding, specialist: data.specialist });
-      }
-    }
+  try {
+    const rewriteText =
+      rewriteRaw.content[0]?.type === "text"
+        ? rewriteRaw.content[0].text
+        : "{}";
+    const rewriteParsed = JSON.parse(extractJSON(rewriteText));
+    rewrittenCode = rewriteParsed.rewritten_code ?? "";
+    aiProbability = rewriteParsed.ai_probability ?? 0;
+    engineerNote = rewriteParsed.engineer_note ?? "";
+  } catch {
+    rewrittenCode = code;
+    engineerNote = "Rewrite failed — original code returned.";
   }
 
-  const avgScore = successCount > 0 ? totalScore / successCount : 0;
-  const criticalCount = findings.filter((f) => f.severity === "CRITICAL").length;
-  const masterScore = Math.max(0, avgScore - criticalCount * 15);
-
-  findings.sort((a, b) => {
-    const severityOrder = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
-    if (severityOrder[a.severity] !== severityOrder[b.severity]) {
-      return severityOrder[a.severity] - severityOrder[b.severity];
-    }
-    return a.line - b.line;
-  });
-
   return {
-    masterScore: Math.round(masterScore),
-    findings,
-    specialistsRun,
-    summary:
-      findings.length > 0
-        ? `${findings.length} findings (${criticalCount} critical). Review recommended before merging.`
-        : "No significant issues detected. Code looks good.",
+    masterScore,
+    masterRisk,
+    specialists,
+    allIssues,
+    summary,
+    engineerNote,
+    rewrittenCode,
+    aiProbability,
   };
 }
 
-// Fail-safe rewrite: generate corrected code
-export async function generateRewrite(
-  code: string,
-  language: string,
-  findings: Array<{ line: number; severity: string; description: string }>
-) {
+// ─── Humanise layer ──────────────────────────────────────────────────────────
+
+export async function humaniseCode(code: string): Promise<HumaniseResult> {
   const client = getClient();
-  const findingsText = findings
-    .map((f) => `Line ${f.line} [${f.severity}]: ${f.description}`)
-    .join("\n");
-
-  const prompt = `You are a senior engineer. Fix the following code based on these review findings.
-Return ONLY the corrected code. No explanations, no markdown code fences.
-
-Findings:
-${findingsText}
-
-Original code (${language}):
-${code}
-
-Corrected code:`;
 
   const message = await client.messages.create({
     model: CLAUDE_MODEL,
-    max_tokens: 8000,
-    messages: [{ role: "user", content: prompt }],
-    temperature: 0.1,
+    max_tokens: 6000,
+    system: `You are a senior engineer who has been writing code for 12 years. Make the received code read like it was written and evolved by a real human engineer, NOT generated by AI. Apply ALL: VARIABLE NAMING DRIFT, HUMAN COMMENTS (why not what), INTENTIONAL IMPERFECTIONS (TODOs, style drift), ASYMMETRIC ERROR HANDLING, EVIDENCE OF ITERATION. Code must remain 100% functionally identical. Respond ONLY in JSON: {"humanised_code":"<code>","changes_made":["<change>"],"human_score":<int>}`,
+    messages: [
+      { role: "user", content: `Humanise this code:\n\n${code}` },
+    ],
   });
 
-  return message.content[0]?.type === "text" ? message.content[0].text : code;
-}
+  const raw =
+    message.content[0]?.type === "text" ? message.content[0].text : "{}";
 
-// Humanisation layer: make AI-generated code sound human-written
-export async function humaniseCode(code: string, language: string) {
-  const client = getClient();
-
-  const prompt = `You are a senior engineer refactoring code to sound naturally human-written.
-Add subtle imperfections: slightly inconsistent spacing, a meaningful comment, a minor variable rename that shows human thought.
-Do NOT change logic or introduce bugs. Return ONLY the refactored code.
-
-Code (${language}):
-${code}
-
-Refactored code:`;
-
-  const message = await client.messages.create({
-    model: CLAUDE_MODEL,
-    max_tokens: 8000,
-    messages: [{ role: "user", content: prompt }],
-    temperature: 0.7,
-  });
-
-  return message.content[0]?.type === "text" ? message.content[0].text : code;
+  try {
+    const parsed = JSON.parse(extractJSON(raw));
+    return {
+      humanisedCode: parsed.humanised_code ?? code,
+      changesMade: parsed.changes_made ?? [],
+      humanScore: parsed.human_score ?? 0,
+    };
+  } catch {
+    return {
+      humanisedCode: code,
+      changesMade: [],
+      humanScore: 0,
+    };
+  }
 }
