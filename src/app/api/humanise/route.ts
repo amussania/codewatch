@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     const { code, language } = parsed.data;
 
     // 4. Humanise
-    const humanised = await humaniseCode(code, language);
+    const humanised = await humaniseCode(code);
 
     return NextResponse.json({
       success: true,
