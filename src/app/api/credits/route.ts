@@ -4,6 +4,7 @@
 
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { rateLimitOrThrow } from "@/lib/upstash/ratelimit";
 
 export async function GET() {
@@ -29,15 +30,18 @@ export async function GET() {
       );
     }
 
-    // 3. Fetch credit balance
-    const { data: credits, error: creditsError } = await supabase
+    // 3. Fetch credit balance — use service role to bypass RLS on the credits table.
+    // The user is already verified above via supabase.auth.getUser().
+    const service = createServiceClient();
+
+    const { data: credits, error: creditsError } = await service
       .from("credits")
       .select("plan_credits, topup_credits, total_used, reset_date, plan_tier, last_topup_at")
       .eq("user_id", user.id)
       .single();
 
     if (creditsError) {
-      // If no credits row exists, user might be new — return free tier defaults
+      // No credits row yet — user signed up before migrations ran, return free defaults
       if (creditsError.code === "PGRST116") {
         return NextResponse.json({
           planCredits: 0,
@@ -57,7 +61,7 @@ export async function GET() {
     }
 
     // 4. Fetch usage stats
-    const { data: reviews, error: reviewsError } = await supabase
+    const { data: reviews } = await service
       .from("reviews")
       .select("master_score, credits_used, created_at")
       .eq("user_id", user.id)

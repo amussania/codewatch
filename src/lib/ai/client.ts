@@ -17,6 +17,12 @@ function getClient(): Anthropic {
 
 export const CLAUDE_MODEL = "claude-sonnet-4-6";
 
+// Strip markdown code fences that Claude sometimes wraps JSON responses in
+function extractJSON(raw: string): string {
+  const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
+  return fenced ? fenced[1].trim() : raw.trim();
+}
+
 // Base system prompt shared across all specialists
 export const BASE_SYSTEM_PROMPT = `You are a senior software engineer conducting a code review.
 Analyze the provided code for issues. Respond in strict JSON format.
@@ -116,8 +122,9 @@ export async function runSpecialist(
     temperature: 0.2,
   });
 
-  const content =
+  const raw =
     message.content[0]?.type === "text" ? message.content[0].text : "{}";
+  const content = extractJSON(raw);
 
   try {
     const parsed = JSON.parse(content);
@@ -126,7 +133,7 @@ export async function runSpecialist(
       findings: parsed.findings || [],
       summary: parsed.summary || "",
       score: typeof parsed.score === "number" ? parsed.score : 75,
-      raw: content,
+      raw,
     };
   } catch {
     return {
@@ -134,7 +141,7 @@ export async function runSpecialist(
       findings: [],
       summary: "Failed to parse review response",
       score: 0,
-      raw: content,
+      raw,
     };
   }
 }
