@@ -13,7 +13,7 @@ function getClient(): Anthropic {
   return _client;
 }
 
-export const CLAUDE_MODEL = "claude-sonnet-4-5-20251001";
+export const CLAUDE_MODEL = "claude-sonnet-4-5";
 
 // ─── JSON extraction ────────────────────────────────────────────────────────
 
