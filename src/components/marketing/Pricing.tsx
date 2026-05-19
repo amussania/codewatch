@@ -24,10 +24,27 @@ interface Plan {
 
 const PLANS: Plan[] = [
   {
+    id: "free",
+    name: "Free",
+    monthlyPrice: null,
+    reviews: "3 reviews on signup",
+    desc: "Three full reviews, no card required. One-time allocation to get started.",
+    features: [
+      "All 5 specialists",
+      "No credit card required",
+      "One-time allocation",
+      "Zero code retention",
+      "30+ languages",
+    ],
+    cta: "Start for free",
+    href: "/signup",
+    featured: false,
+  },
+  {
     id: "solo",
     name: "Solo",
     monthlyPrice: 12,
-    reviews: "100 reviews / mo",
+    reviews: "30 reviews / mo",
     desc: "For developers who want expert-level review without the enterprise overhead.",
     features: [
       "All 5 specialists",
@@ -37,14 +54,14 @@ const PLANS: Plan[] = [
       "30+ languages",
     ],
     cta: "Get started",
-    href: "/signup",
+    href: "/signup?plan=solo",
     featured: false,
   },
   {
     id: "pro",
     name: "Pro",
     monthlyPrice: 30,
-    reviews: "350 reviews / mo",
+    reviews: "120 reviews / mo",
     desc: "For developers who need the full toolkit, including rewrites and white-label output.",
     features: [
       "Everything in Solo",
@@ -52,7 +69,7 @@ const PLANS: Plan[] = [
       "Humanisation Layer",
       "White-label reports",
       "Priority review queue",
-      "Credit rollover (up to 200)",
+      "Top-up credits never expire",
     ],
     cta: "Get started",
     href: "/signup?plan=pro",
@@ -62,7 +79,7 @@ const PLANS: Plan[] = [
     id: "studio",
     name: "Studio",
     monthlyPrice: 72,
-    reviews: "1,000 reviews / mo",
+    reviews: "400 reviews / mo",
     desc: "For small teams and freelancers reviewing client code at volume.",
     features: [
       "Everything in Pro",
@@ -79,7 +96,7 @@ const PLANS: Plan[] = [
     id: "agency",
     name: "Agency",
     monthlyPrice: 155,
-    reviews: "3,000 reviews / mo",
+    reviews: "1,000 reviews / mo",
     desc: "For agencies running code review as a client-facing service.",
     features: [
       "Everything in Studio",
@@ -485,7 +502,7 @@ export default function Pricing() {
 
         {/* Plan cards */}
         <div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5"
           style={{ gap: 16, alignItems: "start", marginBottom: 24 }}
         >
           {PLANS.map((plan) => (
